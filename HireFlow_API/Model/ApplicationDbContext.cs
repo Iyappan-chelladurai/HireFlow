@@ -1,16 +1,18 @@
 ﻿using HireFlow_API.Model.DataModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HireFlow_API.Model
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<UserAccount, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
 
-        public DbSet<UserAccount> UserAccounts { get; set; }
+        //public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<CandidateDetail> CandidateDetails { get; set; }
 
         public DbSet<DocumentType> DocumentTypes { get; set; }
@@ -32,6 +34,16 @@ namespace HireFlow_API.Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<UserAccount>().ToTable("UserAccounts");
+            modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
+
 
             modelBuilder.Entity<CandidateDocumentDetail>()
                         .HasOne(d => d.Candidate)
@@ -58,16 +70,16 @@ namespace HireFlow_API.Model
                         .OnDelete(DeleteBehavior.Restrict); // Prevent cascade from Job → Application
 
             modelBuilder.Entity<OfferLetter>()
-    .HasOne(o => o.Candidate)
-    .WithMany(c => c.OfferLetters)
-    .HasForeignKey(o => o.CandidateId)
-    .OnDelete(DeleteBehavior.Cascade); // Allow cascade from Candidate
+                        .HasOne(o => o.Candidate)
+                        .WithMany(c => c.OfferLetters)
+                        .HasForeignKey(o => o.CandidateId)
+                        .OnDelete(DeleteBehavior.Cascade); // Allow cascade from Candidate
 
             modelBuilder.Entity<OfferLetter>()
-                .HasOne(o => o.Job)
-                .WithMany(j => j.OfferLetters)
-                .HasForeignKey(o => o.JobId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade from Job
+                        .HasOne(o => o.Job)
+                        .WithMany(j => j.OfferLetters)
+                        .HasForeignKey(o => o.JobId)
+                        .OnDelete(DeleteBehavior.Restrict); // Prevent cascade from Job
 
         }
     }

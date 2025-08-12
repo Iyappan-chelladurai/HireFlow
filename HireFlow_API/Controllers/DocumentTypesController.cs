@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HireFlow_API.Controllers
 {
@@ -23,6 +24,7 @@ namespace HireFlow_API.Controllers
 
         // GET: api/DocumentTypes
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<DocumentType>>> GetDocumentTypes()
         {
             return await _context.DocumentTypes.ToListAsync();

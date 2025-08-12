@@ -1,23 +1,17 @@
-﻿using HireFlow_MVC.Models.Data;
-using Microsoft.AspNetCore.Identity;
+using HireFlow_MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace HireFlow_MVC.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly HttpClient _httpClient;
 
-
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        public AccountController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(IHttpClientFactory httpClientFactory)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
+            _httpClient = httpClientFactory.CreateClient("HireFlowAPI");
         }
-
 
         [HttpGet]
         public IActionResult Login()
@@ -26,31 +20,36 @@ namespace HireFlow_MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-
-            var user = await _userManager.FindByEmailAsync(model.Email);
-
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
-
-            if (result.Succeeded)
+            
+            var loginData = new
             {
+                Email = email,
+                Password = password
+            };
 
-                return View(model);
+            var response = await _httpClient.PostAsJsonAsync("/api/account/login/", loginData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+                // Save JWT in Session
+                HttpContext.Session.SetString("AuthToken", responseData.JwtToken);
+
+                return RedirectToAction("PostJob", "Job");
             }
 
-            ViewBag.Message = "Invalid login attempt.";
-            return View(model);
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            HttpContext.Session.Remove("AuthToken");
+            return RedirectToAction("Login");
         }
+
     }
 }

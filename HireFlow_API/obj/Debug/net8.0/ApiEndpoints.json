@@ -1,5 +1,51 @@
 [
   {
+    "ContainingType": "HireFlow_API.Controllers.AccountController",
+    "Method": "CreateAdminUser",
+    "RelativePath": "api/Account/create-admin",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.AccountController",
+    "Method": "CreateRoles",
+    "RelativePath": "api/Account/create-roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.AccountController",
+    "Method": "Login",
+    "RelativePath": "api/Account/Login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "HireFlow_API.Model.DTOs.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.AccountController",
+    "Method": "Logout",
+    "RelativePath": "api/Account/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HireFlow_API.Controllers.DocumentTypesController",
     "Method": "GetDocumentTypes",
     "RelativePath": "api/DocumentTypes",
@@ -103,6 +149,433 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleDetailsController",
+    "Method": "GetInterviewScheduleDetails",
+    "RelativePath": "api/InterviewScheduleDetails",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DataModel.InterviewScheduleDetail, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleDetailsController",
+    "Method": "PostInterviewScheduleDetail",
+    "RelativePath": "api/InterviewScheduleDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "interviewScheduleDetail",
+        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleDetailsController",
+    "Method": "GetInterviewScheduleDetail",
+    "RelativePath": "api/InterviewScheduleDetails/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleDetailsController",
+    "Method": "PutInterviewScheduleDetail",
+    "RelativePath": "api/InterviewScheduleDetails/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "interviewScheduleDetail",
+        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleDetailsController",
+    "Method": "DeleteInterviewScheduleDetail",
+    "RelativePath": "api/InterviewScheduleDetails/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "GetAllApplications",
+    "RelativePath": "api/JobApplications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DataModel.JobApplication, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "SubmitNewApplication",
+    "RelativePath": "api/JobApplications",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ApplicationId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "CandidateId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "ResumePath",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "AppliedOn",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApplicationStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "InterviewFeedback",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "OfferSentOn",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsOfferAccepted",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "OnboardedOn",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ResumeFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DTOs.JobApplicationDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "GetApplicationDetails",
+    "RelativePath": "api/JobApplications/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DataModel.JobApplication",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "UpdateApplication",
+    "RelativePath": "api/JobApplications/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "ApplicationId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "CandidateId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "ResumePath",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "AppliedOn",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApplicationStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "InterviewFeedback",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "OfferSentOn",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsOfferAccepted",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "OnboardedOn",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ResumeFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "CancelApplication",
+    "RelativePath": "api/JobApplications/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "GetAllJobs",
+    "RelativePath": "api/Jobs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DTOs.JobDTO, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "CreateJob",
+    "RelativePath": "api/Jobs",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newJob",
+        "Type": "HireFlow_API.Model.DTOs.CreateJobDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DTOs.JobDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "GetJobById",
+    "RelativePath": "api/Jobs/{jobId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HireFlow_API.Model.DTOs.JobDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "UpdateJob",
+    "RelativePath": "api/Jobs/{jobId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedJob",
+        "Type": "HireFlow_API.Model.DTOs.UpdateJobDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "DeleteJob",
+    "RelativePath": "api/Jobs/{jobId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],

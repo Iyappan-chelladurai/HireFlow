@@ -1,0 +1,88 @@
+﻿@model HireFlow_MVC.Models.JobApplicationViewModel
+
+@{
+    ViewData["Title"] = "NewApplication";
+}
+
+<h1>NewApplication</h1>
+
+<h4>JobApplicationViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NewApplication">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ApplicationId" class="control-label"></label>
+                <input asp-for="ApplicationId" class="form-control" />
+                <span asp-validation-for="ApplicationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CandidateId" class="control-label"></label>
+                <input asp-for="CandidateId" class="form-control" />
+                <span asp-validation-for="CandidateId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CandidateName" class="control-label"></label>
+                <input asp-for="CandidateName" class="form-control" />
+                <span asp-validation-for="CandidateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobId" class="control-label"></label>
+                <input asp-for="JobId" class="form-control" />
+                <span asp-validation-for="JobId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobTitle" class="control-label"></label>
+                <input asp-for="JobTitle" class="form-control" />
+                <span asp-validation-for="JobTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ResumePath" class="control-label"></label>
+                <input asp-for="ResumePath" class="form-control" />
+                <span asp-validation-for="ResumePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AppliedOn" class="control-label"></label>
+                <input asp-for="AppliedOn" class="form-control" />
+                <span asp-validation-for="AppliedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationStatus" class="control-label"></label>
+                <input asp-for="ApplicationStatus" class="form-control" />
+                <span asp-validation-for="ApplicationStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InterviewFeedback" class="control-label"></label>
+                <input asp-for="InterviewFeedback" class="form-control" />
+                <span asp-validation-for="InterviewFeedback" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OfferSentOn" class="control-label"></label>
+                <input asp-for="OfferSentOn" class="form-control" />
+                <span asp-validation-for="OfferSentOn" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsOfferAccepted" /> @Html.DisplayNameFor(model => model.IsOfferAccepted)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="OnboardedOn" class="control-label"></label>
+                <input asp-for="OnboardedOn" class="form-control" />
+                <span asp-validation-for="OnboardedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

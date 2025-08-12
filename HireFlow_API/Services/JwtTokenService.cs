@@ -9,21 +9,23 @@ namespace HireFlow_API.Services
 {
     public class JwtTokenService
     {
-        private readonly JwtSettings _jwtSettings;
+        private  readonly JwtSettings _jwtSettings;
 
         public JwtTokenService(IOptions<JwtSettings> jwtOptions)
         {
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(string username, string role)
+        public  string GenerateToken(Guid userid ,  string username, string role)
         {
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
             new Claim(ClaimTypes.Name, username),
+             new Claim(ClaimTypes.NameIdentifier , userid.ToString()),
             new Claim(ClaimTypes.Role, role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

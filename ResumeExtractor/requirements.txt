@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pdfminer.six
+python-docx
+pytesseract
+python-multipart
+opencv-python
+pdf2image
+Pillow
+spacy
+pdfplumber
+chardet
+

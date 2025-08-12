@@ -1,0 +1,101 @@
+﻿@model IEnumerable<HireFlow_MVC.Models.JobApplicationViewModel>
+
+@{
+    ViewData["Title"] = "ListAllApplications";
+}
+
+<h1>ListAllApplications</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CandidateId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CandidateName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResumePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppliedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InterviewFeedback)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OfferSentOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsOfferAccepted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OnboardedOn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CandidateId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CandidateName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResumePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppliedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterviewFeedback)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OfferSentOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOfferAccepted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OnboardedOn)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

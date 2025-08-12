@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "HireFlow_API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "..\\HireFlow_MVC\\HireFlow_MVC.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

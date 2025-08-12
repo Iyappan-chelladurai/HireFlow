@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\HireFlow_MVC\\HireFlow_MVC.csproj": {}
+    "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\HireFlow_MVC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\HireFlow_MVC\\HireFlow_MVC.csproj": {
+    "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\HireFlow_MVC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\HireFlow_MVC\\HireFlow_MVC.csproj",
+        "projectUniqueName": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\HireFlow_MVC.csproj",
         "projectName": "HireFlow_MVC",
-        "projectPath": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\HireFlow_MVC\\HireFlow_MVC.csproj",
+        "projectPath": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\HireFlow_MVC.csproj",
         "packagesPath": "C:\\Users\\iyapp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\HireFlow_MVC\\obj\\",
+        "outputPath": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,23 +50,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.18, )"
             },
-            "Microsoft.AspNetCore.Identity.UI": {
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[8.0.18, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[8.0.18, )"
-            },
-            "Microsoft.EntityFrameworkCore.Tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.18, )"
+              "version": "[8.0.7, )"
             }
           },
           "imports": [
