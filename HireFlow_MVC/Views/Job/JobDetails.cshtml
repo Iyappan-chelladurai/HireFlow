@@ -44,22 +44,24 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative">
         <h2 class="text-xl font-bold text-indigo-700 mb-4">Apply for @Model.JobTitle</h2>
 
-        <form asp-action="Apply" asp-controller="Jobs" method="post" enctype="multipart/form-data" class="space-y-4">
-            <input type="hidden" asp-for="JobId" />
+        <form asp-action="NewApplication" asp-controller="JobApplications" method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="hidden" name="ApplicationId" value="" />
+            <input type="hidden" name="JobId" value="@Model.JobId" />
+            <input type="hidden" name="CandidateId" value="" />
 
             <div>
-                <label class="block text-sm font-medium mb-1">Full Name</label>
-              <input asp-for="Location" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                <label class="block text-sm font-medium mb-1">Current Job Title</label>
+                <input type="text" name="CurrentJobTitle" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Email Address</label>
-                <input asp-for="EmploymentType" type="email" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                <label class="block text-sm font-medium mb-1">Total Experience Years</label>
+                <input type="number" name="TotalExperienceYears" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
 
             <div>
                 <label class="block text-sm font-medium mb-1">Resume</label>
-               <input asp-for="Salary" type="file" accept=".pdf,.doc,.docx" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                <input type="file" name="ResumeFile" accept=".pdf,.doc,.docx" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
 
             <div class="flex justify-end space-x-3 pt-4 border-t mt-4">

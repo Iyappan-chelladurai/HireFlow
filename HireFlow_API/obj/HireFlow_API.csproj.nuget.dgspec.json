@@ -50,9 +50,25 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AWSSDK.Comprehend": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "AWSSDK.Textract": {
+              "target": "Package",
+              "version": "[4.0.1.9, )"
+            },
             "AutoMapper": {
               "target": "Package",
               "version": "[15.0.1, )"
+            },
+            "DocX": {
+              "target": "Package",
+              "version": "[4.0.25105.5786, )"
+            },
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[3.3.0, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
@@ -76,9 +92,17 @@
               "target": "Package",
               "version": "[8.0.18, )"
             },
+            "Microsoft.ML": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.7, )"
+            },
+            "PdfPig": {
+              "target": "Package",
+              "version": "[0.1.11, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

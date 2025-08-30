@@ -1,53 +1,88 @@
-﻿using HireFlow_API.Model.DataModel;
+﻿using HireFlow_API.Controllers;
+using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 
 namespace HireFlow_API.Services
 {
     public interface IJobApplicationService
     {
-        Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync();
+        Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync(Guid JobId);
         Task<JobApplicationDTO?> RetrieveApplicationDetailsAsync(Guid applicationId);
         Task<JobApplicationDTO> SubmitApplicationAsync(JobApplicationDTO jobApplication);
         Task<bool> UpdateExistingApplicationAsync(Guid applicationId, JobApplicationDTO jobApplication);
         Task<bool> CancelApplicationAsync(Guid applicationId);
+
+        Task<IEnumerable<JobApplicationResponseDTO>> GetApplicationsByCandidateIdAsync(Guid candidateId);
     }
 
     public class JobApplicationService : IJobApplicationService
     {
         private readonly IJobApplicationRepository _repository;
 
-        public JobApplicationService(IJobApplicationRepository repository)
+        private readonly ICandidateDocumentsRepository _candidateDocumentsRepository;
+
+        private readonly IConfiguration _configuration;
+
+        public JobApplicationService(IJobApplicationRepository repository , IConfiguration configuration,
+            ICandidateDocumentsRepository candidateDocumentsRepository)
         {
             _repository = repository;
+            _configuration = configuration;
+            _candidateDocumentsRepository = candidateDocumentsRepository;
         }
 
-        public async Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync()
+        public async Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync(Guid JobId)
         {
-            return await _repository.GetAllApplicationsAsync();
+            return await _repository.GetAllApplicationsAsync(JobId);
         }
 
         public async Task<JobApplicationDTO?> RetrieveApplicationDetailsAsync(Guid applicationId)
         {
+
             return await _repository.GetApplicationByIdAsync(applicationId);
         }
 
         public async Task<JobApplicationDTO> SubmitApplicationAsync(JobApplicationDTO jobApplication)
         {
-            
-            var uploadsFolder = Path.Combine("wwwroot", "resumes"); // Example: save resume to server or cloud storage
-            Directory.CreateDirectory(uploadsFolder);
-            var filePath = Path.Combine(uploadsFolder, Guid.NewGuid() + Path.GetExtension(jobApplication.ResumeFile.FileName));
+            var ResumePath = _configuration["FilePath:ResumePath"];
+            Directory.CreateDirectory(ResumePath);
+
+            var filePath = Path.Combine(ResumePath, Guid.NewGuid() + Path.GetExtension(jobApplication.ResumeFile.FileName));
+
+            // Optionally store the file path in DTO
+            jobApplication.ResumePath = filePath;
+
+            await _repository.AddNewApplicationAsync(jobApplication);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await jobApplication.ResumeFile.CopyToAsync(stream);
             }
 
-            // Optionally store the file path in DTO
-            jobApplication.ResumePath = filePath;
 
-            await _repository.AddNewApplicationAsync(jobApplication);
+
+
+
+            CandidateDocumentDetail candidateDocumentDetail = new CandidateDocumentDetail()
+            {
+
+                DocumentDetailId = Guid.NewGuid(),
+                CandidateId = jobApplication.CandidateId,
+                FilePath = filePath,
+                FileName = jobApplication.ResumeFile.FileName,
+                FileExtension = Path.GetExtension(jobApplication.ResumeFile.FileName),
+                DocumentTypeId = 3,
+                UploadedOn = DateTime.Now,
+                IsFraudDetected = false,
+                IsVerified = false,
+                FraudScore = 0,
+                IsActive = false,
+                FileSizeInMB = Convert.ToDecimal(jobApplication.ResumeFile.Length / 24) / 24,
+            };
+
+           await _candidateDocumentsRepository.AddAsync(candidateDocumentDetail);
             return jobApplication;
         }
 
@@ -70,6 +105,11 @@ namespace HireFlow_API.Services
 
             await _repository.DeleteApplicationByIdAsync(applicationId);
             return true;
+        }
+
+        public async Task<IEnumerable<JobApplicationResponseDTO>> GetApplicationsByCandidateIdAsync(Guid candidateId)
+        {
+            return await _repository.GetByCandidateIdAsync(candidateId);
         }
     }
 }

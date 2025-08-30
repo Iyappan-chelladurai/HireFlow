@@ -10,10 +10,14 @@
         public decimal? Salary { get; set; }
         public string EmploymentType { get; set; }
         public int Openings { get; set; }
+        public string Skills { get; set; }  
+
         public DateTime PostedOn { get; set; }
         public DateTime? ClosingDate { get; set; }
         public Guid PostedBy { get; set; }
         public bool IsActive { get; set; }
+        public int CandidateCount { get; set; }
+
     }
 
     // ✅ DTO for Creating a Job (POST)
@@ -26,6 +30,8 @@
         public decimal? Salary { get; set; }
         public string EmploymentType { get; set; }
         public int Openings { get; set; }
+        public string Skills { get; set; } 
+
         public DateTime? ClosingDate { get; set; }
         public Guid? PostedBy { get; set; }
     }
@@ -40,8 +46,25 @@
         public decimal? Salary { get; set; }
         public string EmploymentType { get; set; }
         public int Openings { get; set; }
+
+        public string Skills { get; set; }
         public DateTime? ClosingDate { get; set; }
         public bool IsActive { get; set; }
     }
+
+    public class JobApplicatiionsForHRDto
+    {
+        public Guid JobId { get; set; }
+        public string JobTitle { get; set; }
+        public string Department { get; set; }
+        public string Location { get; set; }
+        public int Openings { get; set; }
+
+        public string Skills { get; set; }
+
+        public int CandidateCount { get; set; } // Number of applicants
+        public DateTime ClosingDate { get; set; }
+    }
+
 
 }

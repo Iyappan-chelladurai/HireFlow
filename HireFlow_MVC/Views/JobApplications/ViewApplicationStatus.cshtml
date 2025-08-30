@@ -1,0 +1,92 @@
+﻿@model List<HireFlow_MVC.Models.JobApplicationViewModel>
+
+@{
+    ViewData["Title"] = "Application Status";
+
+    string[] stages = new[] { "Applied", "Under Review", "Shortlisted", "Interview Scheduled", "Offer Sent", "Offer Accepted", "Onboarded" };
+
+    Func<HireFlow_MVC.Models.JobApplicationViewModel, (string current, string next)> GetCurrentAndNextStage = app =>
+    {
+        var currentIndex = stages.ToList().FindLastIndex(s =>
+            s == app.ApplicationStatus ||
+            (s == "Applied" && app.AppliedOn != null) ||
+            (s == "Interview Scheduled" && !string.IsNullOrEmpty(app.InterviewFeedback)) ||
+            (s == "Offer Sent" && app.OfferSentOn != null) ||
+            (s == "Offer Accepted" && app.IsOfferAccepted) ||
+            (s == "Onboarded" && app.OnboardedOn != null)
+        );
+
+        string currentStage = currentIndex >= 0 ? stages[currentIndex] : stages[0];
+        string nextStage = (currentIndex + 1) < stages.Length ? stages[currentIndex + 1] : null;
+
+        return (currentStage, nextStage);
+    };
+}
+
+<div class="max-w-6xl mx-auto mt-10 px-4">
+    <h1 class="text-3xl font-bold mb-10 text-gray-800">Your Applications</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @foreach (var app in Model)
+        {
+            var (currentStage, nextStage) = GetCurrentAndNextStage(app);
+
+            <div class="bg-gradient-to-r from-white via-gray-50 to-white border border-gray-200 rounded-2xl shadow-lg p-6 transition hover:shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold text-gray-900">@app.JobTitle</h2>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium
+                            @(currentStage switch
+                          {
+                              "Applied" => "bg-blue-100 text-blue-800",
+                              "Under Review" => "bg-yellow-100 text-yellow-800",
+                              "Shortlisted" => "bg-green-100 text-green-800",
+                              "Interview Scheduled" => "bg-indigo-100 text-indigo-800",
+                              "Offer Sent" => "bg-purple-100 text-purple-800",
+                              "Offer Accepted" => "bg-green-700 text-white",
+                              "Onboarded" => "bg-gray-300 text-gray-800",
+                              _ => "bg-gray-100 text-gray-800"
+                          })">
+                    @currentStage
+                </span>
+            </div>
+
+                <!-- Horizontal Stepper -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex-1 h-1 bg-gray-300 rounded relative">
+                        <div class="absolute h-1 bg-blue-600 rounded left-0 top-0" style="width:50%"></div>
+                    </div>
+                    <div class="flex justify-between w-full -ml-2">
+                        <div class="flex flex-col items-center">
+                            <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">✓</div>
+                            <span class="text-xs mt-1 text-gray-700">@currentStage</span>
+                        </div>
+                    @if (nextStage != null)
+                        {
+                            <div class="flex flex-col items-center">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs">→</div>
+                                <span class="text-xs mt-1 text-gray-500">@nextStage</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Resume & Info -->
+                <div class="border-t pt-4 flex flex-col space-y-2">
+                    <p class="text-gray-600 text-sm"><b>Applied On:</b> @app.AppliedOn.ToString("dd MMM yyyy")</p>
+                    @if (!string.IsNullOrEmpty(app.InterviewFeedback))
+                    {
+                        <p class="text-gray-700 text-sm"><b>Feedback:</b> @app.InterviewFeedback</p>
+                    }
+                    <p class="text-gray-600 text-sm"><b>Resume:</b> <a href="@app.ResumePath" target="_blank" class="text-indigo-600 hover:underline">View Resume</a></p>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <a asp-controller="JobApplications" asp-action="ViewApplication" asp-route-id="@app.ApplicationId"
+                       class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

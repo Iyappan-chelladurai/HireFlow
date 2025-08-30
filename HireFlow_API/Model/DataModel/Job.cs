@@ -27,6 +27,7 @@ namespace HireFlow_API.Model.DataModel
         public string? EmploymentType { get; set; } // Full-time, Part-time, Internship, etc.
 
         public int Openings { get; set; } = 0;
+        public string Skills { get; set; }
 
         public DateTime PostedOn { get; set; } = DateTime.UtcNow;
 

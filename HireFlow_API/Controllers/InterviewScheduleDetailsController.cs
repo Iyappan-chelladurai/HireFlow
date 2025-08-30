@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HireFlow_API.Model;
+using HireFlow_API.Model.DataModel;
+using HireFlow_API.Model.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HireFlow_API.Model;
-using HireFlow_API.Model.DataModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HireFlow_API.Controllers
 {
@@ -23,9 +24,21 @@ namespace HireFlow_API.Controllers
 
         // GET: api/InterviewScheduleDetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InterviewScheduleDetail>>> GetInterviewScheduleDetails()
+        public async Task<ActionResult<IEnumerable<InterviewDetailsDTO>>> GetInterviewScheduleDetails()
         {
-            return await _context.InterviewScheduleDetails.ToListAsync();
+            return await _context.InterviewScheduleDetails.AsNoTracking()
+                .Select(j => new InterviewDetailsDTO
+                {
+                    InterviewId = j.InterviewId,
+                    ApplicationId = j.ApplicationId,
+                    InterviewerName = j.InterviewerName,
+                    ScheduledDate = j.ScheduledDate,
+                    InterviewFeedback = j.InterviewFeedback,
+                    InterviewMode = j.InterviewMode,
+                    InterviewResult = j.InterviewResult,
+                    IsActive = j.IsActive,
+                    CreatedOn = j.CreatedOn,
+                }).ToListAsync();
         }
 
         // GET: api/InterviewScheduleDetails/5
@@ -76,12 +89,25 @@ namespace HireFlow_API.Controllers
         // POST: api/InterviewScheduleDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<InterviewScheduleDetail>> PostInterviewScheduleDetail(InterviewScheduleDetail interviewScheduleDetail)
+        public async Task<ActionResult<InterviewDetailsDTO>> PostInterviewScheduleDetail(InterviewDetailsDTO interviewScheduleDetail)
         {
-            _context.InterviewScheduleDetails.Add(interviewScheduleDetail);
+
+            var newinterviewScheduleDetail = new InterviewScheduleDetail()
+            {
+                ApplicationId = interviewScheduleDetail.ApplicationId,
+                ScheduledDate = interviewScheduleDetail.ScheduledDate,
+                InterviewerName = interviewScheduleDetail.InterviewerName,
+                InterviewMode = interviewScheduleDetail.InterviewMode,
+                InterviewResult = null,
+                InterviewFeedback = null,
+                IsActive = true,
+                CreatedOn = DateTime.Now,
+            };
+
+            _context.InterviewScheduleDetails.Add(newinterviewScheduleDetail);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetInterviewScheduleDetail", new { id = interviewScheduleDetail.InterviewId }, interviewScheduleDetail);
+            return CreatedAtAction("GetInterviewScheduleDetail", new { id = newinterviewScheduleDetail.InterviewId }, newinterviewScheduleDetail);
         }
 
         // DELETE: api/InterviewScheduleDetails/5

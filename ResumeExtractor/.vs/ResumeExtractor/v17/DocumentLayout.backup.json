@@ -1,17 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\",
+  "WorkspaceRootPath": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|solutionrelative:main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|solutionrelative:requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\ResumeExtractor.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\ResumeExtractor.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{26030DA7-EA5C-4632-A10D-85A88643A849}|ResumeExtractor.pyproj|solutionrelative:ResumeExtractor.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
@@ -22,17 +22,29 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ResumeExtractor.py",
+              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\ResumeExtractor.py",
+              "RelativeDocumentMoniker": "ResumeExtractor.py",
+              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\ResumeExtractor.py",
+              "RelativeToolTip": "ResumeExtractor.py",
+              "ViewState": "AgIAADYAAAAAAAAAAAAQwD0AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-08-16T00:20:24.515Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.py",
-              "DocumentMoniker": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\main.py",
+              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\main.py",
               "RelativeDocumentMoniker": "main.py",
-              "ToolTip": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\main.py",
+              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\main.py",
               "RelativeToolTip": "main.py",
-              "ViewState": "AgIAACkAAAAAAAAAAAAYwC4AAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAAGEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2025-07-26T13:01:29.874Z",
               "EditorCaption": ""
@@ -41,25 +53,14 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "requirements.txt",
-              "DocumentMoniker": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\requirements.txt",
+              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\requirements.txt",
               "RelativeDocumentMoniker": "requirements.txt",
-              "ToolTip": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\requirements.txt",
+              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\ResumeExtractor\\requirements.txt",
               "RelativeToolTip": "requirements.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-07-26T12:11:25.738Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ResumeExtractor.py",
-              "DocumentMoniker": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\ResumeExtractor.py",
-              "RelativeDocumentMoniker": "ResumeExtractor.py",
-              "ToolTip": "C:\\Users\\iyapp\\OneDrive\\Desktop\\Project\\Project\\ResumeExtractor\\ResumeExtractor.py",
-              "RelativeToolTip": "ResumeExtractor.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-07-26T11:57:26.241Z"
+              "WhenOpened": "2025-07-26T12:11:25.738Z",
+              "EditorCaption": ""
             }
           ]
         }

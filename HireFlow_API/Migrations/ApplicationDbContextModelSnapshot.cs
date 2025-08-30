@@ -272,6 +272,10 @@ namespace HireFlow_API.Migrations
                     b.Property<decimal?>("Salary")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Skills")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("JobId");
 
                     b.HasIndex("PostedBy");

@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Job Application Confirmation</title>
+    <style>
+      /* "Enterprise" look inspired by large IT firms: clean, blue-accent header, lots of white space */
+      body { margin:0; padding:0; background:#f5f7fb; font-family:Arial, Helvetica, sans-serif; }
+      table { border-collapse:collapse; }
+      .wrap { width:100%; }
+      .container { width:100%; max-width:680px; margin:0 auto; }
+
+      /* Header */
+      .hdr { background:#ffffff; }
+      .hdr-inner { padding:18px 20px; }
+      .brand-row { width:100%; }
+      .logo { text-align:left; }
+      .logo img { max-width:150px; height:auto; display:block; }
+      .careers { text-align:right; font-size:14px; color:#1f2937; letter-spacing:0.2px; }
+      .accent { height:4px; background:#0b5bd3; line-height:0; font-size:0; }
+
+      /* Card */
+      .body { padding:28px 20px; }
+      .card { background:#ffffff; border-radius:12px; border:1px solid #e6eaf0; box-shadow:0 1px 2px rgba(16,24,40,0.04); }
+      .card-pad { padding:28px 28px 16px; }
+      h1 { margin:0 0 6px; font-size:22px; color:#0b1220; }
+      p { margin:0 0 12px; color:#334155; font-size:15px; line-height:22px; }
+
+      /* Key info band */
+      .info-band { background:#f8fafc; border-top:1px solid #edf2f7; border-bottom:1px solid #edf2f7; }
+      .info-pad { padding:14px 28px; }
+      .item { font-size:14px; color:#1f2937; padding:6px 0; }
+      .item strong { color:#0b1220; }
+
+      /* CTA */
+      .cta-row { padding:18px 28px 28px; text-align:center; }
+      .btn { display:inline-block; background:#0b5bd3; color:#ffffff; text-decoration:none; padding:12px 22px; border-radius:6px; font-size:14px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+      .link { display:inline-block; margin-top:10px; font-size:13px; color:#0b5bd3; text-decoration:underline; }
+
+      /* Footer */
+      .ftr { background:#ffffff; }
+      .ftr-pad { text-align:center; padding:18px 20px 26px; color:#6b7280; font-size:12px; }
+      .ftr a { color:#6b7280; text-decoration:underline; }
+
+      /* Mobile */
+      @media screen and (max-width:600px) {
+        .hdr-inner, .body { padding-left:14px !important; padding-right:14px !important; }
+        .card-pad, .info-pad, .cta-row { padding-left:18px !important; padding-right:18px !important; }
+        .logo, .careers { display:block; text-align:center !important; }
+        .careers { margin-top:8px; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- preheader -->
+    <div style="display:none; max-height:0; overflow:hidden;">We received your application for {{JobTitle}} at {{CompanyName}} (ID: {{ApplicationId}})</div>
+
+    <table role="presentation" class="wrap" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td>
+          <!-- Header -->
+          <table role="presentation" class="hdr" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td>
+                <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td class="hdr-inner">
+                      <table role="presentation" class="brand-row" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td class="logo">
+                            <a href="{{CompanyWebsite}}"><img src="{{LogoUrl}}" alt="{{CompanyName}} Logo"></a>
+                          </td>
+                          <td class="careers">{{CompanyName}} Careers</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr><td class="accent">&nbsp;</td></tr>
+          </table>
+
+          <!-- Body -->
+          <table role="presentation" class="container body" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td>
+                <table role="presentation" class="card" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td class="card-pad">
+                      <h1>Application received</h1>
+                      <p>Hi <strong>{{CandidateName}}</strong>, thank you for applying for <strong>{{JobTitle}}</strong> at <strong>{{CompanyName}}</strong>. We've logged your application and our team will review it shortly.</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="info-band">
+                      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr><td class="info-pad">
+                          <div class="item"><strong>Application ID:</strong> {{ApplicationId}}</div>
+                          <div class="item"><strong>Date:</strong> {{ApplicationDate}}</div>
+                          <div class="item"><strong>Location:</strong> {{JobLocation}}</div>
+                          <div class="item"><strong>Status:</strong> Received – Under review</div>
+                        </td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="card-pad">
+                      <p>Next steps: We typically complete initial screening within <strong>{{SLAReviewWindow}}</strong>. If shortlisted, you’ll receive an invite for the interview process.</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="cta-row">
+                      <a href="{{PortalLink}}" class="btn">View my application</a><br>
+                      <a href="{{JobPostingLink}}" class="link">View job posting</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Footer -->
+          <table role="presentation" class="container ftr" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="ftr-pad">
+                © {{CurrentYear}} {{CompanyName}} • <a href="{{PrivacyPolicyLink}}">Privacy</a><br>
+                {{CompanyAddressLine1}} • {{CompanyAddressLine2}}<br>
+                <a href="{{UnsubscribeLink}}">Unsubscribe</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

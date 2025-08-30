@@ -16,6 +16,7 @@ namespace HireFlow_API.Controllers
             _accountService = accountService;
         }
 
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
@@ -29,6 +30,21 @@ namespace HireFlow_API.Controllers
 
             return Ok(new { Message = "Login successful", JWTToken = token });
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromForm] CreateUserRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var success = await _accountService.RegisterUserAsync(model);
+
+            if (!success.Item1)
+                return BadRequest(success.Item2);
+
+            return Ok("User account created..");
+        }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()

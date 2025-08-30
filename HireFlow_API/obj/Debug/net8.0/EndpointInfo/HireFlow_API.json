@@ -36,6 +36,81 @@
         }
       }
     },
+    "/api/Account/register": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Email",
+                  "FullName",
+                  "Password",
+                  "UserName"
+                ],
+                "type": "object",
+                "properties": {
+                  "UserName": {
+                    "type": "string"
+                  },
+                  "FullName": {
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "PhoneNumber": {
+                    "type": "string"
+                  },
+                  "Password": {
+                    "type": "string"
+                  },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Role": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "UserName": {
+                  "style": "form"
+                },
+                "FullName": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "PhoneNumber": {
+                  "style": "form"
+                },
+                "Password": {
+                  "style": "form"
+                },
+                "ProfileImage": {
+                  "style": "form"
+                },
+                "Role": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Account/logout": {
       "post": {
         "tags": [
@@ -270,7 +345,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InterviewScheduleDetail"
+                    "$ref": "#/components/schemas/InterviewDetailsDTO"
                   }
                 }
               },
@@ -278,7 +353,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InterviewScheduleDetail"
+                    "$ref": "#/components/schemas/InterviewDetailsDTO"
                   }
                 }
               },
@@ -286,7 +361,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InterviewScheduleDetail"
+                    "$ref": "#/components/schemas/InterviewDetailsDTO"
                   }
                 }
               }
@@ -302,17 +377,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterviewScheduleDetail"
+                "$ref": "#/components/schemas/InterviewDetailsDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterviewScheduleDetail"
+                "$ref": "#/components/schemas/InterviewDetailsDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/InterviewScheduleDetail"
+                "$ref": "#/components/schemas/InterviewDetailsDTO"
               }
             }
           }
@@ -323,17 +398,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/InterviewScheduleDetail"
+                  "$ref": "#/components/schemas/InterviewDetailsDTO"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InterviewScheduleDetail"
+                  "$ref": "#/components/schemas/InterviewDetailsDTO"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InterviewScheduleDetail"
+                  "$ref": "#/components/schemas/InterviewDetailsDTO"
                 }
               }
             }
@@ -447,6 +522,16 @@
         "tags": [
           "JobApplications"
         ],
+        "parameters": [
+          {
+            "name": "JobId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -455,7 +540,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/JobApplication"
+                    "$ref": "#/components/schemas/JobApplicationDTO"
                   }
                 }
               },
@@ -463,7 +548,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/JobApplication"
+                    "$ref": "#/components/schemas/JobApplicationDTO"
                   }
                 }
               },
@@ -471,7 +556,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/JobApplication"
+                    "$ref": "#/components/schemas/JobApplicationDTO"
                   }
                 }
               }
@@ -528,6 +613,13 @@
                   "ResumeFile": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "CurrentJobTitle": {
+                    "type": "string"
+                  },
+                  "TotalExperienceYears": {
+                    "type": "integer",
+                    "format": "int32"
                   }
                 }
               },
@@ -563,6 +655,12 @@
                   "style": "form"
                 },
                 "ResumeFile": {
+                  "style": "form"
+                },
+                "CurrentJobTitle": {
+                  "style": "form"
+                },
+                "TotalExperienceYears": {
                   "style": "form"
                 }
               }
@@ -631,97 +729,35 @@
             }
           }
         }
-      },
-      "put": {
+      }
+    },
+    "/api/JobApplications/candidate/{candidateId}": {
+      "get": {
         "tags": [
           "JobApplications"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "candidateId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             }
-          },
-          {
-            "name": "ApplicationId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "CandidateId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "JobId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "ResumePath",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "AppliedOn",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "ApplicationStatus",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "InterviewFeedback",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "OfferSentOn",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "IsOfferAccepted",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "OnboardedOn",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/JobApplications/score": {
+      "post": {
+        "tags": [
+          "JobApplications"
         ],
         "requestBody": {
           "content": {
@@ -729,41 +765,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "ResumeFile": {
+                  "JobDescription": {
+                    "type": "string"
+                  },
+                  "Resume": {
                     "type": "string",
                     "format": "binary"
                   }
                 }
               },
               "encoding": {
-                "ResumeFile": {
+                "JobDescription": {
+                  "style": "form"
+                },
+                "Resume": {
                   "style": "form"
                 }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "JobApplications"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1198,6 +1219,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "skills": {
+            "type": "string",
+            "nullable": true
+          },
           "closingDate": {
             "type": "string",
             "format": "date-time",
@@ -1280,6 +1305,48 @@
               "$ref": "#/components/schemas/CandidateDocumentDetail"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InterviewDetailsDTO": {
+        "type": "object",
+        "properties": {
+          "interviewId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "interviewerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "interviewMode": {
+            "type": "string",
+            "nullable": true
+          },
+          "interviewFeedback": {
+            "type": "string",
+            "nullable": true
+          },
+          "interviewResult": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1380,6 +1447,10 @@
           "openings": {
             "type": "integer",
             "format": "int32"
+          },
+          "skills": {
+            "type": "string",
+            "nullable": true
           },
           "postedOn": {
             "type": "string",
@@ -1525,6 +1596,15 @@
             "type": "string",
             "format": "binary",
             "nullable": true
+          },
+          "currentJobTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalExperienceYears": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1565,6 +1645,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "skills": {
+            "type": "string",
+            "nullable": true
+          },
           "postedOn": {
             "type": "string",
             "format": "date-time"
@@ -1580,6 +1664,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "candidateCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1692,6 +1780,10 @@
           "openings": {
             "type": "integer",
             "format": "int32"
+          },
+          "skills": {
+            "type": "string",
+            "nullable": true
           },
           "closingDate": {
             "type": "string",

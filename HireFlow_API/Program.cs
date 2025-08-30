@@ -26,6 +26,7 @@ builder.Services.AddIdentity<UserAccount, IdentityRole<Guid>>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<JwtTokenService>();
+
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
@@ -34,6 +35,9 @@ builder.Services.AddScoped<IJobApplicationService,  JobApplicationService>();
 
 builder.Services.AddScoped<IJobRepository,  JobRepository>();
 builder.Services.AddScoped<IJobService,  JobService>();
+
+builder.Services.AddScoped<ICandidateDocumentsRepository, CandidateDocumentsRepository>();
+builder.Services.AddScoped<ICandidateDocumentsService, CandidateDocumentsService>();
 
 
 
@@ -57,6 +61,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
+        
         Description = "Enter 'Bearer' [space] and then your valid JWT token.\nExample: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     });
 

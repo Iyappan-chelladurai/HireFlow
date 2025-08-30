@@ -46,6 +46,52 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "HireFlow_API.Controllers.AccountController",
+    "Method": "Register",
+    "RelativePath": "api/Account/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "UserName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FullName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PhoneNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Password",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ProfileImage",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "Role",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HireFlow_API.Controllers.DocumentTypesController",
     "Method": "GetDocumentTypes",
     "RelativePath": "api/DocumentTypes",
@@ -164,7 +210,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DataModel.InterviewScheduleDetail, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DTOs.InterviewDetailsDTO, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -184,13 +230,13 @@
     "Parameters": [
       {
         "Name": "interviewScheduleDetail",
-        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "Type": "HireFlow_API.Model.DTOs.InterviewDetailsDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "HireFlow_API.Model.DataModel.InterviewScheduleDetail",
+        "Type": "HireFlow_API.Model.DTOs.InterviewDetailsDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -270,10 +316,16 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "JobId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DataModel.JobApplication, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[HireFlow_API.Model.DTOs.JobApplicationDTO, HireFlow_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -345,6 +397,16 @@
         "Name": "ResumeFile",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      },
+      {
+        "Name": "CurrentJobTitle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "TotalExperienceYears",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -387,87 +449,37 @@
   },
   {
     "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
-    "Method": "UpdateApplication",
-    "RelativePath": "api/JobApplications/{id}",
-    "HttpMethod": "PUT",
+    "Method": "GetApplicationsByCandidateId",
+    "RelativePath": "api/JobApplications/candidate/{candidateId}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "candidateId",
         "Type": "System.Guid",
         "IsRequired": true
-      },
-      {
-        "Name": "ApplicationId",
-        "Type": "System.Guid",
-        "IsRequired": false
-      },
-      {
-        "Name": "CandidateId",
-        "Type": "System.Guid",
-        "IsRequired": false
-      },
-      {
-        "Name": "JobId",
-        "Type": "System.Guid",
-        "IsRequired": false
-      },
-      {
-        "Name": "ResumePath",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "AppliedOn",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "ApplicationStatus",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "InterviewFeedback",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "OfferSentOn",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "IsOfferAccepted",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      },
-      {
-        "Name": "OnboardedOn",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "ResumeFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
-    "Method": "CancelApplication",
-    "RelativePath": "api/JobApplications/{id}",
-    "HttpMethod": "DELETE",
+    "Method": "ScoreCandidate",
+    "RelativePath": "api/JobApplications/score",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Guid",
-        "IsRequired": true
+        "Name": "JobDescription",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Resume",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

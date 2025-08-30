@@ -1,6 +1,7 @@
 ﻿using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -9,13 +10,15 @@ namespace HireFlow_API.Repositories
     public interface IJobApplicationRepository
     {
        
-            Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync();
+            Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync(Guid JobId);
             Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
             Task AddNewApplicationAsync(JobApplicationDTO jobApplicationDto);
             Task UpdateApplicationInfoAsync(JobApplicationDTO jobApplicationDto);
             Task DeleteApplicationByIdAsync(Guid applicationId);
             Task<bool> IsApplicationExistsAsync(Guid applicationId);
-       
+
+        Task<IEnumerable<JobApplicationResponseDTO>> GetByCandidateIdAsync(Guid candidateId);
+
     }
 
     public class JobApplicationRepository : IJobApplicationRepository
@@ -27,11 +30,30 @@ namespace HireFlow_API.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync()
+        public async Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync(Guid jobId)
         {
-            var applications = await _context.JobApplications.ToListAsync();
-            return applications.Select(a => MapEntityToDTO(a));
+            var applications = await _context.JobApplications
+                .Where(a => a.JobId == jobId)
+                .ToListAsync();
+
+            // Map to DTO
+            var applicationDTOs = applications.Select(entity => new JobApplicationDTO
+            {
+                ApplicationId = entity.ApplicationId,
+                CandidateId = entity.CandidateId,
+                JobId = entity.JobId,
+                ResumePath = entity.ResumePath,
+                AppliedOn = entity.AppliedOn,
+                ApplicationStatus = entity.ApplicationStatus,
+                InterviewFeedback = entity.InterviewFeedback,
+                OfferSentOn = entity.OfferSentOn,
+                IsOfferAccepted = entity.IsOfferAccepted,
+                OnboardedOn = entity.OnboardedOn
+            }).ToList();
+
+            return applicationDTOs;
         }
+
 
         public async Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId)
         {
@@ -41,10 +63,18 @@ namespace HireFlow_API.Repositories
 
         public async Task AddNewApplicationAsync(JobApplicationDTO jobApplicationDto)
         {
-            var entity = MapDTOToEntity(jobApplicationDto);
-            entity.ApplicationId = Guid.NewGuid();  
-            entity.AppliedOn = DateTime.UtcNow; 
 
+            var entity = new JobApplication
+            {
+                ApplicationId = Guid.NewGuid(),
+                CandidateId = jobApplicationDto.CandidateId,
+                JobId = jobApplicationDto.JobId,
+                ResumePath = jobApplicationDto.ResumePath,
+                AppliedOn = DateTime.UtcNow,
+                ApplicationStatus = JobApplicationStatus.Applied.ToString(),
+            };
+
+          
             _context.JobApplications.Add(entity);
             await _context.SaveChangesAsync();
         }
@@ -119,6 +149,31 @@ namespace HireFlow_API.Repositories
                 OnboardedOn = dto.OnboardedOn
             };
         }
+
+        public async Task<IEnumerable<JobApplicationResponseDTO>> GetByCandidateIdAsync(Guid candidateId)
+        {
+
+            var data = await _context.JobApplications
+                .Where(app => app.CandidateId == candidateId)
+                .Include(app => app.Job)
+                 .Select(app => new JobApplicationResponseDTO
+                 {
+                     ApplicationId = app.ApplicationId,
+                     CandidateId = app.CandidateId,
+                     JobId = app.JobId,
+                     ResumePath = app.ResumePath,
+                     AppliedOn = app.AppliedOn,
+                     ApplicationStatus = app.ApplicationStatus,
+                     InterviewFeedback = app.InterviewFeedback,
+                     OfferSentOn = app.OfferSentOn,
+                     IsOfferAccepted = app.IsOfferAccepted,
+                     OnboardedOn = app.OnboardedOn,
+                     JobTitle = app.Job.JobTitle
+                 }).ToListAsync();
+
+            return data;
+        }
+
     }
 
 

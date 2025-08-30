@@ -1,11 +1,16 @@
-﻿using HireFlow_API.Model.DataModel;
+﻿using HireFlow_API.Model;
+using HireFlow_API.Model.DataModel;
 using HireFlow_API.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Data;
 
 namespace HireFlow_API.Repositories
 {
     public interface IAccountRepository
     {
+        Task<string> CreateUserAsync(UserAccount user, string password, string role);
         Task<string?> LoginAsync(string email, string password, bool rememberMe);
         Task LogoutAsync();
         Task<bool> CreateRolesAsync(string[] roles);
@@ -19,16 +24,44 @@ namespace HireFlow_API.Repositories
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly JwtTokenService _jwtTokenService;
 
+        private readonly ApplicationDbContext _context;
+
         public AccountRepository(
             UserManager<UserAccount> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             SignInManager<UserAccount> signInManager,
-            JwtTokenService jwtTokenService)
+            JwtTokenService jwtTokenService,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _jwtTokenService = jwtTokenService;
+            _context = context;
+        }
+
+
+        public async Task<string> CreateUserAsync(UserAccount user, string password ,string role)
+        {
+            var result = await _userManager.CreateAsync(user, password);
+
+            await _userManager.AddToRoleAsync(user, role);
+
+            if (role.ToLower()  == "candidate")
+            {
+                ICandidateDetailRepository candidateDetailRepository = new CandidateDetailRepository(_context);
+                await candidateDetailRepository.CreateCandidateAsync(user);
+            }
+
+
+            if (result.Succeeded)
+            {
+                return $"User '{user.UserName}' created ";
+            }
+
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+            return $"Failed to create user: {errors}";
         }
 
         public async Task<string?> LoginAsync(string email, string password, bool rememberMe)
@@ -41,8 +74,10 @@ namespace HireFlow_API.Repositories
             if (!result.Succeeded)
                 return null;
 
+            var candidate =  _context.CandidateDetails.Where(a=>a.UserId == user.Id).FirstOrDefault();
+
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _jwtTokenService.GenerateToken(user.Id, user.UserName, roles.FirstOrDefault());
+            var token = _jwtTokenService.GenerateToken(user, candidate,  roles.FirstOrDefault());
             return token;
         }
 

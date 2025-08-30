@@ -1,42 +1,134 @@
 ﻿@model HireFlow_MVC.Models.LoginViewModel
-
 @{
-    ViewData["Title"] = "Login";
+    Layout = null;
 }
 
-<h1>Login</h1>
-<h4>LoginViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Custom animation for fade-in + slide-up */
+        @@keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+   /*      .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        } */
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50">
+
+    <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-gray-100 animate-fadeInUp">
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+            <img src="images/hireflow_Name.png" alt="Company Logo" class="h-14 w-auto " />
+        </div>
+
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Welcome Back</h1>
+
+        <form asp-action="Login" class="space-y-5">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+            <!-- Email -->
+            <div>
+                <label asp-for="Email" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <input asp-for="Email" placeholder="Email" class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all duration-200" />
+                <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+
+            <!-- Password -->
+          <!-- Password Field with Toggle -->
+<div class="relative">
+    <label asp-for="Password" class="block text-sm font-medium text-gray-700 mb-1"></label>
+    
+    <input asp-for="Password" placeholder="password" type="password" id="password" 
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+    <span asp-validation-for="Password" class="text-red-500 text-sm"></span>
+    
+    <!-- Eye Icon -->
+    <button type="button" id="togglePassword" 
+        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600">
+        <!-- Heroicon: Eye -->
+        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" 
+            class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5
+                   c4.477 0 8.268 2.943 9.542 7
+                   -1.274 4.057-5.065 7-9.542 7
+                   -4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+    </button>
+</div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center">
+                <input asp-for="RememberMe" class="h-4 w-4 text-indigo-500 border-gray-300 rounded focus:ring-indigo-300" />
+                <label asp-for="RememberMe" class="ml-2 block text-sm text-gray-700"></label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <!-- Submit Button -->
+            <div>
+                <input type="submit" value="Login" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm  hover:cursor-pointer hover:shadow-md" />
             </div>
         </form>
+
+        <div class="mt-6 text-center">
+            <a asp-action="Register" class="text-indigo-500 hover:underline text-sm transition-colors duration-200">Create an account</a>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        const passwordInput = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+        
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            // Change to Eye-Off Icon
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19
+                       c-4.477 0-8.268-2.943-9.542-7
+                       a10.05 10.05 0 012.142-3.568M9.88 9.88
+                       a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />`;
+        } else {
+            passwordInput.type = "password";
+            // Change to Eye Icon
+            eyeIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       -1.274 4.057-5.065 7-9.542 7
+                       -4.477 0-8.268-2.943-9.542-7z" />`;
+        }
+    });
+</script>
+
+</body>
+</html>

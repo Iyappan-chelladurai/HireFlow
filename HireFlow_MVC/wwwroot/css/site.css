@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* site.css */
+.input-field {
+    @apply mt-1 pl-10 w-full rounded-lg border-gray-300 shadow-sm bg-gray-50 hover:bg-white focus:border-blue-500 focus:ring focus:ring-blue-200 transition;
+}

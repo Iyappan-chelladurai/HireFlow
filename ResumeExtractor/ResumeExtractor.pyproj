@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>ResumeExtractor</Name>
     <RootNamespace>ResumeExtractor</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

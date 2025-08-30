@@ -19,6 +19,8 @@ namespace HireFlow_MVC.Models
         [MaxLength(500)]
         public string? ResumePath { get; set; }
 
+        public IFormFile? ResumeFile { get; set; }
+
         [DataType(DataType.DateTime)]
         public DateTime AppliedOn { get; set; }
 
@@ -35,5 +37,9 @@ namespace HireFlow_MVC.Models
 
         [DataType(DataType.DateTime)]
         public DateTime? OnboardedOn { get; set; }
+
+        public string? CurrentJobTitle { get; set; }
+        public int? TotalExperienceYears { get; set; }
+
     }
 }

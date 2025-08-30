@@ -28,6 +28,10 @@ namespace HireFlow_MVC.Models
         public int Openings { get; set; }
 
         public DateTime? ClosingDate { get; set; }
+
+        public JobApplicationViewModel? NewApplicationViewData { get; set; } = new JobApplicationViewModel();
+
+
     }
 
 }

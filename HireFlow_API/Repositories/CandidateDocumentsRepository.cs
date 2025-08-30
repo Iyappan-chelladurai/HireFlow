@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireFlow_API.Repositories
 {
-    interface ICandidateDocumentsRepository
+   public  interface ICandidateDocumentsRepository
     {
         Task<IEnumerable<CandidateDocumentDetail>> GetAllAsync();
         Task<CandidateDocumentDetail> GetByIdAsync(Guid id);
