@@ -19,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HireFlowConnection")));
 
-
 // Add Identity with GUID-based user and role
 builder.Services.AddIdentity<UserAccount, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -38,6 +37,9 @@ builder.Services.AddScoped<IJobService,  JobService>();
 
 builder.Services.AddScoped<ICandidateDocumentsRepository, CandidateDocumentsRepository>();
 builder.Services.AddScoped<ICandidateDocumentsService, CandidateDocumentsService>();
+
+// Register IHttpClientFactory
+builder.Services.AddHttpClient();
 
 
 

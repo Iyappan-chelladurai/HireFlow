@@ -1,10 +1,10 @@
-wwwroot\uploads\f30f68b0-0805-4f03-924b-6b349c858da1.png
+wwwroot\Email\Interveiw.html
+wwwroot\Email\Selected.html
+wwwroot\Email\Shortlisted.html
 wwwroot\uploads\23757205-6cab-497a-bf0d-cb5437e46e04.png
-wwwroot\uploads\ff54be19-c5e5-4acd-8895-12830bc73ecf.png
-wwwroot\uploads\aded568c-6c65-4e9a-b589-3445ba2ac10f.png
 wwwroot\uploads\8e39cb08-adc8-41ad-98c5-a825f1e4bd0c.png
 wwwroot\uploads\a9c995c9-e18b-4701-9ced-44e9ecb5e29d.png
-wwwroot\Email\Shortlisted.html
-wwwroot\Email\Selected.html
-wwwroot\Email\Interveiw.html
+wwwroot\uploads\aded568c-6c65-4e9a-b589-3445ba2ac10f.png
+wwwroot\uploads\f30f68b0-0805-4f03-924b-6b349c858da1.png
+wwwroot\uploads\ff54be19-c5e5-4acd-8895-12830bc73ecf.png
 wwwroot\Email\JobApplied.html

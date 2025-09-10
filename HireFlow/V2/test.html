@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candidate Application Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #1e293b;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --light: #f1f5f9;
+      --dark: #0f172a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .app-content {
+      margin-top: 24px;
+      display: flex;
+      gap: 24px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      flex: 0 0 250px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+      padding: 14px 20px;
+      margin: 4px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--secondary);
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+
+    .nav-item:hover {
+      background: var(--light);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--light);
+      padding-bottom: 8px;
+    }
+
+    /* Progress tracker */
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0 30px;
+      position: relative;
+    }
+    .progress-steps::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--light);
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+    .step {
+      z-index: 1;
+      background: var(--light);
+      border: 2px solid var(--light);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .step.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .step.completed {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 15px;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    .upload-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+    .upload-box:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .btn-block {
+      width: 100%;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Summary */
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+    .badge-success { background: var(--success); }
+    .badge-warning { background: var(--warning); }
+    .badge-danger { background: var(--danger); }
+
+    @media(max-width: 768px) {
+      .app-content { flex-direction: column; }
+      .sidebar { flex: 0 0 auto; }
+      .nav-item span { display: none; } /* icons only */
+      .nav-item { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">Candidate Application Portal</div>
+      <div class="user-info">
+        <div class="avatar">JD</div>
+        <span>John Doe</span>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="nav-item active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div>
+        <div class="nav-item" data-page="details"><i class="fas fa-user"></i><span>Details</span></div>
+        <div class="nav-item" data-page="documents"><i class="fas fa-file-upload"></i><span>Documents</span></div>
+        <div class="nav-item" data-page="witness"><i class="fas fa-signature"></i><span>Witness</span></div>
+        <div class="nav-item" data-page="submission"><i class="fas fa-check-circle"></i><span>Submission</span></div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Dashboard -->
+        <div class="page active" id="dashboard">
+          <h2 class="section-title">Progress Overview</h2>
+          <div class="progress-steps">
+            <div class="step completed">1</div>
+            <div class="step active">2</div>
+            <div class="step">3</div>
+            <div class="step">4</div>
+          </div>
+          <div class="card">
+            <h3>Action Required</h3>
+            <p>Please upload your documents and complete witness signature.</p>
+          </div>
+          <button class="btn btn-primary btn-block" id="continueBtn">Continue Application</button>
+        </div>
+
+        <!-- Candidate Details -->
+        <div class="page" id="details">
+          <h2 class="section-title">Candidate Details</h2>
+          <div class="card">
+            <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-control" placeholder="Enter full name"></div>
+            <div class="form-group"><label class="form-label">Date of Birth</label><input type="date" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="Enter email"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-control" placeholder="Enter phone number"></div>
+            <div class="form-group"><label class="form-label">Address</label><textarea class="form-control" rows="3"></textarea></div>
+            <button class="btn btn-primary">Save & Next</button>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="page" id="documents">
+          <h2 class="section-title">Document Upload</h2>
+          <div class="card upload-box"><i class="fas fa-cloud-upload-alt fa-2x" style="color:var(--primary)"></i><p>Upload Photo & Signature</p><button class="btn btn-primary">Select File</button></div>
+          <div class="card upload-box"><i class="fas fa-cloud-upload-alt fa-2x" style="color:var(--primary)"></i><p>Upload ID Proof</p><button class="btn btn-primary">Select File</button></div>
+          <div class="card upload-box"><i class="fas fa-cloud-upload-alt fa-2x" style="color:var(--primary)"></i><p>Upload Certificates</p><button class="btn btn-primary">Select File</button></div>
+          <button class="btn btn-primary btn-block">Save & Next</button>
+        </div>
+
+        <!-- Witness -->
+        <div class="page" id="witness">
+          <h2 class="section-title">Witness Signature</h2>
+          <div class="card">
+            <div class="form-group"><label class="form-label">Witness Name</label><input type="text" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Relationship</label><input type="text" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Contact</label><input type="tel" class="form-control"></div>
+            <div class="upload-box"><i class="fas fa-pen fa-2x" style="color:var(--primary)"></i><p>Upload or Draw Signature</p><button class="btn btn-primary">Add Signature</button></div>
+            <button class="btn btn-primary btn-block">Save & Next</button>
+          </div>
+        </div>
+
+        <!-- Submission -->
+        <div class="page" id="submission">
+          <h2 class="section-title">Final Submission</h2>
+          <div class="card">
+            <h3>Summary</h3>
+            <div class="summary-item"><span>Name:</span><span>John Doe</span></div>
+            <div class="summary-item"><span>Email:</span><span>john.doe@example.com</span></div>
+            <div class="summary-item"><span>Education:</span><span>MBA</span></div>
+          </div>
+          <div class="card">
+            <h3>Checklist</h3>
+            <div class="summary-item"><span>Personal Details</span><span class="badge badge-success">Done</span></div>
+            <div class="summary-item"><span>Documents</span><span class="badge badge-success">Done</span></div>
+            <div class="summary-item"><span>Witness</span><span class="badge badge-success">Done</span></div>
+          </div>
+          <button class="btn btn-primary btn-block">Submit Application</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const navItems = document.querySelectorAll(".nav-item");
+      const pages = document.querySelectorAll(".page");
+      navItems.forEach(item => {
+        item.addEventListener("click", () => {
+          navItems.forEach(i => i.classList.remove("active"));
+          item.classList.add("active");
+          const target = item.getAttribute("data-page");
+          pages.forEach(p => {
+            p.classList.remove("active");
+            if (p.id === target) p.classList.add("active");
+          });
+        });
+      });
+      document.getElementById("continueBtn").addEventListener("click", () => {
+        document.querySelector('[data-page="documents"]').click();
+      });
+    });
+  </script>
+</body>
+</html>

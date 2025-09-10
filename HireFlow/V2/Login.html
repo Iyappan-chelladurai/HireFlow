@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModernTech Solutions | Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7e22ce;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-cta {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-cta:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .nav-cta::after {
+            display: none;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 120px 20px 60px;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .auth-subtitle {
+            opacity: 0.9;
+        }
+        
+        .auth-body {
+            padding: 30px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .password-toggle {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .forgot-password {
+            color: var(--primary);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary-dark);
+        }
+        
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--gray);
+        }
+        
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #e2e8f0;
+        }
+        
+        .auth-divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+        
+        .social-auth {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .social-button {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .social-button:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .social-icon {
+            font-size: 1.2rem;
+        }
+        
+        .google-icon {
+            color: #DB4437;
+        }
+        
+        .facebook-icon {
+            color: #4267B2;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .auth-footer a:hover {
+            color: var(--primary-dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-description {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .footer-link {
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            opacity: 1;
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .auth-container {
+                padding: 100px 20px 40px;
+            }
+            
+            .social-auth {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .auth-header {
+                padding: 20px;
+            }
+            
+            .auth-body {
+                padding: 20px;
+            }
+            
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Modern<span>Tech</span></a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#careers" class="nav-link">Careers</a></li>
+                    <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="index.html#contact" class="nav-link nav-cta">Contact Us</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 class="auth-title">Welcome to ModernTech</h2>
+                <p class="auth-subtitle">Sign in to access your account</p>
+            </div>
+            
+            <div class="auth-body">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="login-tab">Login</div>
+                    <div class="auth-tab" id="register-tab">Register</div>
+                </div>
+                
+                <!-- Login Form -->
+                <form class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Email Address</label>
+                        <input type="email" id="login-email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required>
+                            <span class="toggle-password" id="toggle-login-password">
+                                <i class="far fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="auth-button">Login to Account</button>
+                </form>
+                
+                <!-- Register Form (Initially Hidden) -->
+                <form class="auth-form" id="register-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-name" class="form-label">Full Name</label>
+                        <input type="text" id="register-name" class="form-input" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-email" class="form-label">Email Address</label>
+                        <input type="email" id="register-email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password" class="form-label">Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="register-password" class="form-input" placeholder="Create a password" required>
+                            <span class="toggle-password" id="toggle-register-password">
+                                <i class="far fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-confirm-password" class="form-label">Confirm Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="register-confirm-password" class="form-input" placeholder="Confirm your password" required>
+                            <span class="toggle-password" id="toggle-register-confirm-password">
+                                <i class="far fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" required>
+                            <span>I agree to the <a href="#" style="color: var(--primary);">Terms & Conditions</a></span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-button">Create Account</button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>Or continue with</span>
+                </div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-button">
+                        <i class="fab fa-google google-icon social-icon"></i>
+                    </button>
+                    <button type="button" class="social-button">
+                        <i class="fab fa-facebook-f facebook-icon social-icon"></i>
+                    </button>
+                </div>
+                
+                <div class="auth-footer" id="login-footer">
+                    <p>Don't have an account? <a href="#" id="switch-to-register">Sign up</a></p>
+                </div>
+                
+                <div class="auth-footer" id="register-footer" style="display: none;">
+                    <p>Already have an account? <a href="#" id="switch-to-login">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">ModernTech</a>
+                    <p class="footer-description">Providing innovative technology solutions to businesses worldwide since 2010.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about" class="footer-link">About Us</a></li>
+                        <li><a href="index.html#careers" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Blog</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#services" class="footer-link">Web Development</a></li>
+                        <li><a href="index.html#services" class="footer-link">App Development</a></li>
+                        <li><a href="index.html#services" class="footer-link">Cloud Solutions</a></li>
+                        <li><a href="index.html#services" class="footer-link">Data Analytics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">info@moderntech.com</a></li>
+                        <li><a href="#" class="footer-link">+1 (555) 123-4567</a></li>
+                        <li><a href="#" class="footer-link">123 Tech Street, San Francisco, CA 94103</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 ModernTech Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle between login and register forms
+        document.getElementById('switch-to-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterForm();
+        });
+        
+        document.getElementById('switch-to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+        
+        document.getElementById('login-tab').addEventListener('click', function() {
+            showLoginForm();
+        });
+        
+        document.getElementById('register-tab').addEventListener('click', function() {
+            showRegisterForm();
+        });
+        
+        function showLoginForm() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-footer').style.display = 'block';
+            document.getElementById('register-footer').style.display = 'none';
+            document.getElementById('login-tab').classList.add('active');
+            document.getElementById('register-tab').classList.remove('active');
+        }
+        
+        function showRegisterForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+            document.getElementById('login-footer').style.display = 'none';
+            document.getElementById('register-footer').style.display = 'block';
+            document.getElementById('login-tab').classList.remove('active');
+            document.getElementById('register-tab').classList.add('active');
+        }
+        
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        // Form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your login logic here
+            alert('Login functionality would be implemented here!');
+        });
+        
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your registration logic here
+            alert('Registration functionality would be implemented here!');
+        });
+        
+        // Mobile menu toggle
+        document.querySelector('.mobile-toggle').addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+    </script>
+</body>
+</html>

@@ -594,6 +594,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "HireFlow_API.Controllers.JobsController",
+    "Method": "GenerateJobDescription",
+    "RelativePath": "api/Jobs/generate-jd",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "job",
+        "Type": "HireFlow_API.Model.DTOs.CreateJobDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HireFlow_API.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

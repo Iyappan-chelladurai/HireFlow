@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Opportunities | ModernTech Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7e22ce;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-cta {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-cta:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .nav-cta::after {
+            display: none;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Page Header */
+        .page-header {
+            padding: 150px 0 80px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Job Listings */
+        .job-listings {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .job-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .job-item {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .job-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .job-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .job-details {
+            display: flex;
+            gap: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .job-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .job-tag {
+            background-color: #e0f2fe;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Button Styles - Added missing styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Application Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .application-modal {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            transform: translateY(50px);
+            transition: transform 0.5s;
+        }
+        
+        .modal-overlay.active .application-modal {
+            transform: translateY(0);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--dark);
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .modal-subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+        
+        .application-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-input.error, .form-select.error, .form-textarea.error {
+            border-color: var(--error);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload-label:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-upload-label.has-file {
+            border-color: var(--success);
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-text {
+            color: var(--gray);
+        }
+        
+        .file-upload-text strong {
+            color: var(--primary);
+        }
+        
+        .form-submit {
+            grid-column: 1 / -1;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .form-submit:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 80px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-description {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .footer-link {
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            opacity: 1;
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .job-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .job-details {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                display: none;
+                gap: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .page-header {
+                padding: 130px 0 60px;
+            }
+            
+            .page-title {
+                font-size: 2.3rem;
+            }
+            
+            .application-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .application-modal {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Modern<span>Tech</span></a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="jobs.html" class="nav-link">Careers</a></li>
+                    <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="index.html#contact" class="nav-link nav-cta">Contact Us</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Join Our Team</h1>
+            <p class="page-subtitle">Explore exciting career opportunities at ModernTech and be part of a team that's shaping the future of technology.</p>
+        </div>
+    </section>
+
+    <!-- Job Listings -->
+    <section class="job-listings">
+        <div class="container">
+            <div class="filters">
+                <select class="filter-select" id="department-filter">
+                    <option value="all">All Departments</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="design">Design</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="operations">Operations</option>
+                </select>
+                
+                <select class="filter-select" id="location-filter">
+                    <option value="all">All Locations</option>
+                    <option value="remote">Remote</option>
+                    <option value="san-francisco">San Francisco</option>
+                    <option value="new-york">New York</option>
+                    <option value="london">London</option>
+                </select>
+                
+                <select class="filter-select" id="type-filter">
+                    <option value="all">All Job Types</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="contract">Contract</option>
+                    <option value="internship">Internship</option>
+                </select>
+            </div>
+            
+            <div class="job-list">
+                <div class="job-item" data-department="engineering" data-location="remote" data-type="full-time">
+                    <div class="job-info">
+                        <h3>Senior Frontend Developer</h3>
+                        <p>We're looking for an experienced frontend developer to join our product team and help build innovative user interfaces.</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                            <span><i class="fas fa-briefcase"></i> Full-time</span>
+                            <span><i class="fas fa-dollar-sign"></i> $100,000 - $140,000</span>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">React</span>
+                            <span class="job-tag">TypeScript</span>
+                            <span class="job-tag">CSS</span>
+                        </div>
+                    </div>
+                    <div class="job-apply">
+                        <a href="#" class="btn btn-primary apply-btn" data-job="Senior Frontend Developer">Apply Now</a>
+                    </div>
+                </div>
+                
+                <div class="job-item" data-department="engineering" data-location="san-francisco" data-type="full-time">
+                    <div class="job-info">
+                        <h3>DevOps Engineer</h3>
+                        <p>Join our infrastructure team to build and maintain scalable, reliable cloud systems and deployment pipelines.</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-map-marker-alt"></i> San Francisco, CA</span>
+                            <span><i class="fas fa-briefcase"></i> Full-time</span>
+                            <span><i class="fas fa-dollar-sign"></i> $120,000 - $160,000</span>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">AWS</span>
+                            <span class="job-tag">Kubernetes</span>
+                            <span class="job-tag">Docker</span>
+                        </div>
+                    </div>
+                    <div class="job-apply">
+                        <a href="#" class="btn btn-primary apply-btn" data-job="DevOps Engineer">Apply Now</a>
+                    </div>
+                </div>
+                
+                <div class="job-item" data-department="design" data-location="new-york" data-type="full-time">
+                    <div class="job-info">
+                        <h3>UX/UI Designer</h3>
+                        <p>Help create beautiful, intuitive user experiences for our products and services across multiple platforms.</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-map-marker-alt"></i> New York, NY</span>
+                            <span><i class="fas fa-briefcase"></i> Full-time</span>
+                            <span><i class="fas fa-dollar-sign"></i> $90,000 - $120,000</span>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">Figma</span>
+                            <span class="job-tag">User Research</span>
+                            <span class="job-tag">Prototyping</span>
+                        </div>
+                    </div>
+                    <div class="job-apply">
+                        <a href="#" class="btn btn-primary apply-btn" data-job="UX/UI Designer">Apply Now</a>
+                    </div>
+                </div>
+                
+                <div class="job-item" data-department="engineering" data-location="remote" data-type="full-time">
+                    <div class="job-info">
+                        <h3>Data Scientist</h3>
+                        <p>Work with our data team to extract insights from complex datasets and build machine learning models.</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                            <span><i class="fas fa-briefcase"></i> Full-time</span>
+                            <span><i class="fas fa-dollar-sign"></i> $110,000 - $150,000</span>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">Python</span>
+                            <span class="job-tag">Machine Learning</span>
+                            <span class="job-tag">SQL</span>
+                        </div>
+                    </div>
+                    <div class="job-apply">
+                        <a href="#" class="btn btn-primary apply-btn" data-job="Data Scientist">Apply Now</a>
+                    </div>
+                </div>
+                
+                <div class="job-item" data-department="operations" data-location="remote" data-type="full-time">
+                    <div class="job-info">
+                        <h3>Product Manager</h3>
+                        <p>Lead product development initiatives and work with cross-functional teams to deliver customer value.</p>
+                        <div class="job-details">
+                            <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                            <span><i class="fas fa-briefcase"></i> Full-time</span>
+                            <span><i class="fas fa-dollar-sign"></i> $130,000 - $160,000</span>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">Product Strategy</span>
+                            <span class="job-tag">Agile</span>
+                            <span class="job-tag">User Stories</span>
+                        </div>
+                    </div>
+                    <div class="job-apply">
+                        <a href="#" class="btn btn-primary apply-btn" data-job="Product Manager">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Modal -->
+    <div class="modal-overlay" id="application-modal">
+        <div class="application-modal">
+            <span class="modal-close">&times;</span>
+            <h2 class="modal-title">Apply for <span id="modal-job-title">Position</span></h2>
+            <p class="modal-subtitle">Fill out the form below to submit your application.</p>
+            
+            <form class="application-form" id="job-application-form">
+                <input type="hidden" id="position-applied" name="position">
+                
+                <div class="form-group">
+                    <label for="first-name" class="form-label">First Name</label>
+                    <input type="text" id="first-name" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last-name" class="form-label">Last Name</label>
+                    <input type="text" id="last-name" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="phone" class="form-input" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="current-employment" class="form-label">Current Employment Details</label>
+                    <textarea id="current-employment" class="form-textarea" placeholder="Current company, position, and key responsibilities" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience" class="form-label">Years of Experience</label>
+                    <select id="experience" class="form-select" required>
+                        <option value="">Select experience</option>
+                        <option value="0-2">0-2 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="6-10">6-10 years</option>
+                        <option value="10+">10+ years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="education" class="form-label">Highest Education</label>
+                    <select id="education" class="form-select" required>
+                        <option value="">Select education</option>
+                        <option value="high-school">High School</option>
+                        <option value="associate">Associate Degree</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">PhD</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="cover-letter" class="form-label">Cover Letter</label>
+                    <textarea id="cover-letter" class="form-textarea" placeholder="Why are you interested in this position?" required></textarea>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label class="form-label">Upload Resume</label>
+                    <div class="file-upload">
+                        <input type="file" id="resume" class="file-upload-input" accept=".pdf,.doc,.docx" required>
+                        <label for="resume" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                            <span class="file-upload-text">Drop your resume here or <strong>browse</strong></span>
+                            <span class="file-upload-text" id="file-name">Max file size: 5MB (PDF, DOC, DOCX)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="form-submit">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">ModernTech</a>
+                    <p class="footer-description">Providing innovative technology solutions to businesses worldwide since 2010.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#about" class="footer-link">About Us</a></li>
+                        <li><a href="jobs.html" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Blog</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#services" class="footer-link">Web Development</a></li>
+                        <li><a href="index.html#services" class="footer-link">App Development</a></li>
+                        <li><a href="index.html#services" class="footer-link">Cloud Solutions</a></li>
+                        <li><a href="index.html#services" class="footer-link">Data Analytics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h3 class="footer-title">Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@moderntech.com" class="footer-link">info@moderntech.com</a></li>
+                        <li><a href="tel:+15551234567" class="footer-link">+1 (555) 123-4567</a></li>
+                        <li><a href="#" class="footer-link">123 Tech Street, San Francisco, CA 94103</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 ModernTech Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-toggle').addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Application modal functionality
+        const applyButtons = document.querySelectorAll('.apply-btn');
+        const applicationModal = document.getElementById('application-modal');
+        const modalJobTitle = document.getElementById('modal-job-title');
+        const positionApplied = document.getElementById('position-applied');
+        const modalClose = document.querySelector('.modal-close');
+        
+        applyButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const jobTitle = this.getAttribute('data-job');
+                modalJobTitle.textContent = jobTitle;
+                positionApplied.value = jobTitle;
+                applicationModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        modalClose.addEventListener('click', function() {
+            applicationModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        applicationModal.addEventListener('click', function(e) {
+            if (e.target === applicationModal) {
+                applicationModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Form submission
+        const applicationForm = document.getElementById('job-application-form');
+        const formInputs = applicationForm.querySelectorAll('.form-input, .form-select, .form-textarea');
+        
+        // Add validation styling
+        formInputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value) {
+                    this.classList.add('error');
+                } else {
+                    this.classList.remove('error');
+                }
+            });
+        });
+        
+        applicationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Validate all required fields
+            formInputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.value) {
+                    input.classList.add('error');
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                alert('Please fill out all required fields.');
+                return;
+            }
+            
+            // Here you would typically send the form data to a server
+            // For this example, we'll just show an alert and close the modal
+            
+            alert('Application submitted successfully!');
+            applicationModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            applicationForm.reset();
+            document.getElementById('file-name').textContent = 'Max file size: 5MB (PDF, DOC, DOCX)';
+            document.querySelector('.file-upload-label').classList.remove('has-file');
+        });
+        
+        // File upload styling
+        const fileInput = document.getElementById('resume');
+        const fileUploadLabel = document.querySelector('.file-upload-label');
+        const fileName = document.getElementById('file-name');
+        
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileName.textContent = this.files[0].name;
+                fileUploadLabel.classList.add('has-file');
+            } else {
+                fileName.textContent = 'Max file size: 5MB (PDF, DOC, DOCX)';
+                fileUploadLabel.classList.remove('has-file');
+            }
+        });
+        
+        // Job filtering functionality
+        const departmentFilter = document.getElementById('department-filter');
+        const locationFilter = document.getElementById('location-filter');
+        const typeFilter = document.getElementById('type-filter');
+        const jobItems = document.querySelectorAll('.job-item');
+        
+        function filterJobs() {
+            const departmentValue = departmentFilter.value;
+            const locationValue = locationFilter.value;
+            const typeValue = typeFilter.value;
+            
+            jobItems.forEach(item => {
+                const department = item.getAttribute('data-department');
+                const location = item.getAttribute('data-location');
+                const type = item.getAttribute('data-type');
+                
+                const departmentMatch = departmentValue === 'all' || department === departmentValue;
+                const locationMatch = locationValue === 'all' || location === locationValue;
+                const typeMatch = typeValue === 'all' || type === typeValue;
+                
+                if (departmentMatch && locationMatch && typeMatch) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        departmentFilter.addEventListener('change', filterJobs);
+        locationFilter.addEventListener('change', filterJobs);
+        typeFilter.addEventListener('change', filterJobs);
+    </script>
+</body>
+</html>

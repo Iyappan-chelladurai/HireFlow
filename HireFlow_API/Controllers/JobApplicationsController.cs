@@ -1,4 +1,5 @@
-﻿using HireFlow_API.Model;
+﻿using HireFlow.Services;
+using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
@@ -35,6 +36,33 @@ namespace HireFlow_API.Controllers
         {
             var applications = await _service.RetrieveAllApplicationsAsync(JobId);
 
+            EmailRepository email = new EmailRepository();
+
+
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Email", "JobApplied.html");
+            string htmlTemplate = System.IO.File.ReadAllText(templatePath);
+
+            // Replace placeholders
+            string body = htmlTemplate
+                .Replace("{{CandidateName}}", "Iyappan C")
+                 .Replace("{{JobTitle}}", ".NET Developer")
+                  .Replace("{{CompanyName}}", "Infoplus Technologies");
+
+
+            EmailRequestDTO emailRequest = new EmailRequestDTO()
+            {
+
+                FromEmailAddress = "hireflowofficial@gmail.com",
+                ToEmailAddresses = new List<string>() { "iyappadhoni6@gmail.com" },
+
+                EmailSubject = ".NET Developer Applied..",
+                HtmlEmailBody = body
+            };
+
+            email.SendEmail(emailRequest);
+
+
+
             return Ok(applications);
         }
 
@@ -59,31 +87,7 @@ namespace HireFlow_API.Controllers
             var created = await _service.SubmitApplicationAsync(jobApplication);
 
 
-            EmailRepository email = new EmailRepository();
-
-
-            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Email", "JobApplied.html");
-            string htmlTemplate = System.IO.File.ReadAllText(templatePath);
-
-            // Replace placeholders
-            string body = htmlTemplate
-                .Replace("{{CandidateName}}", "Iyappan C")
-                 .Replace("{{JobTitle}}", ".NET Developer")
-                  .Replace("{{CompanyName}}", "HireFlow Technologies");
-
-
-            EmailRequestDTO emailRequest = new EmailRequestDTO()
-            {
-
-                FromEmailAddress = "hireflowofficial@gmail.com",
-                ToEmailAddresses = new List<string>() { "iyappadhoni6@gmail.com" },
-
-                EmailSubject = ".NET Developer Applied..",
-                HtmlEmailBody = body
-            };
-
-            email.SendEmail(emailRequest);
-
+          
 
 
             return CreatedAtAction(nameof(GetApplicationDetails), new { id = created.ApplicationId }, created);
