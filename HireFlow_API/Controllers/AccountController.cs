@@ -1,7 +1,11 @@
-﻿using HireFlow_API.Model.DTOs;
+﻿using HireFlow_API.Model.DataModel;
+using HireFlow_API.Model.DTOs;
 using HireFlow_API.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using LoginRequest = HireFlow_API.Model.DTOs.LoginRequest;
 
 namespace HireFlow_API.Controllers
 {
@@ -14,6 +18,20 @@ namespace HireFlow_API.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromForm] CreateUserRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _accountService.RegisterUserAsync(model);
+
+            if (!result.Item1)
+                return BadRequest(new { success = false, message = result.Item2 });
+
+            return Ok(new { success = true, message = result.Item2 });
         }
 
 
@@ -31,19 +49,25 @@ namespace HireFlow_API.Controllers
             return Ok(new { Message = "Login successful", JWTToken = token });
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] CreateUserRequest model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+  
 
-            var success = await _accountService.RegisterUserAsync(model);
+        //[HttpPost("send-otp")]
+        //public async Task<IActionResult> SendOtp([FromBody] OtpLoginRequest request)
+        //{
+        //    await _accountService.SendOtpAsync(request.PhoneNumber);
+        //    return Ok("OTP sent successfully.");
+        //}
 
-            if (!success.Item1)
-                return BadRequest(success.Item2);
+        //[HttpPost("verify-otp")]
+        //public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequest request)
+        //{
+        //    var token = await _accountService.VerifyOtpAsync(request.PhoneNumber, request.Otp);
+        //    if (token == null)
+        //        return Unauthorized("Invalid or expired OTP");
 
-            return Ok("User account created..");
-        }
+        //    return Ok(new { Message = "Login successful", JWTToken = token });
+        //}
+
 
 
         [HttpPost("logout")]

@@ -1,92 +1,740 @@
-﻿@model List<HireFlow_MVC.Models.JobApplicationViewModel>
-
-@{
-    ViewData["Title"] = "Application Status";
-
-    string[] stages = new[] { "Applied", "Under Review", "Shortlisted", "Interview Scheduled", "Offer Sent", "Offer Accepted", "Onboarded" };
-
-    Func<HireFlow_MVC.Models.JobApplicationViewModel, (string current, string next)> GetCurrentAndNextStage = app =>
-    {
-        var currentIndex = stages.ToList().FindLastIndex(s =>
-            s == app.ApplicationStatus ||
-            (s == "Applied" && app.AppliedOn != null) ||
-            (s == "Interview Scheduled" && !string.IsNullOrEmpty(app.InterviewFeedback)) ||
-            (s == "Offer Sent" && app.OfferSentOn != null) ||
-            (s == "Offer Accepted" && app.IsOfferAccepted) ||
-            (s == "Onboarded" && app.OnboardedOn != null)
-        );
-
-        string currentStage = currentIndex >= 0 ? stages[currentIndex] : stages[0];
-        string nextStage = (currentIndex + 1) < stages.Length ? stages[currentIndex + 1] : null;
-
-        return (currentStage, nextStage);
-    };
-}
-
-<div class="max-w-6xl mx-auto mt-10 px-4">
-    <h1 class="text-3xl font-bold mb-10 text-gray-800">Your Applications</h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        @foreach (var app in Model)
-        {
-            var (currentStage, nextStage) = GetCurrentAndNextStage(app);
-
-            <div class="bg-gradient-to-r from-white via-gray-50 to-white border border-gray-200 rounded-2xl shadow-lg p-6 transition hover:shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-semibold text-gray-900">@app.JobTitle</h2>
-                    <span class="px-3 py-1 rounded-full text-sm font-medium
-                            @(currentStage switch
-                          {
-                              "Applied" => "bg-blue-100 text-blue-800",
-                              "Under Review" => "bg-yellow-100 text-yellow-800",
-                              "Shortlisted" => "bg-green-100 text-green-800",
-                              "Interview Scheduled" => "bg-indigo-100 text-indigo-800",
-                              "Offer Sent" => "bg-purple-100 text-purple-800",
-                              "Offer Accepted" => "bg-green-700 text-white",
-                              "Onboarded" => "bg-gray-300 text-gray-800",
-                              _ => "bg-gray-100 text-gray-800"
-                          })">
-                    @currentStage
-                </span>
-            </div>
-
-                <!-- Horizontal Stepper -->
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex-1 h-1 bg-gray-300 rounded relative">
-                        <div class="absolute h-1 bg-blue-600 rounded left-0 top-0" style="width:50%"></div>
-                    </div>
-                    <div class="flex justify-between w-full -ml-2">
-                        <div class="flex flex-col items-center">
-                            <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">✓</div>
-                            <span class="text-xs mt-1 text-gray-700">@currentStage</span>
-                        </div>
-                    @if (nextStage != null)
-                        {
-                            <div class="flex flex-col items-center">
-                                <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xs">→</div>
-                                <span class="text-xs mt-1 text-gray-500">@nextStage</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Resume & Info -->
-                <div class="border-t pt-4 flex flex-col space-y-2">
-                    <p class="text-gray-600 text-sm"><b>Applied On:</b> @app.AppliedOn.ToString("dd MMM yyyy")</p>
-                    @if (!string.IsNullOrEmpty(app.InterviewFeedback))
-                    {
-                        <p class="text-gray-700 text-sm"><b>Feedback:</b> @app.InterviewFeedback</p>
-                    }
-                    <p class="text-gray-600 text-sm"><b>Resume:</b> <a href="@app.ResumePath" target="_blank" class="text-indigo-600 hover:underline">View Resume</a></p>
-                </div>
-
-                <div class="mt-4 flex justify-end">
-                    <a asp-controller="JobApplications" asp-action="ViewApplication" asp-route-id="@app.ApplicationId"
-                       class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition">
-                        View Details
-                    </a>
-                </div>
-            </div>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Account | Infosys</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7e22ce;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
         }
-    </div>
-</div>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+            .logo span {
+                color: var(--secondary);
+            }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+            .nav-link:hover {
+                color: var(--primary);
+            }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: var(--primary);
+                transition: width 0.3s;
+            }
+
+            .nav-link:hover::after {
+                width: 100%;
+            }
+
+        .nav-cta {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .nav-cta:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
+
+            .nav-cta::after {
+                display: none;
+            }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Candidate Dashboard Styles */
+        .candidate-dashboard {
+            margin-top: 100px;
+            padding: 20px 0 50px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .welcome-section p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+        }
+
+            .user-profile img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--primary);
+            }
+
+            .user-profile span {
+                font-weight: 600;
+                color: var(--primary);
+            }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 25px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+            .sidebar-item:hover, .sidebar-item.active {
+                background: rgba(37, 99, 235, 0.1);
+                color: var(--primary);
+            }
+
+            .sidebar-item i {
+                font-size: 1.2rem;
+                width: 25px;
+            }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .status-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .applications .status-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .interviews .status-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .profile-strength .status-icon {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .status-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .status-card p {
+            color: var(--gray);
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+            .card-header h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--dark);
+            }
+
+        .view-all {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .job-list, .interview-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .job-item, .interview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+            .job-item:hover, .interview-item:hover {
+                background: rgba(37, 99, 235, 0.03);
+                border-color: rgba(37, 99, 235, 0.2);
+            }
+
+        .job-info, .interview-info {
+            flex: 1;
+        }
+
+            .job-info h3, .interview-info h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .job-info p, .interview-info p {
+                color: var(--gray);
+                font-size: 0.9rem;
+            }
+
+        .job-meta, .interview-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+            .job-meta span, .interview-meta span {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-under-review {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-scheduled {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .interview-date {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .profile-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .profile-item label {
+                font-size: 0.9rem;
+                color: var(--gray);
+                font-weight: 500;
+            }
+
+            .profile-item .value {
+                font-weight: 500;
+                padding: 10px 15px;
+                background: rgba(0, 0, 0, 0.03);
+                border-radius: 8px;
+            }
+
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--primary-dark);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+            .btn-outline:hover {
+                background: rgba(37, 99, 235, 0.1);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 992px) {
+            .dashboard-grid
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        .status-cards {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .nav-menu
+
+        {
+            display: none;
+        }
+
+        .mobile-toggle {
+            display: block;
+        }
+
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .profile-details {
+            grid-template-columns: 1fr;
+        }
+
+        .job-item, .interview-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .job-meta, .interview-meta {
+            flex-wrap: wrap;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Infosys<span>Careers</span></a>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link">Home</a></li>
+                    <li><a href="#" class="nav-link">Jobs</a></li>
+                    <li><a href="#" class="nav-link">Careers</a></li>
+                    <li><a href="#" class="nav-link">Resources</a></li>
+                </ul>
+            </nav>
+
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Candidate Dashboard -->
+    <section class="candidate-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, Michael!</h1>
+                    <p>Here's your application status and upcoming interviews</p>
+                </div>
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Michael Chen">
+                    <span>Michael Chen</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="sidebar">
+                    <div class="sidebar-menu">
+                        <a href="#" class="sidebar-item active">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Applied Jobs</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Interviews</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Resume</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a href="#" class="sidebar-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="main-content">
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>Applied Jobs</h2>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+
+                        <div class="job-list">
+                            <div class="job-item">
+                                <div class="job-info">
+                                    <h3>Senior Frontend Developer</h3>
+                                    <p>Infosys • Software Development</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-map-marker-alt"></i> Bangalore, India</span>
+                                        <span><i class="fas fa-clock"></i> Applied on: June 15, 2023</span>
+                                    </div>
+                                </div>
+                                <div class="status status-under-review">Under Review</div>
+                            </div>
+
+                            <div class="job-item">
+                                <div class="job-info">
+                                    <h3>Full Stack Engineer</h3>
+                                    <p>Infosys • Technology Innovation Group</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                                        <span><i class="fas fa-clock"></i> Applied on: June 10, 2023</span>
+                                    </div>
+                                </div>
+                                <div class="status status-scheduled">Interview Scheduled</div>
+                            </div>
+
+                            <div class="job-item">
+                                <div class="job-info">
+                                    <h3>Product Manager</h3>
+                                    <p>Infosys • Product Development</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-map-marker-alt"></i> Pune, India</span>
+                                        <span><i class="fas fa-clock"></i> Applied on: May 28, 2023</span>
+                                    </div>
+                                </div>
+                                <div class="status status-rejected">Not Selected</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>Interview Schedule</h2>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+
+                        <div class="interview-list">
+                            <div class="interview-item">
+                                <div class="interview-info">
+                                    <h3>Technical Interview - Senior Frontend Developer</h3>
+                                    <p>With: Sarah Johnson (Lead Developer, Infosys)</p>
+                                    <div class="interview-meta">
+                                        <span><i class="fas fa-video"></i> Video Call</span>
+                                        <span><i class="fas fa-clock"></i> Duration: 60 mins</span>
+                                    </div>
+                                </div>
+                                <div class="interview-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span>June 28, 2023 • 10:00 AM (IST)</span>
+                                </div>
+                            </div>
+
+                            <div class="interview-item">
+                                <div class="interview-info">
+                                    <h3>HR Discussion - Full Stack Engineer</h3>
+                                    <p>With: Hiring Team (Infosys)</p>
+                                    <div class="interview-meta">
+                                        <span><i class="fas fa-video"></i> Video Call</span>
+                                        <span><i class="fas fa-clock"></i> Duration: 45 mins</span>
+                                    </div>
+                                </div>
+                                <div class="interview-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span>July 2, 2023 • 2:30 PM (IST)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>Profile Details</h2>
+                            <a href="#" class="view-all">Edit Profile</a>
+                        </div>
+
+                        <div class="profile-details">
+                            <div class="profile-item">
+                                <label>Full Name</label>
+                                <div class="value">Michael Chen</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Email Address</label>
+                                <div class="value">michael.chen@@example.com</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Phone Number</label>
+                                <div class="value">+1 (555) 123-4567</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Location</label>
+                                <div class="value">San Francisco, CA</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Experience</label>
+                                <div class="value">7 years</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Education</label>
+                                <div class="value">M.S. Computer Science, Stanford University</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Skills</label>
+                                <div class="value">JavaScript, React, Node.js, TypeScript, HTML/CSS, AWS</div>
+                            </div>
+
+                            <div class="profile-item">
+                                <label>Resume</label>
+                                <div class="value">Michael_Chen_Resume.pdf</div>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button class="btn btn-primary">Download Resume</button>
+                            <button class="btn btn-outline">Edit Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple JavaScript for mobile menu toggle
+        document.querySelector('.mobile-toggle').addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Simple JavaScript for demonstration purposes
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusItems = document.querySelectorAll('.status');
+            statusItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    alert('Application Status: ' + this.textContent);
+                });
+            });
+
+            const interviewItems = document.querySelectorAll('.interview-item');
+            interviewItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const role = this.querySelector('h3').textContent;
+                    alert('Interview details for: ' + role);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

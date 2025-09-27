@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "llu8hsbUVJI=",
+  "dgSpecHash": "Yhz2Y0zXBVo=",
   "success": true,
   "projectFilePath": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_API\\HireFlow_API.csproj",
   "expectedPackageFiles": [
@@ -140,6 +140,7 @@
     "C:\\Users\\iyapp\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\iyapp\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
     "C:\\Users\\iyapp\\.nuget\\packages\\pdfpig\\0.1.11\\pdfpig.0.1.11.nupkg.sha512",
+    "C:\\Users\\iyapp\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
     "C:\\Users\\iyapp\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
     "C:\\Users\\iyapp\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.8\\skiasharp.nativeassets.macos.2.88.8.nupkg.sha512",
     "C:\\Users\\iyapp\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.8\\skiasharp.nativeassets.win32.2.88.8.nupkg.sha512",

@@ -39,7 +39,7 @@ namespace HireFlow_API.Model.DataModel
         [ForeignKey("PostedBy")]
         public UserAccount PostedByUser { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public int JobStatus { get; set; } = 0;
 
         public ICollection<JobApplication> Applications { get; set; }
 

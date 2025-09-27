@@ -11,7 +11,6 @@ namespace HireFlow_API.Services
         Task AddAsync(CandidateDocumentDetail entity);
         Task<bool> UpdateAsync(Guid id, CandidateDocumentDetail entity);
         Task<bool> DeleteAsync(Guid id);
-
     }
 
     class CandidateDocumentsService : ICandidateDocumentsService

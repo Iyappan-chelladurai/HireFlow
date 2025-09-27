@@ -5,7 +5,7 @@ namespace HireFlow_MVC.Models
 {
     public class JobApplicationViewModel
     {
-        public Guid ApplicationId { get; set; }
+        public Guid? ApplicationId { get; set; }
 
         [Required(ErrorMessage = "Candidate ID is required.")]
         public Guid CandidateId { get; set; }
@@ -32,7 +32,6 @@ namespace HireFlow_MVC.Models
 
         [DataType(DataType.DateTime)]
         public DateTime? OfferSentOn { get; set; }
-
         public bool IsOfferAccepted { get; set; }
 
         [DataType(DataType.DateTime)]
@@ -42,4 +41,21 @@ namespace HireFlow_MVC.Models
         public int? TotalExperienceYears { get; set; }
 
     }
+    public class JobApplicationRequest
+    {
+        [Required(ErrorMessage = "Candidate ID is required.")]
+        public Guid CandidateId { get; set; }
+
+        [Required(ErrorMessage = "Job ID is required.")]
+        public Guid JobId { get; set; }
+
+        [Required(ErrorMessage = "Resume path is required.")]
+        [MaxLength(500)]
+        public string? ResumePath { get; set; }
+        public IFormFile? ResumeFile { get; set; }
+        public string? CurrentJobTitle { get; set; }
+        public float ? TotalExperienceYears { get; set; }
+    }
+
+
 }

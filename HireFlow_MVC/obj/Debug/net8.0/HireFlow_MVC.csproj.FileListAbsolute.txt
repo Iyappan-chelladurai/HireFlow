@@ -233,3 +233,5 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\bin\Debug\net8.0\runti
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireFlow_MVC.csproj.AssemblyReference.cache
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireFlow.3DCA879C.Up2Date
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\scopedcss\Views\Shared\_CandidateLayout.cshtml.rz.scp.css
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\scopedcss\Views\Shared\_SystemLayout.cshtml.rz.scp.css

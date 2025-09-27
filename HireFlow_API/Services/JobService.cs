@@ -59,7 +59,8 @@ namespace HireFlow_API.Services
                 PostedOn = DateTime.UtcNow,
                 ClosingDate = newJobDto.ClosingDate,
                 PostedBy = postedBy, 
-                IsActive = true
+                Skills = newJobDto.Skills,
+                JobStatus = newJobDto.JobStatus
             };
 
             await _jobRepository.AddNewJobAsync(job);
@@ -74,10 +75,11 @@ namespace HireFlow_API.Services
                 Salary = job.Salary,
                 EmploymentType = job.EmploymentType,
                 Openings = job.Openings,
+                Skills = newJobDto.Skills,
                 PostedOn = job.PostedOn,
                 ClosingDate = job.ClosingDate,
                 PostedBy = job.PostedBy,
-                IsActive = job.IsActive
+                JobStatus = job.JobStatus
             };
         }
 

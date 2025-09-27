@@ -130,6 +130,47 @@ namespace HireFlow_API.Migrations
                     b.ToTable("CandidateDocumentDetails");
                 });
 
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.CandidateJobScore", b =>
+                {
+                    b.Property<int>("ScoreId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScoreId"));
+
+                    b.Property<string>("EvaluatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EvaluatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ExperienceScore")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Feedback")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("JobApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("OverallFitScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResumeMatchScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillsMatchScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScoreId");
+
+                    b.HasIndex("JobApplicationId");
+
+                    b.ToTable("tbl_CandidatesJobScore");
+                });
+
             modelBuilder.Entity("HireFlow_API.Model.DataModel.DocumentType", b =>
                 {
                     b.Property<int>("DocumentTypeId")
@@ -244,12 +285,12 @@ namespace HireFlow_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("JobDescription")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("JobStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
@@ -646,6 +687,17 @@ namespace HireFlow_API.Migrations
                     b.Navigation("Candidate");
 
                     b.Navigation("DocumentType");
+                });
+
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.CandidateJobScore", b =>
+                {
+                    b.HasOne("HireFlow_API.Model.DataModel.JobApplication", "JobApplication")
+                        .WithMany()
+                        .HasForeignKey("JobApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobApplication");
                 });
 
             modelBuilder.Entity("HireFlow_API.Model.DataModel.InterviewScheduleDetail", b =>

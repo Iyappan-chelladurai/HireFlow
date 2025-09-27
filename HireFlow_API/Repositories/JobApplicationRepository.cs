@@ -1,4 +1,5 @@
-﻿using HireFlow_API.Model;
+﻿using Amazon.Comprehend.Model;
+using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using Humanizer;
@@ -12,7 +13,7 @@ namespace HireFlow_API.Repositories
        
             Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync(Guid JobId);
             Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
-            Task AddNewApplicationAsync(JobApplicationDTO jobApplicationDto);
+              Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto);
             Task UpdateApplicationInfoAsync(JobApplicationDTO jobApplicationDto);
             Task DeleteApplicationByIdAsync(Guid applicationId);
             Task<bool> IsApplicationExistsAsync(Guid applicationId);
@@ -61,7 +62,7 @@ namespace HireFlow_API.Repositories
             return entity != null ? MapEntityToDTO(entity) : null;
         }
 
-        public async Task AddNewApplicationAsync(JobApplicationDTO jobApplicationDto)
+        public async Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto)
         {
 
             var entity = new JobApplication
@@ -70,13 +71,15 @@ namespace HireFlow_API.Repositories
                 CandidateId = jobApplicationDto.CandidateId,
                 JobId = jobApplicationDto.JobId,
                 ResumePath = jobApplicationDto.ResumePath,
-                AppliedOn = DateTime.UtcNow,
+                AppliedOn = DateTime.Now,
                 ApplicationStatus = JobApplicationStatus.Applied.ToString(),
             };
 
           
             _context.JobApplications.Add(entity);
             await _context.SaveChangesAsync();
+
+            return entity.ApplicationId;
         }
 
         public async Task UpdateApplicationInfoAsync(JobApplicationDTO jobApplicationDto)

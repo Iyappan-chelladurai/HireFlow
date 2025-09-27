@@ -21,6 +21,7 @@
           "Microsoft.ML": "4.0.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "8.0.7",
           "PdfPig": "0.1.11",
+          "QRCoder": "1.6.0",
           "Swashbuckle.AspNetCore": "6.6.2"
         },
         "runtime": {
@@ -1958,6 +1959,14 @@
           }
         }
       },
+      "QRCoder/1.6.0": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.6.0.0",
+            "fileVersion": "1.6.0.0"
+          }
+        }
+      },
       "SkiaSharp/2.88.8": {
         "dependencies": {
           "SkiaSharp.NativeAssets.Win32": "2.88.8",
@@ -3268,6 +3277,13 @@
       "sha512": "sha512-pGAhccH2pXU5SzNPs94kGD+HnChHWrW/234en2Ky+RSAAui4o7msOiUdePErOmM2FY/wnyfj3MY/WRAhjnlRVw==",
       "path": "pdfpig/0.1.11",
       "hashPath": "pdfpig.0.1.11.nupkg.sha512"
+    },
+    "QRCoder/1.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
+      "path": "qrcoder/1.6.0",
+      "hashPath": "qrcoder.1.6.0.nupkg.sha512"
     },
     "SkiaSharp/2.88.8": {
       "type": "package",

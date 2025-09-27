@@ -11,9 +11,7 @@ namespace HireFlow_API.Services
 {
   public  interface IAccountService
     {
-
         Task<(bool , string)> RegisterUserAsync(CreateUserRequest model);
-
         Task<string?> LoginUserAsync(string email, string password, bool rememberMe);
         Task LogoutUserAsync();
         Task<bool> InitializeRolesAsync();

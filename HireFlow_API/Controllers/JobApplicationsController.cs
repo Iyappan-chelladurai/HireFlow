@@ -20,47 +20,21 @@ namespace HireFlow_API.Controllers
     [ApiController]
     public class JobApplicationsController : ControllerBase
     {
-
         private readonly IJobApplicationService _service;
-
+        private readonly IJobService _Jobservice;
         private readonly CandidateScorerService _candidateScorer;
+        private readonly IConfiguration configuration;
 
         public JobApplicationsController(IJobApplicationService jobService)
         {
             _service = jobService;
-            _candidateScorer = new CandidateScorerService();
+            _candidateScorer = new CandidateScorerService(configuration , _service , _Jobservice);
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobApplicationDTO>>> GetAllApplications(Guid JobId)
         {
             var applications = await _service.RetrieveAllApplicationsAsync(JobId);
-
-            EmailRepository email = new EmailRepository();
-
-
-            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Email", "JobApplied.html");
-            string htmlTemplate = System.IO.File.ReadAllText(templatePath);
-
-            // Replace placeholders
-            string body = htmlTemplate
-                .Replace("{{CandidateName}}", "Iyappan C")
-                 .Replace("{{JobTitle}}", ".NET Developer")
-                  .Replace("{{CompanyName}}", "Infoplus Technologies");
-
-
-            EmailRequestDTO emailRequest = new EmailRequestDTO()
-            {
-
-                FromEmailAddress = "hireflowofficial@gmail.com",
-                ToEmailAddresses = new List<string>() { "iyappadhoni6@gmail.com" },
-
-                EmailSubject = ".NET Developer Applied..",
-                HtmlEmailBody = body
-            };
-
-            email.SendEmail(emailRequest);
-
 
 
             return Ok(applications);
@@ -86,14 +60,7 @@ namespace HireFlow_API.Controllers
 
             var created = await _service.SubmitApplicationAsync(jobApplication);
 
-
-          
-
-
             return CreatedAtAction(nameof(GetApplicationDetails), new { id = created.ApplicationId }, created);
-
-
-
         }
 
     
@@ -111,20 +78,9 @@ namespace HireFlow_API.Controllers
         /// Score a candidate against a Job Role + Job Description
         /// </summary>
         [HttpPost("score")]
-        public async Task<IActionResult> ScoreCandidate([FromForm] CandidateScoreRequest request)
+        public async Task<IActionResult> ScoreCandidate(Guid JobId , Guid JobApp)
         {
-            if (request.Resume == null || request.Resume.Length == 0)
-                return BadRequest("Resume file is required");
-
-            using var ms = new MemoryStream();
-            await request.Resume.CopyToAsync(ms);
-
-            var result = await _candidateScorer.ScoreCandidateAsync(
-                ms.ToArray(),
-                request.Resume.FileName,
-              
-                request.JobDescription
-            );
+            var result = await _candidateScorer.ScoreCandidateAsync(JobId ,JobApp);
 
             return Ok(result);
         }

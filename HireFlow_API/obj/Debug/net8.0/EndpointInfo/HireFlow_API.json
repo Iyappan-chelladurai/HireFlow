@@ -5,37 +5,6 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Account/Login": {
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Account/register": {
       "post": {
         "tags": [
@@ -100,6 +69,37 @@
                 "Role": {
                   "style": "form"
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Account/Login": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
               }
             }
           }
@@ -854,24 +854,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/JobDTO"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JobDTO"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JobDTO"
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -1219,21 +1202,33 @@
         "additionalProperties": false
       },
       "CreateJobDTO": {
+        "required": [
+          "jobTitle"
+        ],
         "type": "object",
         "properties": {
-          "jobTitle": {
+          "jobId": {
             "type": "string",
+            "format": "uuid",
             "nullable": true
           },
+          "jobTitle": {
+            "maxLength": 150,
+            "minLength": 1,
+            "type": "string"
+          },
           "jobDescription": {
+            "maxLength": 1000,
             "type": "string",
             "nullable": true
           },
           "department": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
           "location": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
@@ -1243,10 +1238,13 @@
             "nullable": true
           },
           "employmentType": {
+            "maxLength": 50,
             "type": "string",
             "nullable": true
           },
           "openings": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
@@ -1263,6 +1261,18 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "experience": {
+            "type": "string",
+            "nullable": true
+          },
+          "education": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobStatus": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1499,8 +1509,9 @@
           "postedByUser": {
             "$ref": "#/components/schemas/UserAccount"
           },
-          "isActive": {
-            "type": "boolean"
+          "jobStatus": {
+            "type": "integer",
+            "format": "int32"
           },
           "applications": {
             "type": "array",
@@ -1693,8 +1704,9 @@
             "type": "string",
             "format": "uuid"
           },
-          "isActive": {
-            "type": "boolean"
+          "jobStatus": {
+            "type": "integer",
+            "format": "int32"
           },
           "candidateCount": {
             "type": "integer",

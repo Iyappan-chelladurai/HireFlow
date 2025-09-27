@@ -11,7 +11,7 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JwtToken");
 
             if (!string.IsNullOrEmpty(token))
             {

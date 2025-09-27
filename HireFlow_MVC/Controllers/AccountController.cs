@@ -42,19 +42,23 @@ namespace HireFlow_MVC.Controllers
 
 
         [HttpPost]
+     //   [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+            {
+                // Collect validation errors for AJAX
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { success = false, errors });
+            }
 
-            // Map to CreateUserRequest
             var formContent = new MultipartFormDataContent();
 
-            formContent.Add(new StringContent(model.UserName), nameof(model.UserName));
-            formContent.Add(new StringContent(model.FullName), nameof(model.FullName));
-            formContent.Add(new StringContent(model.Email), nameof(model.Email));
-            formContent.Add(new StringContent(model.PhoneNumber), nameof(model.PhoneNumber));
-            formContent.Add(new StringContent(model.Password), nameof(model.Password));
+            formContent.Add(new StringContent(model.UserName ?? ""), nameof(model.UserName));
+            formContent.Add(new StringContent(model.FullName ?? ""), nameof(model.FullName));
+            formContent.Add(new StringContent(model.Email ?? ""), nameof(model.Email));
+            formContent.Add(new StringContent(model.PhoneNumber ?? ""), nameof(model.PhoneNumber));
+            formContent.Add(new StringContent(model.Password ?? ""), nameof(model.Password));
             formContent.Add(new StringContent("Candidate"), nameof(model.Role));
 
             if (model.ProfileImage != null && model.ProfileImage.Length > 0)
@@ -68,17 +72,15 @@ namespace HireFlow_MVC.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                
-                TempData["Success"] = "Registration successful. Please login.";
-                return RedirectToAction("Login", "Account");
+                return Json(new { success = true, message = "Registration successful. Please login." });
             }
             else
             {
                 var errorResponse = await response.Content.ReadAsStringAsync();
-                ModelState.AddModelError("", $"Registration failed: {errorResponse}");
-                return View(model);
+                return BadRequest(new { success = false, message = $"Registration failed: {errorResponse}" });
             }
         }
+
 
 
 
@@ -86,29 +88,24 @@ namespace HireFlow_MVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl; // save it for the form
             return View();
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password , string returnUrl = null)
         {
 
-            var loginData = new
+            var LoginRequest = new
             {
-                Email = "Iyappan@Hireflow.com",
-                Password = "Wanda@3000"
+                Email = email,
+                Password = password
             };
 
-            //var loginData = new
-            //{
-            //    Email = email,
-            //    Password = password
-            //};
-
-            var response = await _httpClient.PostAsJsonAsync("/api/account/login/", loginData);
+            var response = await _httpClient.PostAsJsonAsync("/api/account/login/", LoginRequest);
 
             if (response.IsSuccessStatusCode)
             {
@@ -137,15 +134,18 @@ namespace HireFlow_MVC.Controllers
                 HttpContext.Session.SetString("UserRole", role ?? "");
                 HttpContext.Session.SetString("JwtToken", responseData.JwtToken);
 
+
                 if (role.ToLower() == "candidate")
                 {
-                    return RedirectToAction("ViewApplicationStatus", "JobApplications");
+                        return returnUrl == null ? RedirectToAction("ViewApplicationStatus", "JobApplications") : Redirect(returnUrl);
                 }
                 else
                 {
-                    return RedirectToAction("PostJob", "Job");
+                    return returnUrl == null ? RedirectToAction("PostJob", "Job") : Redirect(returnUrl);
                 }
-               
+                
+              
+
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");

@@ -1,4 +1,5 @@
-﻿using HireFlow_API.Controllers;
+﻿using HireFlow.Services;
+using HireFlow_API.Controllers;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
@@ -24,14 +25,27 @@ namespace HireFlow_API.Services
         private readonly ICandidateDocumentsRepository _candidateDocumentsRepository;
 
         private readonly IConfiguration _configuration;
+         
+        private readonly IEmailRepository _emailRepository;
+
+        private readonly CandidateScorerService _candidateScorer;
+
+
+
 
         public JobApplicationService(IJobApplicationRepository repository , IConfiguration configuration,
-            ICandidateDocumentsRepository candidateDocumentsRepository)
+            ICandidateDocumentsRepository candidateDocumentsRepository,
+            IEmailRepository emailRepository,
+            CandidateScorerService candidateScorer
+            )
         {
             _repository = repository;
             _configuration = configuration;
             _candidateDocumentsRepository = candidateDocumentsRepository;
+            _emailRepository = emailRepository;
+            _candidateScorer = candidateScorer;
         }
+
 
         public async Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync(Guid JobId)
         {
@@ -54,16 +68,13 @@ namespace HireFlow_API.Services
             // Optionally store the file path in DTO
             jobApplication.ResumePath = filePath;
 
-            await _repository.AddNewApplicationAsync(jobApplication);
+           var AppId = await _repository.AddNewApplicationAsync(jobApplication);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await jobApplication.ResumeFile.CopyToAsync(stream);
             }
-
-
-
-
+          
 
             CandidateDocumentDetail candidateDocumentDetail = new CandidateDocumentDetail()
             {
@@ -83,6 +94,28 @@ namespace HireFlow_API.Services
             };
 
            await _candidateDocumentsRepository.AddAsync(candidateDocumentDetail);
+           
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Email", "JobApplied.html");
+            string htmlTemplate = System.IO.File.ReadAllText(templatePath);
+
+            // Replace placeholders
+            string body = htmlTemplate
+                .Replace("{{CandidateName}}", "Iyappan C")
+                 .Replace("{{JobTitle}}", ".NET Developer")
+                  .Replace("{{CompanyName}}", "Infoplus Technologies");
+
+            EmailRequestDTO emailRequest = new EmailRequestDTO()
+            {
+                FromEmailAddress = "hireflowofficial@gmail.com",
+                ToEmailAddresses = new List<string>() { "iyappadhoni6@gmail.com" },
+                EmailSubject = ".NET Developer Applied..",
+                HtmlEmailBody = body
+            };
+          var CS =  await _candidateScorer.ScoreCandidateAsync(jobApplication.JobId, AppId);
+
+
+            _emailRepository.SendEmail(emailRequest);
+
             return jobApplication;
         }
 

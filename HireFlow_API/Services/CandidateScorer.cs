@@ -1,16 +1,18 @@
 ﻿using Amazon;
-using Amazon.Textract;
-using Amazon.Textract.Model;
 using Amazon.Comprehend;
 using Amazon.Comprehend.Model;
+using Amazon.Textract;
+using Amazon.Textract.Model;
 using DocumentFormat.OpenXml.Packaging;
+using HireFlow_API.Services;
+using Humanizer;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using UglyToad.PdfPig;
-using System;
 
 namespace HireFlow.Services
 {
@@ -21,6 +23,11 @@ namespace HireFlow.Services
         private readonly HttpClient _httpClient;
         private readonly string _openAiKey;
         private readonly IConfiguration _configuration;
+
+        private readonly IJobApplicationService _jobApplicationService;
+        private readonly IJobService _jobService;
+
+
 
         // ML.NET
         private readonly MLContext _ml;
@@ -37,7 +44,8 @@ namespace HireFlow.Services
 
         // Cache for JD skills
         private static readonly Dictionary<string, List<string>> _jdSkillsCache = new(StringComparer.OrdinalIgnoreCase);
-        public CandidateScorerService( IConfiguration configuration , string? modelPath = null)
+        public CandidateScorerService(IConfiguration configuration, IJobApplicationService JobApplicationService, 
+                                      IJobService jobService, string? modelPath = null)
         {
             _textractClient = new AmazonTextractClient(awsAccessKey, awsSecretKey, RegionEndpoint.GetBySystemName(awsRegion));
             _comprehendClient = new AmazonComprehendClient(awsAccessKey, awsSecretKey, RegionEndpoint.GetBySystemName(awsRegion));
@@ -52,50 +60,60 @@ namespace HireFlow.Services
             }
 
             _configuration = configuration;
+
+              _jobApplicationService = JobApplicationService;
+                _jobService = jobService;
         }
 
         // =======================
         // Main Scoring Function
         // =======================
-        public async Task<CandidateScoreResult> ScoreCandidateAsync(byte[] resumeFile, string fileName, string jobDescription)
+        public async Task<CandidateScoreResult> ScoreCandidateAsync(Guid JobId, Guid JobApplicationId)
         {
+            var app = await _jobApplicationService.RetrieveApplicationDetailsAsync(JobApplicationId);
+            var job = await _jobService.RetrieveJobByIdAsync(JobId);
 
-            var jdSkills = await ExtractSkillsFromJD(jobDescription);
+            if (string.IsNullOrEmpty(app.ResumePath) || !System.IO.File.Exists(app.ResumePath))
+            {
+                throw new FileNotFoundException("Resume file not found.", app.ResumePath);
+            }
 
+            var resumeFile = await System.IO.File.ReadAllBytesAsync(app.ResumePath);
+                var fileName = Path.GetFileName(app.ResumePath);
             string resumeText = await ExtractTextFromResume(resumeFile, fileName);
 
-            var entities = await ExtractEntitiesWithComprehend(resumeText);
+                var jdSkills = await ExtractSkillsFromJD(job.JobDescription);
 
-            int candidateExpFromDates = ExtractYearsFromResumeDates(resumeFile, fileName);
-            int candidateExperience = ExtractCandidateExperience(resumeText, candidateExpFromDates);
+                var entities = await ExtractEntitiesWithComprehend(resumeText);
+                int candidateExpFromDates = ExtractYearsFromResumeDates(resumeFile, fileName);
+                int candidateExperience = ExtractCandidateExperience(resumeText, candidateExpFromDates);
+                int requiredMinExp = ExtractExperienceMin(job.JobDescription);
+                int requiredMaxExp = ExtractExperienceMax(job.JobDescription);
 
-            int requiredMinExp = ExtractExperienceMin(jobDescription);
-            int requiredMaxExp = ExtractExperienceMax(jobDescription);
+                var matchedSkills = new List<string>();
 
-            var matchedSkills = new List<string>();
+                foreach (var skill in jdSkills)
+                {
+                    if (ContainsSkill(resumeText, skill))
+                        matchedSkills.Add(skill);
+                }
+                float skillScore = jdSkills.Count == 0 ? 0f : (matchedSkills.Count / (float)jdSkills.Count) * 100f;
 
-            foreach (var skill in jdSkills)
-            {
-                if (ContainsSkill(resumeText, skill))
-                    matchedSkills.Add(skill);
-            }
-            float skillScore = jdSkills.Count == 0 ? 0f : (matchedSkills.Count / (float)jdSkills.Count) * 100f;
+                float expScore = CalculateExperienceScore(requiredMinExp, requiredMaxExp, candidateExperience);
 
-            float expScore = CalculateExperienceScore(requiredMinExp, requiredMaxExp, candidateExperience);
+                float finalScore = PredictFinalScore(skillScore, expScore);
 
-            float finalScore = PredictFinalScore(skillScore, expScore);
-
-            return new CandidateScoreResult
-            {
-                JdRequiredSkills = jdSkills,
-                MatchedSkills = matchedSkills,
-                Entities = entities,
-                RequiredExperience = requiredMaxExp,
-                CandidateExperience = candidateExperience,
-                SkillScore = skillScore,
-                ExperienceScore = expScore,
-                FinalScore = finalScore
-            };
+                return new CandidateScoreResult
+                {
+                    JdRequiredSkills = jdSkills,
+                    MatchedSkills = matchedSkills,
+                    Entities = entities,
+                    RequiredExperience = requiredMaxExp,
+                    CandidateExperience = candidateExperience,
+                    SkillScore = skillScore,
+                    ExperienceScore = expScore,
+                    FinalScore = finalScore
+                };
         }
 
         // -------------------------------
@@ -425,5 +443,7 @@ namespace HireFlow.Services
         public float SkillScore { get; set; }
         public float ExperienceScore { get; set; }
         public float FinalScore { get; set; }
+
+        public string? CandidateFeedBack { get; set; }
     }
 }

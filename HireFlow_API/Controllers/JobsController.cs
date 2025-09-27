@@ -41,14 +41,25 @@ namespace HireFlow_API.Controllers
             if (job == null) return NotFound();
             return Ok(job);
         }
-
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<JobDTO>> CreateJob(CreateJobDTO newJob)
+        public async Task<IActionResult> CreateJob([FromBody] CreateJobDTO newJob)
         {
-            var createdJob = await _jobService.CreateNewJobAsync(newJob);
-            return CreatedAtAction(nameof(GetJobById), new { jobId = createdJob.JobId }, createdJob);
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid input" });
+
+            try
+            {
+                var createdJob = await _jobService.CreateNewJobAsync(newJob);
+                return CreatedAtAction(nameof(GetJobById),
+                                       new { jobId = createdJob.JobId },
+                                       new { success = true, message = "Job created successfully", data = createdJob });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
+
 
         [HttpPut("{jobId}")]
         [Authorize(Roles = "Admin")]

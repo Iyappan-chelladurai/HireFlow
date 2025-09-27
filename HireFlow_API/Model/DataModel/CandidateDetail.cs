@@ -44,6 +44,38 @@ namespace HireFlow_API.Model.DataModel
         public ICollection<OfferLetter> OfferLetters { get; set; }
     }
 
+    public class CandidateJobScore
+    {
+        [Key]
+        public int ScoreId { get; set; }
+
+        [Required]
+        public Guid JobApplicationId { get; set; }
+
+        [ForeignKey(nameof(JobApplicationId))]
+        public virtual JobApplication JobApplication { get; set; }
+
+        // ✅ Core Fit Scoring
+        [Range(0, 100)]
+        public int ResumeMatchScore { get; set; }   // Resume keywords vs job requirements
+
+        [Range(0, 100)]
+        public int SkillsMatchScore { get; set; }   // Skills vs required job skills
+
+        [Range(0, 100)]
+        public int ExperienceScore { get; set; }    // Candidate experience vs required
+
+        [Range(0, 100)]
+        public int OverallFitScore { get; set; }    // Computed aggregate score
+
+        // ✅ Feedback from Recruiter / System
+        [StringLength(2000)]
+        public string? Feedback { get; set; }
+
+        [Required]
+        public string EvaluatedBy { get; set; }     // Recruiter / System / AI Engine
+        public DateTime EvaluatedOn { get; set; } = DateTime.Now;
+    }
 
 
 }

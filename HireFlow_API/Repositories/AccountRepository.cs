@@ -44,7 +44,7 @@ namespace HireFlow_API.Repositories
         public async Task<string> CreateUserAsync(UserAccount user, string password ,string role)
         {
             var result = await _userManager.CreateAsync(user, password);
-
+            user.SecurityStamp = Guid.NewGuid().ToString();
             await _userManager.AddToRoleAsync(user, role);
 
             if (role.ToLower()  == "candidate")

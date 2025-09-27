@@ -22,32 +22,38 @@ namespace HireFlow_MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostJob(JobViewModel model)
+        public async Task<JsonResult> PostJob([FromBody] JobViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (model == null)
+                return Json(new { success = false, message = "Invalid job data." });
 
-            var response = await _httpClient.PostAsJsonAsync("api/Jobs/", model);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TempData["SuccessMessage"] = "Job posted successfully!";
-                return RedirectToAction("PostJob");
-            }
+                var response = await _httpClient.PostAsJsonAsync("api/Jobs/", model);
 
-            ModelState.AddModelError("", "Failed to post job.");
-            return View(model);
+                if (response.IsSuccessStatusCode)
+                    return Json(new { success = true, message = "Job posted successfully!" });
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return Json(new { success = false, message = $"Failed to post job: {errorContent}" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Exception: {ex.Message}" });
+            }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AllJobs()
         {
+
             var response = await _httpClient.GetAsync("api/Jobs/");
 
             if (!response.IsSuccessStatusCode)
             {
-                ViewBag.Error = "Failed to fetch jobs from API.";
-                return View(new List<JobViewModel>());
+                // Return empty list with 500 status
+                return StatusCode(500, new { message = "Failed to fetch jobs from API." });
             }
 
             var json = await response.Content.ReadAsStringAsync();
@@ -58,6 +64,29 @@ namespace HireFlow_MVC.Controllers
 
             return View(jobs);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllJobs()
+        {
+            var response = await _httpClient.GetAsync("api/Jobs/");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // Return empty list with 500 status
+                return StatusCode(500, new { message = "Failed to fetch jobs from API." });
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var jobs = JsonSerializer.Deserialize<List<JobViewModel>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            // Return JSON instead of a View
+            return Json(jobs);
+        }
+
+
 
         [HttpGet]
         public async Task<IActionResult> JobDetails(Guid id)

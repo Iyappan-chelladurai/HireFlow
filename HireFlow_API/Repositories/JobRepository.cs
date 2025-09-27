@@ -26,24 +26,27 @@ namespace HireFlow_API.Repositories
 
         public async Task<IEnumerable<JobDTO>> RetrieveAllJobsAsync()
         {
-            return await _context.Jobs
-                .AsNoTracking()
-                .Select(j => new JobDTO
-                {
-                    JobId = j.JobId,
-                    JobTitle = j.JobTitle,
-                    JobDescription = j.JobDescription,
-                    Department = j.Department,
-                    Location = j.Location,
-                    Salary = j.Salary,
-                    EmploymentType = j.EmploymentType,
-                    Openings = j.Openings,
-                    PostedOn = j.PostedOn,
-                    ClosingDate = j.ClosingDate,
-                    PostedBy = j.PostedBy,
-                    IsActive = j.IsActive
-                })
-                .ToListAsync();
+   return await _context.Jobs
+    .AsNoTracking()
+    .Select(j => new JobDTO
+    {
+        JobId = j.JobId,
+        JobTitle = j.JobTitle,
+        JobDescription = j.JobDescription,
+        Department = j.Department,
+        Location = j.Location,
+        Salary = j.Salary,
+        Skills = j.Skills,
+        EmploymentType = j.EmploymentType,
+        Openings = j.Openings,
+        PostedOn = j.PostedOn,
+        ClosingDate = j.ClosingDate,
+        PostedBy = j.PostedBy,
+        JobStatus = j.JobStatus,
+        CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
+    })
+    .ToListAsync();
+
         }
 
 
@@ -65,8 +68,16 @@ namespace HireFlow_API.Repositories
 
         public async Task AddNewJobAsync(Job job)
         {
-            await _context.Jobs.AddAsync(job);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Jobs.AddAsync(job);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception EX)
+            { 
+            
+            }
+
         }
 
         public async Task<bool> UpdateExistingJobAsync(Job job)

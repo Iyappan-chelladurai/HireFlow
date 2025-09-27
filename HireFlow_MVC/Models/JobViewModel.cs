@@ -2,9 +2,12 @@
 
 namespace HireFlow_MVC.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class JobViewModel
     {
-        public Guid? JobId { get; set; }  // Inc
+        public Guid? JobId { get; set; }  // For updates / internal use
 
         [Required, MaxLength(150)]
         public string JobTitle { get; set; }
@@ -18,6 +21,8 @@ namespace HireFlow_MVC.Models
         [MaxLength(100)]
         public string Location { get; set; }
 
+        public string Skills { get; set; }
+
         [Range(0, double.MaxValue)]
         public decimal? Salary { get; set; }
 
@@ -29,9 +34,21 @@ namespace HireFlow_MVC.Models
 
         public DateTime? ClosingDate { get; set; }
 
+        // 🔹 Experience & Education (from DTO)
+        public string Experience { get; set; }
+        public string Education { get; set; }
+
+        // 🔹 PostedBy as Guid
+        public Guid? PostedBy { get; set; }
+
+        // 🔹 Active flag
+        public int JobStatus { get; set; }
+
+        // 🔹 Internal / UI only
         public JobApplicationViewModel? NewApplicationViewData { get; set; } = new JobApplicationViewModel();
 
-
+        public int? CandidateCount { get; set; }
     }
+
 
 }

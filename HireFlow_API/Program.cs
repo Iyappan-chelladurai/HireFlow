@@ -38,6 +38,9 @@ builder.Services.AddScoped<IJobService,  JobService>();
 builder.Services.AddScoped<ICandidateDocumentsRepository, CandidateDocumentsRepository>();
 builder.Services.AddScoped<ICandidateDocumentsService, CandidateDocumentsService>();
 
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+
+
 // Register IHttpClientFactory
 builder.Services.AddHttpClient();
 

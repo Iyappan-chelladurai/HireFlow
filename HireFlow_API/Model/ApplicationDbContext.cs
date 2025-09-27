@@ -27,7 +27,8 @@ namespace HireFlow_API.Model
 
         public DbSet<OnboardingStatus> OnboardingStatusTable { get; set; }
 
-
+        public DbSet<CandidateJobScore> tbl_CandidatesJobScore { get; set; }
+ 
         public DbSet<InterviewScheduleDetail> InterviewScheduleDetails { get; set; }
 
 

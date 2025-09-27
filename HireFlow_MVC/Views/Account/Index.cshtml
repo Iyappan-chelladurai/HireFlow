@@ -1,9 +1,4 @@
-﻿@{
-
-    Layout = null;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +6,7 @@
     <title>Infoplus Solutions | Innovative Technology Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -80,9 +76,9 @@
             align-items: center;
         }
 
-        .logo span {
-            color: var(--secondary);
-        }
+            .logo span {
+                color: var(--secondary);
+            }
 
         .nav-menu {
             display: flex;
@@ -95,24 +91,24 @@
             position: relative;
         }
 
-        .nav-link:hover {
-            color: var(--primary);
-        }
+            .nav-link:hover {
+                color: var(--primary);
+            }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s;
-        }
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: var(--primary);
+                transition: width 0.3s;
+            }
 
-        .nav-link:hover::after {
-            width: 100%;
-        }
+            .nav-link:hover::after {
+                width: 100%;
+            }
 
         .nav-cta {
             background-color: var(--primary);
@@ -123,14 +119,14 @@
             transition: all 0.3s;
         }
 
-        .nav-cta:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
+            .nav-cta:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
 
-        .nav-cta::after {
-            display: none;
-        }
+            .nav-cta::after {
+                display: none;
+            }
 
         .mobile-toggle {
             display: none;
@@ -176,6 +172,7 @@
             font-weight: 600;
             transition: all 0.3s;
             display: inline-block;
+            cursor: pointer;
         }
 
         .btn-primary {
@@ -183,11 +180,11 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
-        }
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            }
 
         .btn-secondary {
             background-color: transparent;
@@ -195,11 +192,11 @@
             color: var(--primary);
         }
 
-        .btn-secondary:hover {
-            background-color: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
+            .btn-secondary:hover {
+                background-color: var(--primary);
+                color: white;
+                transform: translateY(-3px);
+            }
 
         .hero-image {
             position: absolute;
@@ -247,10 +244,10 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
+            .service-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            }
 
         .service-icon {
             width: 70px;
@@ -285,9 +282,9 @@
             transition: gap 0.3s;
         }
 
-        .service-link:hover {
-            gap: 10px;
-        }
+            .service-link:hover {
+                gap: 10px;
+            }
 
         /* About Section */
         .about {
@@ -306,11 +303,11 @@
             position: relative;
         }
 
-        .about-image img {
-            width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
+            .about-image img {
+                width: 100%;
+                border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            }
 
         .about-stats {
             display: grid;
@@ -366,10 +363,10 @@
             transition: all 0.3s;
         }
 
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+            .benefit-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
 
         .benefit-icon {
             font-size: 2.5rem;
@@ -410,10 +407,10 @@
             transition: all 0.3s;
         }
 
-        .job-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
+            .job-item:hover {
+                transform: translateX(5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
 
         .job-info h3 {
             font-size: 1.3rem;
@@ -429,6 +426,11 @@
 
         .job-apply .btn {
             padding: 10px 20px;
+        }
+
+        .view-all-jobs {
+            text-align: center;
+            margin-top: 40px;
         }
 
         /* Testimonials */
@@ -527,10 +529,10 @@
             transition: all 0.3s;
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
 
         /* Footer */
         footer {
@@ -574,10 +576,10 @@
             transition: all 0.3s;
         }
 
-        .social-link:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-        }
+            .social-link:hover {
+                background-color: var(--primary);
+                transform: translateY(-3px);
+            }
 
         .footer-title {
             font-size: 1.2rem;
@@ -596,11 +598,11 @@
             transition: all 0.3s;
         }
 
-        .footer-link:hover {
-            opacity: 1;
-            color: var(--primary);
-            padding-left: 5px;
-        }
+            .footer-link:hover {
+                opacity: 1;
+                color: var(--primary);
+                padding-left: 5px;
+            }
 
         .footer-bottom {
             text-align: center;
@@ -610,96 +612,191 @@
             font-size: 0.9rem;
         }
 
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+
+        }
+
         /* Responsive Design */
         @@media (max-width: 992px) {
-            .hero-title {
-                font-size: 2.8rem;
-            }
+            .hero-title
 
-            .about-content {
-                grid-template-columns: 1fr;
-            }
+        {
+            font-size: 2.8rem;
+        }
 
-            .about-image {
-                order: -1;
-            }
+        .about-content {
+            grid-template-columns: 1fr;
+        }
 
-            .job-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
+        .about-image {
+            order: -1;
+        }
 
-            .job-details {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
+        .job-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .job-details {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         }
 
         @@media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
+            .nav-menu
 
-            .mobile-toggle {
-                display: block;
-            }
+        {
+            display: none;
+        }
 
-            .hero {
-                padding: 130px 0 80px;
-            }
+        .mobile-toggle {
+            display: block;
+        }
 
-            .hero-title {
-                font-size: 2.3rem;
-            }
+        .hero {
+            padding: 130px 0 80px;
+        }
 
-            .hero-image {
-                display: none;
-            }
+        .hero-title {
+            font-size: 2.3rem;
+        }
 
-            .hero-content {
-                max-width: 100%;
-            }
+        .hero-image {
+            display: none;
+        }
 
-            .section-title {
-                font-size: 2rem;
-            }
+        .hero-content {
+            max-width: 100%;
+        }
 
-            .job-openings {
-                padding: 30px 20px;
-            }
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .job-openings {
+            padding: 30px 20px;
+        }
+
         }
 
         @@media (max-width: 576px) {
-            .hero-buttons {
-                flex-direction: column;
-            }
+            .hero-buttons
 
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .about-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .testimonial-card {
-                padding: 30px 20px;
-            }
-
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
+        {
+            flex-direction: column;
         }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .about-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .testimonial-card {
+            padding: 30px 20px;
+        }
+
+        .benefits-grid {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        #candidate-nav-item .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            #candidate-nav-item .nav-link i {
+                font-size: 1.1rem;
+            }
+
+        .job-description {
+            margin: 15px 0;
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .job-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            background-color: #e0f2fe;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments for job items */
+        @@media (max-width: 992px) {
+            .job-item
+
+        {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .job-details {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .job-apply {
+            width: 100%;
+            text-align: center;
+        }
+
+        }
+
+
     </style>
 </head>
 <body>
     <!-- Header & Navigation -->
     <header>
         <div class="container header-container">
-            <a href="#" class="logo">Modern<span>Tech</span></a>
-
+            <a href="#" class="logo">Infoplus<span>Solutions</span></a>
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" class="nav-link">Home</a></li>
@@ -707,7 +804,15 @@
                     <li><a href="#about" class="nav-link">About</a></li>
                     <li><a href="#careers" class="nav-link">Careers</a></li>
                     <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
-                    <li><a href="#contact" class="nav-link nav-cta">Contact Us</a></li>
+
+                    <!-- Conditional display based on candidate login -->
+                    <li id="contact-nav-item"><a href="#contact" class="nav-link nav-cta">Contact Us</a></li>
+                    <li id="candidate-nav-item" style="display: none;">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-user"></i>
+                            <span id="candidate-name"></span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
 
@@ -876,62 +981,14 @@
 
             <h3 class="section-title" style="font-size: 2rem; margin-bottom: 40px;">Current Openings</h3>
             <div class="job-openings">
-                <div class="job-list">
-                    <div class="job-item">
-                        <div class="job-info">
-                            <h3>Senior Frontend Developer</h3>
-                            <div class="job-details">
-                                <span><i class="fas fa-map-marker-alt"></i> Remote</span>
-                                <span><i class="fas fa-briefcase"></i> Full-time</span>
-                                <span><i class="fas fa-dollar-sign"></i> $100,000 - $140,000</span>
-                            </div>
-                        </div>
-                        <div class="job-apply">
-                            <a href="#apply" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-
-                    <div class="job-item">
-                        <div class="job-info">
-                            <h3>DevOps Engineer</h3>
-                            <div class="job-details">
-                                <span><i class="fas fa-map-marker-alt"></i> San Francisco, CA</span>
-                                <span><i class="fas fa-briefcase"></i> Full-time</span>
-                                <span><i class="fas fa-dollar-sign"></i> $120,000 - $160,000</span>
-                            </div>
-                        </div>
-                        <div class="job-apply">
-                            <a href="#apply" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-
-                    <div class="job-item">
-                        <div class="job-info">
-                            <h3>UX/UI Designer</h3>
-                            <div class="job-details">
-                                <span><i class="fas fa-map-marker-alt"></i> New York, NY</span>
-                                <span><i class="fas fa-briefcase"></i> Full-time</span>
-                                <span><i class="fas fa-dollar-sign"></i> $90,000 - $120,000</span>
-                            </div>
-                        </div>
-                        <div class="job-apply">
-                            <a href="#apply" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-
-                    <div class="job-item">
-                        <div class="job-info">
-                            <h3>Data Scientist</h3>
-                            <div class="job-details">
-                                <span><i class="fas fa-map-marker-alt"></i> Remote</span>
-                                <span><i class="fas fa-briefcase"></i> Full-time</span>
-                                <span><i class="fas fa-dollar-sign"></i> $110,000 - $150,000</span>
-                            </div>
-                        </div>
-                        <div class="job-apply">
-                            <a href="#apply" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
+                <div class="loading" id="jobs-loading">
+                    <div class="spinner"></div>
+                </div>
+                <div class="job-list" id="job-list">
+                    <!-- Jobs will be loaded here via JavaScript -->
+                </div>
+                <div class="view-all-jobs">
+                    <a href="#" class="btn btn-primary" id="view-all-jobs-btn">View All Jobs</a>
                 </div>
             </div>
         </div>
@@ -993,57 +1050,40 @@
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <a href="#" class="footer-logo">Infoplus</a>
-                    <p class="footer-description">Providing innovative technology solutions to businesses worldwide since 2010.</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-links-column">
-                    <h3 class="footer-title">Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#" class="footer-link">About Us</a></li>
-                        <li><a href="#careers" class="footer-link">Careers</a></li>
-                        <li><a href="#" class="footer-link">Blog</a></li>
-                        <li><a href="#" class="footer-link">Press</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links-column">
-                    <h3 class="footer-title">Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="#" class="footer-link">Web Development</a></li>
-                        <li><a href="#" class="footer-link">App Development</a></li>
-                        <li><a href="#" class="footer-link">Cloud Solutions</a></li>
-                        <li><a href="#" class="footer-link">Data Analytics</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links-column">
-                    <h3 class="footer-title">Contact</h3>
-                    <ul class="footer-links">
-                        <li><a href="#" class="footer-link">info@Infoplus.com</a></li>
-                        <li><a href="#" class="footer-link">+1 (555) 123-4567</a></li>
-                        <li><a href="#" class="footer-link">123 Tech Street, San Francisco, CA 94103</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2023 Infoplus Solutions. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
+   
     <script>
+
+                // Function to check if candidate is logged in and update UI accordingly
+        function checkCandidateSession() {
+            // In a real application, this would check server-side session
+            // For demo purposes, we're using sessionStorage
+            const candidateId = sessionStorage.getItem('candidateId');
+            const candidateName = sessionStorage.getItem('candidateName');
+
+            if (candidateId && candidateName) {
+                // Hide Contact Us, show candidate name
+                document.getElementById('contact-nav-item').style.display = 'none';
+                document.getElementById('candidate-nav-item').style.display = 'list-item';
+                document.getElementById('candidate-name').textContent = candidateName;
+            } else {
+                // Show Contact Us, hide candidate name
+                document.getElementById('contact-nav-item').style.display = 'list-item';
+                document.getElementById('candidate-nav-item').style.display = 'none';
+            }
+        }
+
+        // Call this function when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkCandidateSession();
+
+            // Also add to your existing document ready function
+            $(document).ready(function() {
+                checkCandidateSession();
+                // ... your existing code ...
+            });
+        });
+
+
         // Simple JavaScript for mobile menu toggle
         document.querySelector('.mobile-toggle').addEventListener('click', function() {
             const navMenu = document.querySelector('.nav-menu');
@@ -1070,6 +1110,140 @@
                         document.querySelector('.nav-menu').style.display = 'none';
                     }
                 }
+            });
+        });
+
+        // Function to check if candidate is logged in (simulated with sessionStorage)
+        function isCandidateLoggedIn() {
+            // In a real application, this would check server-side session
+            // For demo purposes, we're using sessionStorage
+            return sessionStorage.getItem('candidateId') !== null;
+        }
+
+        // Function to handle job application
+        function handleJobApply(jobId) {
+            if (isCandidateLoggedIn()) {
+                // Redirect to job details page
+                window.location.href = `Job/AllJobs`;
+            } else {
+              const returnUrl = encodeURIComponent("/Job/AllJobs");
+          window.location.href = `/Account/Login?returnUrl=${returnUrl}`;
+            }
+        }
+
+              // Function to load jobs from API endpoint
+        function loadJobs() {
+            // Show loading spinner
+            $('#jobs-loading').show();
+            $('#job-list').hide();
+
+            // Simulate API call with setTimeout (replace with actual API endpoint)
+            setTimeout(() => {
+                // Sample job data (replace with actual API response)
+                const jobs = [
+                    {
+                        id: 1,
+                        title: "Senior Frontend Developer",
+                        location: "Remote",
+                        type: "Full-time",
+                        department: "Engineering",
+                        description: "We are looking for an experienced Frontend Developer to join our team. You will be responsible for building the next generation of web applications using modern frameworks like React and Vue.js.",
+                        skills: ["JavaScript", "React", "Vue.js", "HTML5", "CSS3", "TypeScript"]
+                    },
+                    {
+                        id: 2,
+                        title: "UX/UI Designer",
+                        location: "San Francisco, CA",
+                        type: "Full-time",
+                        department: "Design",
+                        description: "Join our design team to create beautiful, intuitive user experiences. You'll work closely with product managers and developers to bring designs to life.",
+                        skills: ["Figma", "Sketch", "Adobe XD", "UI Design", "UX Research", "Prototyping"]
+                    },
+                    {
+                        id: 3,
+                        title: "Data Scientist",
+                        location: "New York, NY",
+                        type: "Full-time",
+                        department: "Data Science",
+                        description: "Help us turn data into insights! We're looking for a Data Scientist to analyze complex datasets and build predictive models.",
+                        skills: ["Python", "R", "Machine Learning", "SQL", "TensorFlow", "Data Visualization"]
+                    },
+                    {
+                        id: 4,
+                        title: "DevOps Engineer",
+                        location: "Remote",
+                        type: "Contract",
+                        department: "Operations",
+                        description: "Seeking a DevOps Engineer to automate our deployment processes and maintain our cloud infrastructure.",
+                        skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Terraform", "Linux"]
+                    },
+                    {
+                        id: 5,
+                        title: "Product Manager",
+                        location: "Austin, TX",
+                        type: "Full-time",
+                        department: "Product",
+                        description: "Lead our product development initiatives from conception to launch. Work with cross-functional teams to deliver products that customers love.",
+                        skills: ["Product Strategy", "Agile", "Market Research", "Roadmapping", "User Stories", "Analytics"]
+                    }
+                ];
+
+                // Clear any existing content
+                $('#job-list').empty();
+
+                // Add jobs to the list (show only 3 for demo)
+                jobs.slice(0, 3).forEach(job => {
+                    // Create skills tags HTML
+                    const skillsTags = job.skills.map(skill =>
+                        `<span class="skill-tag">${skill}</span>`
+                    ).join('');
+
+                    $('#job-list').append(`
+                        <div class="job-item">
+                            <div class="job-info">
+                                <h3>${job.title}</h3>
+                                <div class="job-details">
+                                    <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                                    <span><i class="fas fa-clock"></i> ${job.type}</span>
+                                    <span><i class="fas fa-building"></i> ${job.department}</span>
+                                </div>
+                                <div class="job-description">
+                                    <p>${job.description}</p>
+                                </div>
+                                <div class="job-skills">
+                                    ${skillsTags}
+                                </div>
+                            </div>
+                            <div class="job-apply">
+                                <button class="btn btn-primary apply-btn" data-job-id="${job.id}">Apply Now</button>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                // Hide loading spinner and show job list
+                $('#jobs-loading').hide();
+                $('#job-list').show();
+
+                // Add event listeners to apply buttons
+                $('.apply-btn').on('click', function() {
+                    const jobId = $(this).data('job-id');
+                    handleJobApply(jobId);
+                });
+
+            }, 1500); // Simulate network delay
+        }
+
+        // Load jobs when document is ready
+        $(document).ready(function() {
+            loadJobs();
+
+            // Add event listener for "View All Jobs" button
+            $('#view-all-jobs-btn').on('click', function(e) {
+                e.preventDefault();
+                 window.location.href = `Job/AllJobs`;
+                // In a real application, this would redirect to a jobs listing page
+                alert('Redirecting to all jobs page...');
             });
         });
     </script>

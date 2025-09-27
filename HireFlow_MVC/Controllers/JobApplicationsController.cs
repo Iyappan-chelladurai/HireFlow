@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HireFlow_MVC.Controllers
 {
@@ -41,7 +42,7 @@ namespace HireFlow_MVC.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> NewApplication([FromForm] JobApplicationViewModel model)
         {
             var candidateIdString = HttpContext.Session.GetString("CandidateId");
@@ -127,22 +128,23 @@ namespace HireFlow_MVC.Controllers
 
         public async Task<IActionResult> ViewApplicationStatus()
         {
-            var candidateIdString = HttpContext.Session.GetString("CandidateId");
+            //var candidateIdString = HttpContext.Session.GetString("CandidateId");
 
-            if (!string.IsNullOrEmpty(candidateIdString) && Guid.TryParse(candidateIdString, out Guid candidateId))
-            {
-                var response = await _httpClient.GetAsync($"api/JobApplications/candidate/{candidateId}");
+            //if (!string.IsNullOrEmpty(candidateIdString) && Guid.TryParse(candidateIdString, out Guid candidateId))
+            //{
+            //    var response = await _httpClient.GetAsync($"api/JobApplications/candidate/{candidateId}");
 
-                var content = await response.Content.ReadAsStringAsync();
-                // Deserialize JSON -> List of ViewModels
-                var applications = JsonConvert.DeserializeObject<List<JobApplicationViewModel>>(content);
-                return View(applications);
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Session expired. Please log in again.";
-                return RedirectToAction("Login", "Account");
-            }
+            //    var content = await response.Content.ReadAsStringAsync();
+            //    // Deserialize JSON -> List of ViewModels
+            //    var applications = JsonConvert.DeserializeObject<List<JobApplicationViewModel>>(content);
+            //    return View(applications);
+            //}
+            //else
+            //{
+            //    TempData["ErrorMessage"] = "Session expired. Please log in again.";
+            //    return RedirectToAction("Login", "Account");
+            //}
+            return View();
         }
 
 

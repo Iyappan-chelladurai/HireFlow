@@ -29,7 +29,7 @@ namespace HireFlow_API.Services
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.ToString()),  
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
                 new Claim(ClaimTypes.Name, user.UserName),                 
                 new Claim(ClaimTypes.Email, user.Email),                    
                 new Claim("FullName", user.FullName),
