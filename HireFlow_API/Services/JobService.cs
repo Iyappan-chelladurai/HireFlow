@@ -1,6 +1,7 @@
 ﻿using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace HireFlow_API.Services
@@ -18,13 +19,17 @@ namespace HireFlow_API.Services
     {
         private readonly IJobRepository _jobRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<JobService> _logger;
 
-        public JobService(IJobRepository jobRepository , IHttpContextAccessor httpContextAccessor)
+        public JobService(IJobRepository jobRepository,
+                          IHttpContextAccessor httpContextAccessor,
+                          ILogger<JobService> logger)
         {
             _jobRepository = jobRepository;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
- 
+
         public async Task<IEnumerable<JobDTO>> RetrieveAllJobsAsync()
         {
             return await _jobRepository.RetrieveAllJobsAsync();
@@ -38,18 +43,18 @@ namespace HireFlow_API.Services
         public async Task<JobDTO> CreateNewJobAsync(CreateJobDTO newJobDto)
         {
             var user = _httpContextAccessor.HttpContext?.User;
-
             var userIdValue = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userIdValue))
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            Guid postedBy = Guid.Parse(userIdValue); // Convert string → Guid
+            Guid postedBy = Guid.Parse(userIdValue);
 
             var job = new Job
             {
                 JobId = Guid.NewGuid(),
                 JobTitle = newJobDto.JobTitle,
+                JobSummary = newJobDto.JobSummary,
                 JobDescription = newJobDto.JobDescription,
                 Department = newJobDto.Department,
                 Location = newJobDto.Location,
@@ -58,24 +63,34 @@ namespace HireFlow_API.Services
                 Openings = newJobDto.Openings,
                 PostedOn = DateTime.UtcNow,
                 ClosingDate = newJobDto.ClosingDate,
-                PostedBy = postedBy, 
+                PostedBy = postedBy,
                 Skills = newJobDto.Skills,
                 JobStatus = newJobDto.JobStatus
             };
 
-            await _jobRepository.AddNewJobAsync(job);
+            try
+            {
+                await _jobRepository.AddNewJobAsync(job);
+                _logger.LogInformation("Job '{JobTitle}' created successfully by {UserId}", job.JobTitle, postedBy);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while creating job '{JobTitle}' by {UserId}", job.JobTitle, postedBy);
+                throw;
+            }
 
             return new JobDTO
             {
                 JobId = job.JobId,
                 JobTitle = job.JobTitle,
+                JobSummary = job.JobSummary,
                 JobDescription = job.JobDescription,
                 Department = job.Department,
                 Location = job.Location,
                 Salary = job.Salary,
                 EmploymentType = job.EmploymentType,
                 Openings = job.Openings,
-                Skills = newJobDto.Skills,
+                Skills = job.Skills,
                 PostedOn = job.PostedOn,
                 ClosingDate = job.ClosingDate,
                 PostedBy = job.PostedBy,
@@ -83,24 +98,54 @@ namespace HireFlow_API.Services
             };
         }
 
-
         public async Task<bool> UpdateJobDetailsAsync(Guid jobId, UpdateJobDTO updatedJobDto)
         {
+            var existingJob = await _jobRepository.RetrieveJobByIdAsync(jobId);
+
+            if (existingJob == null)
+            {
+                _logger.LogWarning("Attempted to update non-existing job {JobId}", jobId);
+                return false;
+            }
+
             var job = new Job
             {
                 JobId = jobId,
                 JobTitle = updatedJobDto.JobTitle,
+                JobSummary = updatedJobDto.JobSummary,
                 JobDescription = updatedJobDto.JobDescription,
                 Department = updatedJobDto.Department,
-                Location = updatedJobDto.Location
+                Location = updatedJobDto.Location,
+                Salary = updatedJobDto.Salary ?? existingJob.Salary,  // safe merge
+                Skills = updatedJobDto.Skills ?? existingJob.Skills,
+                EmploymentType = updatedJobDto.EmploymentType ?? existingJob.EmploymentType,
+                Openings = updatedJobDto?.Openings ?? existingJob.Openings,
+                ClosingDate = updatedJobDto.ClosingDate ?? existingJob.ClosingDate,
+                JobStatus = updatedJobDto?.JobStatus ?? existingJob.JobStatus,
+                PostedBy = existingJob.PostedBy,
+                PostedOn = existingJob.PostedOn
             };
 
-            return await _jobRepository.UpdateExistingJobAsync(job);
+            var result = await _jobRepository.UpdateExistingJobAsync(job);
+
+            if (result)
+                _logger.LogInformation("Job {JobId} updated successfully", jobId);
+            else
+                _logger.LogWarning("Failed to update job {JobId}", jobId);
+
+            return result;
         }
 
         public async Task<bool> DeleteJobAsync(Guid jobId)
         {
-            return await _jobRepository.RemoveJobByIdAsync(jobId);
+            var result = await _jobRepository.RemoveJobByIdAsync(jobId);
+
+            if (result)
+                _logger.LogInformation("Job {JobId} deleted successfully", jobId);
+            else
+                _logger.LogWarning("Attempted to delete non-existing job {JobId}", jobId);
+
+            return result;
         }
     }
 }

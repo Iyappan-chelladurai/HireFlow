@@ -8,6 +8,10 @@
 
         public Guid JobId { get; set; }
 
+        public string? JobTitle { get; set; }
+        public string? CandidateName { get; set; }
+        public string? CandidateEmail { get; set; }
+
         public string? ResumePath { get; set; }
 
         public DateTime AppliedOn { get; set; }

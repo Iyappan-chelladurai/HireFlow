@@ -87,7 +87,6 @@ namespace HireFlow_MVC.Controllers
         }
 
 
-
         [HttpGet]
         public async Task<IActionResult> JobDetails(Guid id)
         {

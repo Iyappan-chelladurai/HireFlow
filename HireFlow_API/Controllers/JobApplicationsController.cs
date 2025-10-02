@@ -1,4 +1,4 @@
-﻿using HireFlow.Services;
+﻿ 
 using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
@@ -21,14 +21,11 @@ namespace HireFlow_API.Controllers
     public class JobApplicationsController : ControllerBase
     {
         private readonly IJobApplicationService _service;
-        private readonly IJobService _Jobservice;
-        private readonly CandidateScorerService _candidateScorer;
-        private readonly IConfiguration configuration;
-
-        public JobApplicationsController(IJobApplicationService jobService)
+        private readonly ICandidateScoringService _candidateScorer;
+        public JobApplicationsController(IJobApplicationService jobService , ICandidateScoringService candidateScoringService)
         {
             _service = jobService;
-            _candidateScorer = new CandidateScorerService(configuration , _service , _Jobservice);
+            _candidateScorer = candidateScoringService;
         }
 
         [HttpGet]
@@ -78,9 +75,9 @@ namespace HireFlow_API.Controllers
         /// Score a candidate against a Job Role + Job Description
         /// </summary>
         [HttpPost("score")]
-        public async Task<IActionResult> ScoreCandidate(Guid JobId , Guid JobApp)
+        public async Task<IActionResult> ScoreCandidate( Guid JobApplicationId)
         {
-            var result = await _candidateScorer.ScoreCandidateAsync(JobId ,JobApp);
+            var result = await _candidateScorer.ScoreCandidateAsync( JobApplicationId);
 
             return Ok(result);
         }

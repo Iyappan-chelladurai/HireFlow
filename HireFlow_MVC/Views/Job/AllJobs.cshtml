@@ -653,7 +653,7 @@
 
                             <div class="job-info">
                                 <h3>@job.JobTitle</h3>
-                                <p>@(string.IsNullOrWhiteSpace(job.JobDescription) ? "No description provided." : job.JobDescription)</p>
+                                <p>@(string.IsNullOrWhiteSpace(job.JobSummary) ? "No description provided." : job.JobSummary)</p>
 
                                 <div class="job-details">
                                     <span><i class="fas fa-map-marker-alt"></i> @job.Location</span>

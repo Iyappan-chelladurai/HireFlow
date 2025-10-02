@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Enrichers.WithCaller;
 using System.Configuration;
 using System.Text;
 
@@ -39,12 +41,12 @@ builder.Services.AddScoped<ICandidateDocumentsRepository, CandidateDocumentsRepo
 builder.Services.AddScoped<ICandidateDocumentsService, CandidateDocumentsService>();
 
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<ICandidateScoringService , CandidateScoringService>();
 
+builder.Services.AddScoped<ICandidateDetailService, CandidateDetailService>();
 
 // Register IHttpClientFactory
 builder.Services.AddHttpClient();
-
-
 
 
 builder.Services.AddControllers();
@@ -126,11 +128,34 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
+ 
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.WithCaller() // Adds method and class info
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Error)
+    .WriteTo.File(
+        @"C:\Logs\HireFlow\hireflow_log.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        shared: true,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}][{Level:u3}][{CallerType}.{CallerMethod}] {Message:lj}{NewLine}{Exception}"
+    )
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss}][{Level:u3}][{CallerType}.{CallerMethod}] {Message:lj}{NewLine}{Exception}"
+    )
+    .CreateLogger();
 
+// Use Serilog as the host logger
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+
+ 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -138,8 +163,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Enable CORS
+ 
 app.UseCors("AllowAll");
 
 app.UseAuthentication();

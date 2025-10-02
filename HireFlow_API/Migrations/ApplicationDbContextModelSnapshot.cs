@@ -286,11 +286,15 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("JobDescription")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("JobStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("JobSummary")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()

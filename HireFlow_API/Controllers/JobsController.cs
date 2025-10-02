@@ -1,4 +1,5 @@
 ﻿using Amazon.Runtime;
+using HireFlow_API.Migrations;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -88,12 +89,12 @@ namespace HireFlow_API.Controllers
             try
             {
                 var httpClient = _httpClientFactory.CreateClient();
-                var (jobDescriptionHtml, skills) = await GenerateJDFromDTO(job, httpClient, _openAiKey);
+                var (jobDescriptionHtml, jobSummary) = await GenerateJDFromDTO(job, httpClient, _openAiKey);
 
                 return Ok(new
                 {
                     jobDescriptionHtml,
-                    requiredSkills = skills
+                    jobSummary
                 });
             }
             catch (Exception ex)
@@ -103,37 +104,46 @@ namespace HireFlow_API.Controllers
             }
         }
 
-        private async Task<(string JobDescriptionHtml, List<string> Skills)> GenerateJDFromDTO(CreateJobDTO dto, HttpClient _httpClient, string _openAiKey)
+        private async Task<(string JobDescriptionHtml, string JobSummary)> GenerateJDFromDTO(
+                               CreateJobDTO dto, HttpClient _httpClient, string _openAiKey)
         {
             var prompt = $@"
-                            You are an AI assistant generating professional job descriptions.
-                            Generate a job description in HTML with inline styles. Include sections:
-                            Overview (<p>), Responsibilities (<ul><li>...</li></ul>), Requirements (<ul><li>...</li></ul>), Benefits (<ul><li>...</li></ul>).
-                            Return a JSON object with:
-                            1. 'jobDescriptionHtml': HTML content
-                            2. 'requiredSkills': array of strings
+        You are an AI assistant generating professional job descriptions.
 
-                            Job Details:
-                            Title: {dto.JobTitle}
-                            Department: {dto.Department}
-                            Location: {dto.Location}
-                            Salary: {(dto.Salary.HasValue ? dto.Salary.Value.ToString("C") : "Not specified")}
-                            Employment Type: {dto.EmploymentType}
-                            Openings: {dto.Openings}
-                            Closing Date: {(dto.ClosingDate.HasValue ? dto.ClosingDate.Value.ToString("yyyy-MM-dd") : "Not specified")}
-                            Additional Info: {dto.Skills ?? "N/A"}
+        Generate:
+        1. 'jobDescriptionHtml': A professional job description in HTML with inline styles.
+           - Include a natural structure with sections such as Job Summary, Overview, Responsibilities, Requirements, Benefits, etc.
+           - The sections do not have to follow a fixed format, but they must flow like a professional job posting.
 
-                            Return only valid JSON. No explanations or code fences.
-                            ";
+        2. 'jobSummary': A short plain-text summary (1–2 sentences only) of the role.
+
+        Return a JSON object with exactly:
+        {{
+            ""jobDescriptionHtml"": ""<html>...</html>"",
+            ""jobSummary"": ""...""
+        }}
+
+        Job Details:
+        Title: {dto.JobTitle}
+        Department: {dto.Department}
+        Location: {dto.Location}
+        Salary: {(dto.Salary.HasValue ? dto.Salary.Value.ToString("C") : "Not specified")}
+        Employment Type: {dto.EmploymentType}
+        Openings: {dto.Openings}
+        Closing Date: {(dto.ClosingDate.HasValue ? dto.ClosingDate.Value.ToString("yyyy-MM-dd") : "Not specified")}
+        Additional Info: {dto.Skills ?? "N/A"}
+
+        Return only valid JSON. No explanations or code fences.
+    ";
 
             var body = new
             {
                 model = "gpt-4o-mini",
                 messages = new[]
                 {
-                new { role = "system", content = "You are an AI assistant generating HTML job descriptions with inline styles." },
-                new { role = "user", content = prompt }
-            },
+            new { role = "system", content = "You are an AI assistant generating HTML job descriptions with inline styles." },
+            new { role = "user", content = prompt }
+        },
                 temperature = 0
             };
 
@@ -153,11 +163,11 @@ namespace HireFlow_API.Controllers
 
             using var responseDoc = JsonDocument.Parse(content);
             var jobDescriptionHtml = responseDoc.RootElement.GetProperty("jobDescriptionHtml").GetString() ?? "";
-            var skillsArray = responseDoc.RootElement.GetProperty("requiredSkills").EnumerateArray();
-            var skills = skillsArray.Select(s => s.GetString() ?? "").Where(s => !string.IsNullOrEmpty(s)).ToList();
+            var jobSummary = responseDoc.RootElement.GetProperty("jobSummary").GetString() ?? "";
 
-            return (jobDescriptionHtml, skills);
+            return (jobDescriptionHtml, jobSummary);
         }
+
     }
 }
 

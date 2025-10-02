@@ -2,6 +2,7 @@
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace HireFlow_API.Repositories
 {
@@ -18,91 +19,151 @@ namespace HireFlow_API.Repositories
     public class JobRepository : IJobRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<JobRepository> _logger;
 
-        public JobRepository(ApplicationDbContext context)
+        public JobRepository(ApplicationDbContext context, ILogger<JobRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<JobDTO>> RetrieveAllJobsAsync()
         {
-   return await _context.Jobs
-    .AsNoTracking()
-    .Select(j => new JobDTO
-    {
-        JobId = j.JobId,
-        JobTitle = j.JobTitle,
-        JobDescription = j.JobDescription,
-        Department = j.Department,
-        Location = j.Location,
-        Salary = j.Salary,
-        Skills = j.Skills,
-        EmploymentType = j.EmploymentType,
-        Openings = j.Openings,
-        PostedOn = j.PostedOn,
-        ClosingDate = j.ClosingDate,
-        PostedBy = j.PostedBy,
-        JobStatus = j.JobStatus,
-        CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
-    })
-    .ToListAsync();
+            try
+            {
+                _logger.LogInformation("Fetching all jobs...");
 
+                return await _context.Jobs
+                    .AsNoTracking()
+                    .Select(j => new JobDTO
+                    {
+                        JobId = j.JobId,
+                        JobTitle = j.JobTitle,
+                        JobSummary = j.JobSummary,
+                        JobDescription = j.JobDescription,
+                        Department = j.Department,
+                        Location = j.Location,
+                        Salary = j.Salary,
+                        Skills = j.Skills,
+                        EmploymentType = j.EmploymentType,
+                        Openings = j.Openings,
+                        PostedOn = j.PostedOn,
+                        ClosingDate = j.ClosingDate,
+                        PostedBy = j.PostedBy,
+                        JobStatus = j.JobStatus,
+                        CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while fetching all jobs");
+                return Enumerable.Empty<JobDTO>();
+            }
         }
-
 
         public async Task<JobDTO?> RetrieveJobByIdAsync(Guid jobId)
         {
-            return await _context.Jobs
-                .AsNoTracking()
-                .Where(j => j.JobId == jobId)
-                .Select(j => new JobDTO
-                {
-                    JobId = j.JobId,
-                    JobTitle = j.JobTitle,
-                    JobDescription = j.JobDescription,
-                    Department = j.Department,
-                    Location = j.Location
-                })
-                .FirstOrDefaultAsync();
+            try
+            {
+                _logger.LogInformation("Fetching job with Id {JobId}", jobId);
+
+                return await _context.Jobs
+                    .AsNoTracking()
+                    .Where(j => j.JobId == jobId)
+                    .Select(j => new JobDTO
+                    {
+                        JobId = j.JobId,
+                        JobTitle = j.JobTitle,
+                        JobSummary = j.JobSummary,
+                        JobDescription = j.JobDescription,
+                        Department = j.Department,
+                        Location = j.Location
+                    })
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while fetching job with Id {JobId}", jobId);
+                return null;
+            }
         }
 
         public async Task AddNewJobAsync(Job job)
         {
             try
             {
+                _logger.LogInformation("Adding new job {@Job}", job);
+
                 await _context.Jobs.AddAsync(job);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception EX)
-            { 
-            
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding new job {@Job}", job);
+                throw; // rethrow so higher layers know it failed
             }
-
         }
 
         public async Task<bool> UpdateExistingJobAsync(Job job)
         {
-            var exists = await _context.Jobs.AnyAsync(e => e.JobId == job.JobId);
-            if (!exists) return false;
+            try
+            {
+                if (!await _context.Jobs.AnyAsync(e => e.JobId == job.JobId))
+                {
+                    _logger.LogWarning("Job with Id {JobId} not found for update", job.JobId);
+                    return false;
+                }
 
-            _context.Entry(job).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return true;
+                _logger.LogInformation("Updating job with Id {JobId}", job.JobId);
+
+                _context.Entry(job).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating job {@Job}", job);
+                return false;
+            }
         }
 
         public async Task<bool> RemoveJobByIdAsync(Guid jobId)
         {
-            var job = await _context.Jobs.FindAsync(jobId);
-            if (job == null) return false;
+            try
+            {
+                var job = await _context.Jobs.FindAsync(jobId);
+                if (job == null)
+                {
+                    _logger.LogWarning("Job with Id {JobId} not found for deletion", jobId);
+                    return false;
+                }
 
-            _context.Jobs.Remove(job);
-            await _context.SaveChangesAsync();
-            return true;
+                _logger.LogInformation("Deleting job with Id {JobId}", jobId);
+
+                _context.Jobs.Remove(job);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while removing job with Id {JobId}", jobId);
+                return false;
+            }
         }
 
         public async Task<bool> CheckJobExistsAsync(Guid jobId)
         {
-            return await _context.Jobs.AnyAsync(e => e.JobId == jobId);
+            try
+            {
+                _logger.LogInformation("Checking if job with Id {JobId} exists", jobId);
+                return await _context.Jobs.AnyAsync(e => e.JobId == jobId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while checking existence of job {JobId}", jobId);
+                return false;
+            }
         }
     }
 }

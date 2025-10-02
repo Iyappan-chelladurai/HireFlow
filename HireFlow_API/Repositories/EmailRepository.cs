@@ -19,7 +19,7 @@ namespace HireFlow_API.Repositories
 
         public interface IEmailRepository
     {
-        void SendEmail(EmailRequestDTO emailRequest);
+        Task SendEmail(EmailRequestDTO emailRequest);
     }
 
     public class EmailRepository : IEmailRepository
@@ -28,7 +28,7 @@ namespace HireFlow_API.Repositories
         {
 
         }
-        public void SendEmail(EmailRequestDTO emailRequest)
+        public async Task SendEmail(EmailRequestDTO emailRequest)
         {
             try
             {

@@ -6,6 +6,8 @@ namespace HireFlow_API.Model.DTOs
     {
         public Guid JobId { get; set; }
         public string JobTitle { get; set; }
+
+        public string JobSummary { get; set; } = "";
         public string JobDescription { get; set; } = "";
         public string Department { get; set; }
         public string Location { get; set; }
@@ -33,7 +35,7 @@ public class CreateJobDTO
         [Required, MaxLength(150)]
         public string JobTitle { get; set; }
 
-        [MaxLength(1000)]
+        public string JobSummary { get; set; } = "";
         public string JobDescription { get; set; }
 
         [MaxLength(100)]
@@ -69,13 +71,15 @@ public class CreateJobDTO
     public class UpdateJobDTO
     {
         public string JobTitle { get; set; }
+
+        public string JobSummary { get; set; } = "";
         public string JobDescription { get; set; }
         public string Department { get; set; }
         public string Location { get; set; }
         public decimal? Salary { get; set; }
         public string EmploymentType { get; set; }
         public int Openings { get; set; }
-
+        public int JobStatus { get; set; } = 0;
         public string Skills { get; set; }
         public DateTime? ClosingDate { get; set; }
         public bool IsActive { get; set; }
@@ -89,8 +93,10 @@ public class CreateJobDTO
         public string Location { get; set; }
         public int Openings { get; set; }
 
-        public string Skills { get; set; }
+        public string JobSummary { get; set; } = "";
 
+        public string Skills { get; set; }
+        public int JobStatus { get; set; } = 0;
         public int CandidateCount { get; set; } // Number of applicants
         public DateTime ClosingDate { get; set; }
     }

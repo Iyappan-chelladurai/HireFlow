@@ -472,13 +472,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "JobDescription",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Resume",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "Name": "JobApplicationId",
+        "Type": "System.Guid",
         "IsRequired": false
       }
     ],

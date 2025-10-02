@@ -20,9 +20,9 @@ namespace HireFlow_MVC.Controllers
         }
 
         // GET: /JobApplications
-        public async Task<IActionResult> ListAllApplications()
+        public async Task<IActionResult> ListAllApplications(Guid JobId)
         {
-            var applications = await _httpClient.GetFromJsonAsync<List<JobApplicationViewModel>>("api/JobApplications");
+            var applications = await _httpClient.GetFromJsonAsync<List<JobApplicationViewModel>>($"api/JobApplications/{JobId}");
             return View(applications);
         }
 

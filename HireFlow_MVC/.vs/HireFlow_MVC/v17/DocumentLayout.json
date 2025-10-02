@@ -3,48 +3,16 @@
   "WorkspaceRootPath": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\job\\alljobs.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\job\\alljobs.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\controllers\\jobapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:controllers\\jobapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\controllers\\jobcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:controllers\\jobcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\jobapplications\\viewapplicationstatus.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\jobapplications\\viewapplicationstatus.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\models\\jobapplicationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:models\\jobapplicationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\job\\postjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\job\\postjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\shared\\_candidatelayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\shared\\_candidatelayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\views\\jobapplications\\listallapplications.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:views\\jobapplications\\listallapplications.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\models\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:models\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|c:\\iyappan\\projects\\project\\project\\hireflow\\hireflow_mvc\\controllers\\jobapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5FC83023-592C-D54C-30E1-77D142EF5CE2}|HireFlow_MVC.csproj|solutionrelative:controllers\\jobapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,71 +22,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAAD0AAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T15:36:30.295Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AllJobs.cshtml",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Job\\AllJobs.cshtml",
-              "RelativeDocumentMoniker": "Views\\Job\\AllJobs.cshtml",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Job\\AllJobs.cshtml",
-              "RelativeToolTip": "Views\\Job\\AllJobs.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAADAAA6AAAAAAAAAA==",
+              "Title": "ListAllApplications.cshtml",
+              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\JobApplications\\ListAllApplications.cshtml",
+              "RelativeDocumentMoniker": "Views\\JobApplications\\ListAllApplications.cshtml",
+              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\JobApplications\\ListAllApplications.cshtml",
+              "RelativeToolTip": "Views\\JobApplications\\ListAllApplications.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T13:51:10.383Z",
+              "WhenOpened": "2025-10-02T13:45:48.467Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "PostJob.cshtml",
               "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Job\\PostJob.cshtml",
               "RelativeDocumentMoniker": "Views\\Job\\PostJob.cshtml",
               "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Job\\PostJob.cshtml",
               "RelativeToolTip": "Views\\Job\\PostJob.cshtml",
-              "ViewState": "AgIAAOMHAAAAAAAAAAAAAPUHAAALAAAAAAAAAA==",
+              "ViewState": "AgIAANwHAAAAAAAAAAAqwOgHAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T13:18:09.882Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAD4v1oAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T11:27:15.373Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "JobController.cs",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Controllers\\JobController.cs",
-              "RelativeDocumentMoniker": "Controllers\\JobController.cs",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Controllers\\JobController.cs",
-              "RelativeToolTip": "Controllers\\JobController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAQwBgAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T11:36:05.051Z",
+              "WhenOpened": "2025-10-02T13:43:10.453Z",
               "EditorCaption": ""
             },
             {
@@ -129,74 +58,9 @@
               "RelativeDocumentMoniker": "Controllers\\JobApplicationsController.cs",
               "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Controllers\\JobApplicationsController.cs",
               "RelativeToolTip": "Controllers\\JobApplicationsController.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAApwEUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T11:36:05.071Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Account\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Account\\Login.cshtml",
-              "RelativeToolTip": "Views\\Account\\Login.cshtml",
-              "ViewState": "AgIAAN4CAAAAAAAAAAAmwOcCAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T10:17:06.245Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "JobApplicationViewModel.cs",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Models\\JobApplicationViewModel.cs",
-              "RelativeDocumentMoniker": "Models\\JobApplicationViewModel.cs",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Models\\JobApplicationViewModel.cs",
-              "RelativeToolTip": "Models\\JobApplicationViewModel.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAADwvywAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T14:48:16.752Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ViewApplicationStatus.cshtml",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\JobApplications\\ViewApplicationStatus.cshtml",
-              "RelativeDocumentMoniker": "Views\\JobApplications\\ViewApplicationStatus.cshtml",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\JobApplications\\ViewApplicationStatus.cshtml",
-              "RelativeToolTip": "Views\\JobApplications\\ViewApplicationStatus.cshtml",
-              "ViewState": "AgIAAIsCAAAAAAAAAAAAAJsCAAA2AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T15:04:03.804Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "_CandidateLayout.cshtml",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Shared\\_CandidateLayout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_CandidateLayout.cshtml",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Views\\Shared\\_CandidateLayout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_CandidateLayout.cshtml",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAACwAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-27T14:39:55.324Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "LoginViewModel.cs",
-              "DocumentMoniker": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Models\\LoginViewModel.cs",
-              "RelativeDocumentMoniker": "Models\\LoginViewModel.cs",
-              "ToolTip": "C:\\IYAPPAN\\Projects\\Project\\Project\\HireFlow\\HireFlow_MVC\\Models\\LoginViewModel.cs",
-              "RelativeToolTip": "Models\\LoginViewModel.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAA5wDkAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T11:21:49.75Z",
+              "WhenOpened": "2025-10-02T08:45:25.035Z",
               "EditorCaption": ""
             }
           ]

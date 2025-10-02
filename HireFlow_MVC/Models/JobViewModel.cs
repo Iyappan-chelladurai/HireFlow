@@ -12,7 +12,7 @@ namespace HireFlow_MVC.Models
         [Required, MaxLength(150)]
         public string JobTitle { get; set; }
 
-        [MaxLength(1000)]
+        public string JobSummary { get; set; }
         public string JobDescription { get; set; }
 
         [MaxLength(100)]
