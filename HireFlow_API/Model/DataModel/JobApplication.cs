@@ -23,17 +23,20 @@ namespace HireFlow_API.Model.DataModel
         [Required, MaxLength(500)]
         public string? ResumePath { get; set; }
 
-        public DateTime AppliedOn { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime AppliedOn { get; set; } = DateTime.Now;
 
         public string? ApplicationStatus { get; set; } // e.g., "Shortlisted", "Interviewed", "Selected", "Rejected"
 
         [MaxLength(1000)]
         public string? InterviewFeedback { get; set; }
 
+        [Column(TypeName = "datetime")]
         public DateTime? OfferSentOn { get; set; }
 
         public bool IsOfferAccepted { get; set; }
 
+        [Column(TypeName = "datetime")]
         public DateTime? OnboardedOn { get; set; }
     }
 

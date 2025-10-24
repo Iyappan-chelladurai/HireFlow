@@ -1092,7 +1092,7 @@
                         <th>Location</th>
                         <th>Applications</th>
                         <th>Status</th>
-                        <th>Posted Date</th>
+                        <th>Expire Date</th>
                     </tr>
                 </thead>
                 <tbody id="job-table-body">
@@ -1637,6 +1637,11 @@
             function showCandidates(jobId) {
                 currentJobId = jobId;
 
+
+ 
+                   window.location.href = "https://localhost:7149/JobApplications/ListAllApplications?JobId=" + currentJobId;
+
+
                 // Update job title
                 candidatesJobTitle.textContent = `Candidates for ${jobTitles[jobId]}`;
 
@@ -1703,8 +1708,8 @@
 
                     <div class="candidate-actions">
                         <button class="btn btn-outline view-profile-btn" data-candidate-id="${candidate.id}">View Profile</button>
-                        ${candidate.status === 'screening' ? '<button class="btn btn-primary">Shortlist</button>' : ''}
-                        ${candidate.status === 'interview' ? '<button class="btn btn-primary">Schedule Interview</button>' : ''}
+                        ${candidate.status === 'applied' ? '<button class="btn btn-primary">Shortlist</button>' : ''}
+                        ${candidate.status === 'on-Hold' ? '<button class="btn btn-primary">Schedule Interview</button>' : ''}
                         ${candidate.status === 'offered' ? '<button class="btn btn-primary">Manage Offer</button>' : ''}
                         ${candidate.status === 'hired' ? '<button class="btn btn-success">Start Onboarding</button>' : ''}
                     </div>
@@ -1869,13 +1874,12 @@
                 document.body.style.overflow = 'auto';
             }
 
-            // Event listeners for job title clicks
-            document.querySelectorAll('.job-title-cell').forEach(element => {
-                element.addEventListener('click', function() {
-                    const jobId = this.getAttribute('data-job-id');
-                    showCandidates(parseInt(jobId));
-                });
-            });
+             $(document).on('click', '.job-title-cell' , function() {
+                
+         const jobId = $(this).data('job-id');
+       // alert(jobId);
+        showCandidates(jobId);
+    });
 
             // Event listener for back to jobs button
             backToJobsBtn.addEventListener('click', function() {
@@ -2036,7 +2040,6 @@
         });
     }
 
-
         // 🔹 Cancel button
         $("#cancelBtn").on("click", function () {
             $("#createJobModal").hide();
@@ -2055,8 +2058,7 @@
 
                       let Sno = 1;
                     data.forEach(job => {
-
-                        var JobStatus = job.jobStatus == 0 ? "draft" : job.jobStatus == 1 ? "active" : "closed";
+                        var JobStatus = job.jobStatus == 1 ? "draft" : job.jobStatus == 0 ? "active" : "closed";
 
                         const row = `
                             <tr>

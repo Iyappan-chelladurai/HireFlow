@@ -24,7 +24,8 @@ namespace HireFlow_API.Model.DataModel
 
         public bool IsWelcomeEmail_Sent { get; set; }
 
-        public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
     }
 
 }

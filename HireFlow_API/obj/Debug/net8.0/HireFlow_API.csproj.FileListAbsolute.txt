@@ -1327,7 +1327,6 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\stati
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\staticwebassets.development.json
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\HireFlow.58F4BFC9.Up2Date
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\HireFlow_API.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\refint\HireFlow_API.dll
@@ -1391,3 +1390,8 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\runti
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\Ben.Demystifier.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\Serilog.Enrichers.WithCaller.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\Serilog.Enrichers.CallerInfo.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\AWSSDK.Rekognition.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\PdfiumViewer.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\nl\PdfiumViewer.resources.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\AWSSDK.SimpleNotificationService.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

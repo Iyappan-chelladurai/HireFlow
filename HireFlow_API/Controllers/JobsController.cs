@@ -108,40 +108,40 @@ namespace HireFlow_API.Controllers
                                CreateJobDTO dto, HttpClient _httpClient, string _openAiKey)
         {
             var prompt = $@"
-        You are an AI assistant generating professional job descriptions.
+                           You are an AI assistant specialized in writing professional job descriptions for multinational companies.
 
-        Generate:
-        1. 'jobDescriptionHtml': A professional job description in HTML with inline styles.
-           - Include a natural structure with sections such as Job Summary, Overview, Responsibilities, Requirements, Benefits, etc.
-           - The sections do not have to follow a fixed format, but they must flow like a professional job posting.
+                            Generate a JSON object with exactly these two keys:
+                            1. 'jobDescriptionHtml': A complete, polished job description in HTML format with inline styles.
+                            2. 'jobSummary': A short plain-text summary (1–2 sentences) of the role.
 
-        2. 'jobSummary': A short plain-text summary (1–2 sentences only) of the role.
+                            Formatting requirements:
+                            - The HTML must look like a real corporate job listing (modern, clean, and professional).
+                            - Include sections such as Job Summary, Overview, Key Responsibilities, Requirements, Preferred Skills, Benefits, and How to Apply.
+                            - Use clear headings, bullet points, and inline styles (no external CSS).
+                            - Keep the tone formal, inclusive, and MNC-style.
+                            - Avoid placeholder text — use real content relevant to the job details.
+                            - Ensure the response is **valid JSON** (no markdown, no explanations).
 
-        Return a JSON object with exactly:
-        {{
-            ""jobDescriptionHtml"": ""<html>...</html>"",
-            ""jobSummary"": ""...""
-        }}
+                            Job Details:
+                            Title: {dto.JobTitle}
+                            Department: {dto.Department}
+                            Location: {dto.Location}
+                            Salary: {(dto.Salary.HasValue ? dto.Salary.Value.ToString("C") : "Not specified")}
+                            Employment Type: {dto.EmploymentType}
+                            Openings: {dto.Openings}
+                            Closing Date: {(dto.ClosingDate.HasValue ? dto.ClosingDate.Value.ToString("yyyy-MM-dd") : "Not specified")}
+                            Skills: {dto.Skills ?? "N/A"}
 
-        Job Details:
-        Title: {dto.JobTitle}
-        Department: {dto.Department}
-        Location: {dto.Location}
-        Salary: {(dto.Salary.HasValue ? dto.Salary.Value.ToString("C") : "Not specified")}
-        Employment Type: {dto.EmploymentType}
-        Openings: {dto.Openings}
-        Closing Date: {(dto.ClosingDate.HasValue ? dto.ClosingDate.Value.ToString("yyyy-MM-dd") : "Not specified")}
-        Additional Info: {dto.Skills ?? "N/A"}
+                            Return only valid JSON, nothing else.
+                            ";
 
-        Return only valid JSON. No explanations or code fences.
-    ";
 
             var body = new
             {
                 model = "gpt-4o-mini",
                 messages = new[]
                 {
-            new { role = "system", content = "You are an AI assistant generating HTML job descriptions with inline styles." },
+            new { role = "system", content = "You are an AI assistant specialized in writing professional job descriptions for multinational companies" },
             new { role = "user", content = prompt }
         },
                 temperature = 0

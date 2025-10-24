@@ -32,10 +32,12 @@ namespace HireFlow_API.Model.DataModel
         [Column(TypeName = "decimal(5,2)")]
         public decimal? FileSizeInMB { get; set; }
 
-        public DateTime UploadedOn { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime UploadedOn { get; set; } = DateTime.Now;
 
         public bool IsVerified { get; set; } = false;
 
+        [Column(TypeName = "datetime")]
         public DateTime? VerifiedOn { get; set; }
 
         [MaxLength(100)]

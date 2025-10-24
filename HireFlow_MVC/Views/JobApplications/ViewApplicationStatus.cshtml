@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var candidateId = HttpContextAccessor.HttpContext?.Session.GetString("CandidateId");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -364,7 +370,7 @@
             font-weight: 500;
         }
 
-        .status-under-review {
+        .status-Applied {
             background: rgba(245, 158, 11, 0.1);
             color: var(--warning);
         }
@@ -501,20 +507,11 @@
 <body>
     <!-- Header & Navigation -->
     <header>
-        <div class="container header-container">
+        <div class="container header-container" style="display:flex; justify-content: space-between; align-items: center; padding: 20px 0;">
             <a href="#" class="logo">Infosys<span>Careers</span></a>
 
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="#" class="nav-link">Home</a></li>
-                    <li><a href="#" class="nav-link">Jobs</a></li>
-                    <li><a href="#" class="nav-link">Careers</a></li>
-                    <li><a href="#" class="nav-link">Resources</a></li>
-                </ul>
-            </nav>
-
-            <div class="mobile-toggle">
-                <i class="fas fa-bars"></i>
+            <div>
+                <a href="/Account/Logout" class="btn btn-outline">Logout</a>
             </div>
         </div>
     </header>
@@ -524,12 +521,12 @@
         <div class="container">
             <div class="dashboard-header">
                 <div class="welcome-section">
-                    <h1>Welcome back, Michael!</h1>
+                    <h1>Welcome back, @Context.Session.GetString("UserName")!</h1>
                     <p>Here's your application status and upcoming interviews</p>
                 </div>
                 <div class="user-profile">
                     <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Michael Chen">
-                    <span>Michael Chen</span>
+                    <span>@Context.Session.GetString("UserName")</span>
                 </div>
             </div>
 
@@ -575,41 +572,17 @@
                             <a href="#" class="view-all">View All</a>
                         </div>
 
-                        <div class="job-list">
+                        <div id="job-list">
                             <div class="job-item">
                                 <div class="job-info">
                                     <h3>Senior Frontend Developer</h3>
-                                    <p>Infosys • Software Development</p>
+                                    <p>Software Development</p>
                                     <div class="job-meta">
                                         <span><i class="fas fa-map-marker-alt"></i> Bangalore, India</span>
                                         <span><i class="fas fa-clock"></i> Applied on: June 15, 2023</span>
                                     </div>
                                 </div>
                                 <div class="status status-under-review">Under Review</div>
-                            </div>
-
-                            <div class="job-item">
-                                <div class="job-info">
-                                    <h3>Full Stack Engineer</h3>
-                                    <p>Infosys • Technology Innovation Group</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
-                                        <span><i class="fas fa-clock"></i> Applied on: June 10, 2023</span>
-                                    </div>
-                                </div>
-                                <div class="status status-scheduled">Interview Scheduled</div>
-                            </div>
-
-                            <div class="job-item">
-                                <div class="job-info">
-                                    <h3>Product Manager</h3>
-                                    <p>Infosys • Product Development</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-map-marker-alt"></i> Pune, India</span>
-                                        <span><i class="fas fa-clock"></i> Applied on: May 28, 2023</span>
-                                    </div>
-                                </div>
-                                <div class="status status-rejected">Not Selected</div>
                             </div>
                         </div>
                     </div>
@@ -736,5 +709,67 @@
             });
         });
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+          
+             var candidateId = '@Context.Session.GetString("CandidateId")';
+        console.log(candidateId);
+
+
+            console.log(candidateId);
+
+            // 🔹 API endpoint (replace with your actual URL)
+            var apiUrl = 'https://localhost:7180/api/JobApplications/candidate/' + candidateId;
+
+            alert(apiUrl);
+
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#job-list').empty(); // clear existing
+
+                    if (data && data.length > 0) {
+                        data.forEach(app => {
+                            // Format the applied date
+                            const appliedDate = new Date(app.appliedOn).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'long', day: 'numeric'
+                            });
+
+                            // Convert status text to lowercase + hyphen for CSS class
+                            const statusClass = `status-${app.applicationStatus.replace(/\s+/g, '-')}`;
+
+                            // Create the job item HTML
+                            const jobHtml = `
+                                <div class="job-item">
+                                    <div class="job-info">
+                                        <h3>${app.jobTitle}</h3>
+                                        <p>${app.department || ''}</p>
+                                        <div class="job-meta">
+                                            <span><i class="fas fa-map-marker-alt"></i> ${app.location || ''}</span>
+                                            <span><i class="fas fa-clock"></i> Applied on: ${appliedDate}</span>
+                                        </div>
+                                    </div>
+                                    <div class="status ${statusClass}">${app.applicationStatus}</div>
+                                </div>
+                            `;
+                            $('#job-list').append(jobHtml);
+                        });
+                    } else {
+                        $('#job-list').html('<p>No applications found.</p>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    $('#job-list').html('<p>Failed to load applications.</p>');
+                }
+            });
+        });
+    </script>
+
+
 </body>
 </html>

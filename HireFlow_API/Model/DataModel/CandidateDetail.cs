@@ -16,10 +16,11 @@ namespace HireFlow_API.Model.DataModel
         public virtual UserAccount User { get; set; }
 
         [Required]
-        public string? ResumePath { get; set; }
+        public string? EducationLevel { get; set; }
 
-        [StringLength(2000)]
-        public string? CoverLetter { get; set; }
+        public string? Skills { get; set; }
+
+        public int NoticePeriodDays { get; set; } = 0;
 
         [StringLength(100)]
         public string? CurrentJobTitle { get; set; }
@@ -30,12 +31,14 @@ namespace HireFlow_API.Model.DataModel
         [Column(TypeName = "decimal(18,2)")]
         public decimal? ExpectedSalary { get; set; }
 
+        [Column(TypeName = "datetime")]
         public DateTime? AvailableFrom { get; set; }
 
         [StringLength(100)]
         public string? PreferredLocation { get; set; }
 
-        public DateTime ProfileCreatedOn { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime ProfileCreatedOn { get; set; } = DateTime.Now;
 
         public virtual ICollection<CandidateDocumentDetail> Documents { get; set; }
 

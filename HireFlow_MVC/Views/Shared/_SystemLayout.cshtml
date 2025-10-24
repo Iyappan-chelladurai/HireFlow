@@ -564,6 +564,69 @@
         }
 
         }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 45px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 180px;
+            display: none;
+            flex-direction: column;
+            padding: 10px 0;
+            z-index: 2000;
+        }
+
+            .dropdown-menu.active {
+                display: flex;
+                animation: fadeIn 0.2s ease-in-out;
+            }
+
+            .dropdown-menu p.username {
+                font-weight: 600;
+                color: var(--dark);
+                padding: 10px 15px;
+                border-bottom: 1px solid #f1f5f9;
+                margin-bottom: 5px;
+            }
+
+            .dropdown-menu a {
+                padding: 10px 15px;
+                color: var(--gray);
+                font-size: 0.9rem;
+                text-decoration: none;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+                .dropdown-menu a:hover {
+                    background-color: #f8fafc;
+                    color: var(--primary);
+                }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
     </style>
 </head>
 
@@ -579,7 +642,13 @@
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <a href="#" class="icon-btn"><i class="fas fa-bell"></i></a>
-                <a href="#" class="icon-btn"><i class="fas fa-user-circle"></i></a>
+                <div class="user-dropdown">
+                    <a href="#" id="userMenuBtn" class="icon-btn"><i class="fas fa-user-circle"></i></a>
+                    <div id="userMenu" class="dropdown-menu">
+                        <p class="username">@Context.Session.GetString("UserName")</p>
+                        <a href="javascript:void(0);" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
             </div>
 
             <div class="mobile-toggle">
@@ -587,23 +656,26 @@
             </div>
         </div>
     </header>
-
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="dashboard.html" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-        <a href="job-posting.html"><i class="fas fa-briefcase"></i> <span>Job Posting</span></a>
-        <a href="candidates.html"><i class="fas fa-user-graduate"></i> <span>Candidates</span></a>
-        <a href="interviews.html"><i class="fas fa-calendar-alt"></i> <span>Interviews</span></a>
-        <a href="offers.html"><i class="fas fa-file-contract"></i> <span>Offers</span></a>
-        <a href="onboarding.html"><i class="fas fa-tasks"></i> <span>Onboarding</span></a>
-        <a href="reports.html"><i class="fas fa-chart-bar"></i> <span>Reports</span></a>
-
+        <a asp-controller="Account" asp-action="Dashboard" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+        <a asp-controller="Job" asp-action="PostJob"><i class="fas fa-briefcase"></i> <span>Job Posting</span></a>
+        <a asp-controller="JobApplications" asp-action="ListAllApplications" asp-route-JobId="@Guid.Empty"><i class="fas fa-user-graduate"></i> <span>Candidates</span></a>
+        <a asp-controller="Interviews" asp-action="Index"><i class="fas fa-calendar-alt"></i> <span>Interviews</span></a>
+  @*       <a asp-controller="Offers" asp-action="Index"><i class="fas fa-file-contract"></i> <span>Offers</span></a>
+        <a asp-controller="Onboarding" asp-action="Index"><i class="fas fa-tasks"></i> <span>Onboarding</span></a>
+        <a asp-controller="Reports" asp-action="Index"><i class="fas fa-chart-bar"></i> <span>Reports</span></a> *@
     </div>
 
         <!-- Main Content Body -->
         <main class="p-6 flex-grow">
             @RenderBody()
         </main>
+@*     <div id="loading-spinner">
+        <div class="loader-dots">
+            <div></div><div></div><div></div>
+        </div>
+    </div> *@
 
         <!-- Footer -->
         <footer class="bg-white border-t border-gray-200 px-6 py-4 text-sm text-gray-500 text-center">
@@ -611,6 +683,52 @@
             <a asp-controller="Home" asp-action="Privacy" class="text-indigo-600 hover:underline">Privacy</a>
         </footer>
     </div>
+
+    <script>
+        $(document).ready(function () {
+
+             window.addEventListener("load", function () {
+            document.getElementById("loading-spinner").style.display = "none";
+        });
+
+
+
+            const $userMenuBtn = $("#userMenuBtn");
+            const $userMenu = $("#userMenu");
+
+            // Toggle dropdown visibility
+            $userMenuBtn.on("click", function (e) {
+                e.preventDefault();
+                $userMenu.toggleClass("active");
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on("click", function (e) {
+                if (!$(e.target).closest("#userMenu, #userMenuBtn").length) {
+                    $userMenu.removeClass("active");
+                }
+            });
+
+            // Logout using AJAX
+            $("#logoutBtn").on("click", function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "https://localhost:7180/api/Account/logout",
+                    type: "POST",
+                   
+                    success: function () {
+                        window.location.href = "/Account/Login";
+                    },
+                    error: function () {
+                        alert("Logout failed, please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

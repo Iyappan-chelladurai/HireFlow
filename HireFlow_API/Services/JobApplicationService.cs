@@ -15,7 +15,15 @@ namespace HireFlow_API.Services
         Task<bool> UpdateExistingApplicationAsync(Guid applicationId, JobApplicationDTO jobApplication);
         Task<bool> CancelApplicationAsync(Guid applicationId);
         Task<IEnumerable<JobApplicationResponseDTO>> GetApplicationsByCandidateIdAsync(Guid candidateId);
-    }
+        Task<IEnumerable<CandidateDisplayDto>> GetCandidatesForJobAsync(Guid jobId);
+
+        Task<IEnumerable<CandidateDropdownDto>> GetCandidatesForDropdownAsync();
+
+        Task<IEnumerable<InterviewerDropdownDto>> GetInterviewersForDropdownAsync();
+    
+
+
+}
 
     public class JobApplicationService : IJobApplicationService
     {
@@ -47,8 +55,31 @@ namespace HireFlow_API.Services
 
         public async Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync(Guid JobId)
         {
-            return await _repository.GetAllApplicationsAsync(JobId);
+            var applications = await _repository.GetAllApplicationsAsync(JobId);
+
+            return applications.Select(a => new JobApplicationDTO
+            {
+                ApplicationId = a.ApplicationId,
+                JobId = a.JobId,
+                JobTitle = a.JobTitle,
+                CandidateId = a.CandidateId,
+                CandidateName = a.CandidateName,
+                CandidateEmail = a.CandidateEmail,
+                AppliedOn = a.AppliedOn,
+                ApplicationStatus = a.ApplicationStatus,
+                Skills = a.Skills,
+                EducationLevel = a.EducationLevel,
+                ExpectedSalary = a.ExpectedSalary,
+                NoticePeriodDays = a.NoticePeriodDays,
+                PreferredLocation = a.PreferredLocation,
+                ResumePath = a.ResumePath,
+                InterviewFeedback = a.InterviewFeedback,
+                OfferSentOn = a.OfferSentOn,
+                IsOfferAccepted = a.IsOfferAccepted,
+                OnboardedOn = a.OnboardedOn
+            });
         }
+
 
         public async Task<JobApplicationDTO?> RetrieveApplicationDetailsAsync(Guid applicationId)
         {
@@ -91,8 +122,26 @@ namespace HireFlow_API.Services
                 // Add job application to repository
                 var appId = await _repository.AddNewApplicationAsync(jobApplication);
 
-                // Save candidate document details
-                var candidateDocumentDetail = new CandidateDocumentDetail
+
+                var candidateDetails = new CandidateDetail
+                {
+                    CurrentJobTitle = jobApplication.CurrentJobTitle,
+                    TotalExperienceYears = jobApplication.TotalExperienceYears,
+                    NoticePeriodDays = jobApplication.NoticePeriodDays,
+                    EducationLevel = jobApplication.EducationLevel,
+                   AvailableFrom = jobApplication.AvailableFrom,
+                    PreferredLocation = jobApplication.PreferredLocation,
+                   ExpectedSalary = jobApplication.ExpectedSalary,
+                    Skills = jobApplication.Skills,
+
+                };
+
+                await _CandidateDetailService.UpdateCandidateAsync(candidateDetails);
+
+
+
+                 // Save candidate document details
+                 var candidateDocumentDetail = new CandidateDocumentDetail
                 {
                     DocumentDetailId = Guid.NewGuid(),
                     CandidateId = jobApplication.CandidateId,
@@ -104,13 +153,13 @@ namespace HireFlow_API.Services
                     IsFraudDetected = false,
                     IsVerified = false,
                     FraudScore = 0,
-                    IsActive = false,
+                    IsActive = true,
                     FileSizeInMB = Math.Round((decimal)jobApplication.ResumeFile.Length / (1024 * 1024), 2)
                 };
 
                 await _candidateDocumentsRepository.AddAsync(candidateDocumentDetail);
 
-              var Candidate =   await _CandidateDetailService.GetApplicationByIdAsync(appId);
+              var Candidate = await _CandidateDetailService.GetApplicationByIdAsync(appId);
 
 
                 // Read email template
@@ -130,15 +179,18 @@ namespace HireFlow_API.Services
                 var emailRequest = new EmailRequestDTO
                 {
                     FromEmailAddress = "hireflowofficial@gmail.com",
-                    ToEmailAddresses = new List<string> { Candidate.CandidateEmail ?? "no-reply@example.com" },
+                    ToEmailAddresses = new List<string> { "Iyappadhoni6@gmail.com" ?? "no-reply@example.com" },
                     EmailSubject = $"{jobTitle} Application Received",
                     HtmlEmailBody = body
                 };
 
                 await _emailRepository.SendEmail(emailRequest);
 
+
+                jobApplication.ApplicationId = appId;
+
                 // Score candidate
-                var score = await _candidateScorer.ScoreCandidateAsync(appId);
+                var score = await _candidateScorer.ScoreCandidateAsync(jobApplication);
 
                 _logger.LogInformation("Candidate {CandidateId} submitted application {ApplicationId} successfully.", jobApplication.CandidateId, appId);
 
@@ -175,6 +227,24 @@ namespace HireFlow_API.Services
         public async Task<IEnumerable<JobApplicationResponseDTO>> GetApplicationsByCandidateIdAsync(Guid candidateId)
         {
             return await _repository.GetByCandidateIdAsync(candidateId);
+        }
+
+        public async Task<IEnumerable<CandidateDisplayDto>> GetCandidatesForJobAsync(Guid jobId)
+        {
+            var candidates = await _repository.GetCandidatesForJobAsync(jobId);
+
+            // Example: Sort by applied date (newest first)
+            return candidates.OrderByDescending(c => c.MatchScore).ToList();
+        }
+
+
+        public async Task<IEnumerable<CandidateDropdownDto>> GetCandidatesForDropdownAsync()
+        {
+            return await _repository.GetCandidatesForDropdownAsync();
+        }
+        public async Task<IEnumerable<InterviewerDropdownDto>> GetInterviewersForDropdownAsync()
+        {
+            return await _repository.GetInterviewersForDropdownAsync();
         }
     }
 }

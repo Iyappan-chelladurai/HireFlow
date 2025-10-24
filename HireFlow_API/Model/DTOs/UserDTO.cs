@@ -38,4 +38,11 @@ namespace HireFlow_API.Model.DTOs
 
     }
 
+    public class CreateOTPRequest
+    {
+        public string PhoneNumber { get; set; }
+        public string Otp { get; set; }
+    }
+
+
 }

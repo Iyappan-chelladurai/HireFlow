@@ -49,25 +49,23 @@ namespace HireFlow_API.Controllers
             return Ok(new { Message = "Login successful", JWTToken = token });
         }
 
-  
 
-        //[HttpPost("send-otp")]
-        //public async Task<IActionResult> SendOtp([FromBody] OtpLoginRequest request)
-        //{
-        //    await _accountService.SendOtpAsync(request.PhoneNumber);
-        //    return Ok("OTP sent successfully.");
-        //}
+        [HttpPost("Otp-send")]
+        public async Task<IActionResult> SendOtp([FromBody] OtpRequest request)
+        {
+            await _accountService.SendOtpAsync(request.PhoneNumber);
+            return Ok(new { success = true, message = "OTP sent successfully." });
+        }
 
-        //[HttpPost("verify-otp")]
-        //public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequest request)
-        //{
-        //    var token = await _accountService.VerifyOtpAsync(request.PhoneNumber, request.Otp);
-        //    if (token == null)
-        //        return Unauthorized("Invalid or expired OTP");
+        [HttpPost("Otp-verify")]
+        public IActionResult VerifyOtp([FromBody] CreateOTPRequest request)
+        {
+            bool isValid = _accountService.VerifyOtp(request.PhoneNumber, request.Otp);
+            if (isValid)
+                return Ok(new { success = true, message = "OTP verified successfully." });
 
-        //    return Ok(new { Message = "Login successful", JWTToken = token });
-        //}
-
+            return BadRequest(new { success = false, message = "Invalid OTP." });
+        }
 
 
         [HttpPost("logout")]
@@ -86,11 +84,19 @@ namespace HireFlow_API.Controllers
         }
 
         [HttpGet("create-admin")]
-        public async Task<IActionResult> CreateAdminUser()
+        public async Task<IActionResult> CreateDefultUsers()
         {
-            var result = await _accountService.InitializeAdminUserAsync();
+            var result = await _accountService.InitializeDefultsUserAsync();
             return Ok(result);
         }
     }
-
+    public class OtpRequest
+    {
+        public string PhoneNumber { get; set; }
+    }
+    public class CreateOTPRequest
+    {
+        public string PhoneNumber { get; set; }
+        public string Otp { get; set; }
+    }
 }

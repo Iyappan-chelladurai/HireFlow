@@ -61,7 +61,7 @@ namespace HireFlow_API.Services
                 Salary = newJobDto.Salary,
                 EmploymentType = newJobDto.EmploymentType,
                 Openings = newJobDto.Openings,
-                PostedOn = DateTime.UtcNow,
+                PostedOn = DateTime.Now,
                 ClosingDate = newJobDto.ClosingDate,
                 PostedBy = postedBy,
                 Skills = newJobDto.Skills,

@@ -30,8 +30,10 @@ namespace HireFlow_API.Model.DataModel
         public int Openings { get; set; } = 0;
         public string Skills { get; set; }
 
-        public DateTime PostedOn { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime PostedOn { get; set; } = DateTime.Now;
 
+        [Column(TypeName = "datetime")]
         public DateTime? ClosingDate { get; set; }
 
         [Required]

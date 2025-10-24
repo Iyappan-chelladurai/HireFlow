@@ -40,6 +40,13 @@ namespace HireFlow_MVC.Models
         public string? CurrentJobTitle { get; set; }
         public int? TotalExperienceYears { get; set; }
 
+        public int NoticePeriodDays { get; set; } = 0;
+        public string? EducationLevel { get; set; }
+        public string? AvailableFrom { get; set; }
+        public string? ExpectedSalary { get; set; }
+        public string? PreferredLocation { get; set; }
+        public string? Skills { get; set; }
+
     }
     public class JobApplicationRequest
     {
@@ -55,6 +62,14 @@ namespace HireFlow_MVC.Models
         public IFormFile? ResumeFile { get; set; }
         public string? CurrentJobTitle { get; set; }
         public float ? TotalExperienceYears { get; set; }
+
+        public int NoticePeriodDays { get; set; } = 0; 
+        public string? EducationLevel { get; set; }
+        public string? AvailableFrom { get; set; }
+        public string? ExpectedSalary { get; set; }
+        public string? PreferredLocation { get; set; }
+        public string? Skills { get; set; }
+
     }
 
 

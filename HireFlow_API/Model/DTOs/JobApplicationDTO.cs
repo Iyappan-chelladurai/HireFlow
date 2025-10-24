@@ -12,11 +12,22 @@
         public string? CandidateName { get; set; }
         public string? CandidateEmail { get; set; }
 
+        public int NoticePeriodDays { get; set; } = 0;
+
         public string? ResumePath { get; set; }
 
         public DateTime AppliedOn { get; set; }
 
         public string? ApplicationStatus { get; set; } // e.g., "Shortlisted", "Interviewed", etc.
+        public string? EducationLevel { get; set; }
+
+        public DateTime? AvailableFrom { get; set; }
+
+        public decimal? ExpectedSalary { get; set; }
+        public string? PreferredLocation { get; set; }
+
+        public string? Skills { get; set; }
+
 
         public string? InterviewFeedback { get; set; }
 
@@ -43,7 +54,7 @@
         public Guid JobId { get; set; }
 
         public string? ResumePath { get; set; }
- 
+
         public IFormFile? ResumeFile { get; set; } // File in DTO
         public string? CurrentJobTitle { get; set; }
 
@@ -81,6 +92,10 @@
         public string? CurrentJobTitle { get; set; }
 
         public float? TotalExperienceYears { get; set; }
+
+        public string Location { get; set; }
+        public string Department { get; set; }
+
 
     }
 

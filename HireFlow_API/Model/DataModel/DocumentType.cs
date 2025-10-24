@@ -34,8 +34,10 @@ namespace HireFlow_API.Model.DataModel
 
         public bool IsActive { get; set; } = true;
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
+        [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
 
         public virtual ICollection<CandidateDocumentDetail> CandidateDocuments { get; set; }

@@ -54,6 +54,14 @@
               "target": "Package",
               "version": "[4.0.1, )"
             },
+            "AWSSDK.Rekognition": {
+              "target": "Package",
+              "version": "[4.0.2.6, )"
+            },
+            "AWSSDK.SimpleNotificationService": {
+              "target": "Package",
+              "version": "[4.0.1.6, )"
+            },
             "AWSSDK.Textract": {
               "target": "Package",
               "version": "[4.0.1.9, )"
@@ -103,6 +111,10 @@
             "PdfPig": {
               "target": "Package",
               "version": "[0.1.11, )"
+            },
+            "PdfiumViewer": {
+              "target": "Package",
+              "version": "[2.13.0, )"
             },
             "QRCoder": {
               "target": "Package",

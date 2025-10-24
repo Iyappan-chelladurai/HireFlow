@@ -29,28 +29,30 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("AvailableFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CoverLetter")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("CurrentJobTitle")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("EducationLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("ExpectedSalary")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("NoticePeriodDays")
+                        .HasColumnType("int");
 
                     b.Property<string>("PreferredLocation")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("ProfileCreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("ResumePath")
-                        .IsRequired()
+                    b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("TotalExperienceYears")
@@ -112,14 +114,14 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("UploadedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("VerifiedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("VerifiedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("DocumentDetailId");
 
@@ -189,7 +191,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -220,7 +222,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("DocumentTypeId");
 
@@ -237,15 +239,15 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("InterviewFeedback")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("InterviewMode")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("InterviewResult")
                         .HasMaxLength(50)
@@ -258,8 +260,34 @@ namespace HireFlow_API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingLink")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("RescheduleReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("RescheduledDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("RoundNumber")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime");
 
                     b.HasKey("InterviewId");
 
@@ -275,7 +303,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ClosingDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Department")
                         .HasMaxLength(100)
@@ -312,7 +340,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("PostedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<decimal?>("Salary")
                         .HasColumnType("decimal(18,2)");
@@ -338,7 +366,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("AppliedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<Guid>("CandidateId")
                         .HasColumnType("uniqueidentifier");
@@ -354,10 +382,10 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("OfferSentOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime?>("OnboardedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("ResumePath")
                         .IsRequired()
@@ -380,13 +408,13 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("AcceptedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<Guid>("CandidateId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("GeneratedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<bool>("IsAccepted")
                         .HasColumnType("bit");
@@ -403,7 +431,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("SentOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("OfferLetterId");
 
@@ -439,7 +467,7 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("StatusId");
 

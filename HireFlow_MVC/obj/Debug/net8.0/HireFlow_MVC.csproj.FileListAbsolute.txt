@@ -22,7 +22,6 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\stati
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\staticwebassets.development.json
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireFlow_MVC.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\refint\HireFlow_MVC.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireFlow_MVC.pdb
@@ -235,3 +234,4 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireF
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\HireFlow.3DCA879C.Up2Date
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\scopedcss\Views\Shared\_CandidateLayout.cshtml.rz.scp.css
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\scopedcss\Views\Shared\_SystemLayout.cshtml.rz.scp.css
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_MVC\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -52,7 +52,7 @@ namespace HireFlow_API.Repositories
                         PostedBy = j.PostedBy,
                         JobStatus = j.JobStatus,
                         CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
-                    })
+                    }).OrderByDescending(A=>A.PostedOn)
                     .ToListAsync();
             }
             catch (Exception ex)

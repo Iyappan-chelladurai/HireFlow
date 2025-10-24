@@ -8,6 +8,8 @@ namespace HireFlow_API.Services
     {
         Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
         Task<string> CreateCandidateAsync(UserAccount user);
+
+        Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate);
     }
 
     public class CandidateDetailService : ICandidateDetailService
@@ -47,5 +49,19 @@ namespace HireFlow_API.Services
 
             return result;
         }
+
+        public async Task<List<CandidateCardDTO>> GetCandidateCardsAsync()
+        {
+            var candidates = await _candidateRepository.GetAllCandidateCardsAsync();
+            return candidates;
+        }
+
+        public async Task<bool>  UpdateCandidateAsync(CandidateDetail updatedCandidate)
+        {
+            var candidates = await _candidateRepository.UpdateCandidateAsync(updatedCandidate);
+            return candidates;
+        }
+
+
     }
 }

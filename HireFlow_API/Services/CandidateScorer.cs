@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
+using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
 using HireFlow_API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ using Document = Amazon.Textract.Model.Document;
 
 public interface ICandidateScoringService
 {
-    Task<CandidateScoreResult> ScoreCandidateAsync(Guid jobApplicationId);
+    Task<CandidateScoreResult> ScoreCandidateAsync(JobApplicationDTO jobApplication);
 }
 
     public class CandidateScoringService : ICandidateScoringService
@@ -70,9 +71,9 @@ public interface ICandidateScoringService
         _openAiKey = _config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key missing");
     }
 
-    public async Task<CandidateScoreResult> ScoreCandidateAsync(Guid jobApplicationId)
+    public async Task<CandidateScoreResult> ScoreCandidateAsync(JobApplicationDTO jobApplication)
     {
-        var app = await _jobApplicationRepository.GetApplicationByIdAsync(jobApplicationId);
+        var app = await _jobApplicationRepository.GetApplicationByIdAsync(jobApplication.ApplicationId);
         var job = await _jobService.RetrieveJobByIdAsync(app.JobId);
 
         if (string.IsNullOrEmpty(app.ResumePath) || !File.Exists(app.ResumePath))
@@ -101,13 +102,13 @@ public interface ICandidateScoringService
         // --------------------------
         // 3️⃣ Call ChatGPT for scoring
         // --------------------------
-        var result = await GetCandidateScoresFromChatGPT(resumeText, job.JobDescription, jobApplicationId);
+        var result = await GetCandidateScoresFromChatGPT(resumeText, job.JobDescription, jobApplication);
 
         // --------------------------
         // 4️⃣ Save/update DB
         // --------------------------
         var existingScore = await _dbContext.tbl_CandidatesJobScore
-            .FirstOrDefaultAsync(s => s.JobApplicationId == jobApplicationId);
+            .FirstOrDefaultAsync(s => s.JobApplicationId == jobApplication.ApplicationId);
 
         if (existingScore != null)
         {
@@ -134,6 +135,16 @@ public interface ICandidateScoringService
             };
             _dbContext.tbl_CandidatesJobScore.Add(entity);
         }
+
+        var updateCandidateCore = _dbContext.JobApplications.Where(a => a.ApplicationId == result.JobApplicationId).FirstOrDefault();
+
+        if (result.OverallFitScore >= 80)
+            updateCandidateCore.ApplicationStatus = "Shortlisted";
+        else if (result.OverallFitScore >= 50)
+            updateCandidateCore.ApplicationStatus = "On Hold";
+        else
+            updateCandidateCore.ApplicationStatus = "Rejected";
+
 
         await _dbContext.SaveChangesAsync();
         return result;
@@ -215,31 +226,44 @@ public interface ICandidateScoringService
     // --------------------------
     // ChatGPT Scoring
     // --------------------------
-    private async Task<CandidateScoreResult> GetCandidateScoresFromChatGPT(string resumeText, string jobDescription, Guid jobApplicationId)
+    private async Task<CandidateScoreResult> GetCandidateScoresFromChatGPT(string resumeText, string jobDescription, JobApplicationDTO jobApplication)
     {
+
         var body = new
         {
             model = "gpt-4o-mini",
             messages = new[]
-    {
-        new { role = "system", content = "You are an AI assistant that evaluates resumes. You must respond ONLY with valid JSON matching the schema: ResumeMatchScore, SkillsMatchScore, ExperienceScore, OverallFitScore, Feedback. No explanations, no extra text." },
-        new { role = "user", content = $@"
-            Here is the job description:
-            {jobDescription}
+            {
+        new
+        {
+            role = "system",
+            content = "You are a strict resume reviewer. You must evaluate resumes ONLY based on the job description. Respond ONLY with valid JSON matching this schema: ResumeMatchScore, SkillsMatchScore, ExperienceScore, OverallFitScore, Feedback. No explanations, no extra text, no greetings."
+        },
+        new
+        {
+                                role = "user",
+                                content = $@"
+                    Here is the job description:
+                    {jobDescription}
 
-            Here is the candidate's resume text:
-            {resumeText}
+                    Here is the candidate's resume text:
+                    {resumeText}
 
-            Generate the JSON with:
-            - ResumeMatchScore (0-100)
-            - SkillsMatchScore (0-100)
-            - ExperienceScore (0-100)
-            - OverallFitScore (0-100)
-            - Feedback (1-2 sentences)
-        " }
+                    Here is the candidate's submitted application model:
+                    {JsonConvert.SerializeObject(jobApplication, Formatting.Indented)}
+
+                    Generate the JSON with:
+                    - ResumeMatchScore (0-100)
+                    - SkillsMatchScore (0-100)
+                    - ExperienceScore (0-100)
+                    - OverallFitScore (0-100)
+                    - Feedback  
+                    "
+        }
     },
             temperature = 0
         };
+
 
         var req = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
         req.Headers.Add("Authorization", $"Bearer {_openAiKey}");
@@ -272,7 +296,7 @@ public interface ICandidateScoringService
         {
             result = new CandidateScoreResult
             {
-                JobApplicationId = jobApplicationId,
+                JobApplicationId = jobApplication.ApplicationId,
                 ResumeMatchScore = 50,
                 SkillsMatchScore = 50,
                 ExperienceScore = 50,
@@ -283,7 +307,7 @@ public interface ICandidateScoringService
             };
         }
 
-        result.JobApplicationId = jobApplicationId;
+        result.JobApplicationId = jobApplication.ApplicationId;
         result.EvaluatedBy = "ChatGPT";
         result.EvaluatedOn = DateTime.UtcNow;
         return result;

@@ -27,6 +27,12 @@ namespace HireFlow_MVC.Controllers
 
 
         [HttpGet]
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult JobsList()
         {
             return View();
@@ -141,7 +147,7 @@ namespace HireFlow_MVC.Controllers
                 }
                 else
                 {
-                    return returnUrl == null ? RedirectToAction("PostJob", "Job") : Redirect(returnUrl);
+                    return returnUrl == null ? RedirectToAction("Dashboard", "Account") : Redirect(returnUrl);
                 }
                 
               

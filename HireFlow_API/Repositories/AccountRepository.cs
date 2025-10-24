@@ -14,7 +14,7 @@ namespace HireFlow_API.Repositories
         Task<string?> LoginAsync(string email, string password, bool rememberMe);
         Task LogoutAsync();
         Task<bool> CreateRolesAsync(string[] roles);
-        Task<string> CreateAdminUserAsync();
+        Task<string> SeedDefaultUsersAsync();
     }
 
    public  class AccountRepository : IAccountRepository
@@ -76,7 +76,12 @@ namespace HireFlow_API.Repositories
 
             var candidate =  _context.CandidateDetails.Where(a=>a.UserId == user.Id).FirstOrDefault();
 
+            user.LastLoginTimestamp = DateTime.Now;
+            
+            await _context.SaveChangesAsync();
+
             var roles = await _userManager.GetRolesAsync(user);
+
             var token = _jwtTokenService.GenerateToken(user, candidate,  roles.FirstOrDefault());
             return token;
         }
@@ -105,49 +110,66 @@ namespace HireFlow_API.Repositories
             return true;
         }
 
-        public async Task<string> CreateAdminUserAsync()
+        public async Task<string> SeedDefaultUsersAsync()
         {
-            string userName = "Admin";
-            string password = "Admin@123";
-            string role = "Admin";
-            string email = "Admin@HireFlow.com";
+            var usersToCreate = new List<(string UserName, string FullName, string Email, string Password, string Role, string Phone)>
+    {
+        ("Admin", "Admin", "admin@hireflow.com", "Admin@123", "Admin", "8098776961"),
+        ("kavya.ramesh", "Kavya Ramesh", "kavya.ramesh@hireflow.com", "HRTeam@123", "HR", "8098776961"),
+        ("aravind.kumar", "Aravind Kumar", "aravind.kumar@hireflow.com", "ITTeam@123", "IT Team", "8098776961"),
+        ("vignesh.raj", "Vignesh Raj", "vignesh.raj@hireflow.com", "Interviewer@123", "Interviewer", "8098776961"),
+        ("sneha.subramanian", "Sneha Subramanian", "sneha.subramanian@hireflow.com", "Manager@123", "Manager", "8098776961")
+    };
 
-            var existingUser = await _userManager.FindByEmailAsync(email);
-            if (existingUser != null)
+            var results = new List<string>();
+
+            foreach (var (userName, fullName, email, password, role, phone) in usersToCreate)
             {
-                return "User already exists.";
-            }
+                var existingUser = await _userManager.FindByEmailAsync(email);
+                if (existingUser != null)
+                {
+                    results.Add($"User {email} already exists.");
+                    continue;
+                }
 
-            var user = new UserAccount
-            {
-                Id = Guid.NewGuid(),
-                UserName = userName,
-                Email = email,
-                NormalizedUserName = userName.ToUpper(),
-                NormalizedEmail = email.ToUpper(),
-                AccountCreatedOn = DateTime.Now,
-                FullName = userName,
-                IsAccountActive = true,
-            };
+                var user = new UserAccount
+                {
+                    Id = Guid.NewGuid(),
+                    UserName = userName,
+                    FullName = fullName,
+                    Email = email,
+                    NormalizedUserName = userName.ToUpper(),
+                    NormalizedEmail = email.ToUpper(),
+                    AccountCreatedOn = DateTime.Now,
+                    IsAccountActive = true,
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    PhoneNumber = phone
+                };
 
-            var result = await _userManager.CreateAsync(user, password);
+                var createResult = await _userManager.CreateAsync(user, password);
+                if (!createResult.Succeeded)
+                {
+                    var errorMsg = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    results.Add($"❌ Failed to create {email}: {errorMsg}");
+                    continue;
+                }
 
-            if (result.Succeeded)
-            {
+                // Ensure role exists
                 var roleExists = await _roleManager.RoleExistsAsync(role);
                 if (!roleExists)
                 {
                     await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
                 }
 
+                // Assign role
                 await _userManager.AddToRoleAsync(user, role);
-
-                return $"User '{email}' created and assigned to role '{role}'.";
+                results.Add($"✅ Created {email} with role '{role}'.");
             }
 
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            return $"Failed to create user: {errors}";
+            return string.Join(Environment.NewLine, results);
         }
+
     }
 
 }

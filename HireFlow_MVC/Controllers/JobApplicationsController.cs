@@ -19,11 +19,14 @@ namespace HireFlow_MVC.Controllers
             _httpClient = httpClientFactory.CreateClient("HireFlowAPI");
         }
 
+
         // GET: /JobApplications
-        public async Task<IActionResult> ListAllApplications(Guid JobId)
+        [HttpGet]
+        public  IActionResult ListAllApplications(Guid? JobId = null)
         {
-            var applications = await _httpClient.GetFromJsonAsync<List<JobApplicationViewModel>>($"api/JobApplications/{JobId}");
-            return View(applications);
+            //var applications = await _httpClient.GetFromJsonAsync<List<JobApplicationViewModel>>($"api/JobApplications/{JobId}");
+            //return View(applications);
+            return View();
         }
 
         // GET: /JobApplications/ViewApplication/{id}
@@ -48,7 +51,8 @@ namespace HireFlow_MVC.Controllers
             var candidateIdString = HttpContext.Session.GetString("CandidateId");
             if (!string.IsNullOrEmpty(candidateIdString) && Guid.TryParse(candidateIdString, out Guid candidateId))
                 model.CandidateId = candidateId;
-
+    
+            // Create multipart form content
             var content = new MultipartFormDataContent();
 
             // Add text fields
@@ -56,15 +60,21 @@ namespace HireFlow_MVC.Controllers
             content.Add(new StringContent(model.JobId.ToString()), "JobId");
             content.Add(new StringContent(model.CurrentJobTitle ?? ""), "CurrentJobTitle");
             content.Add(new StringContent(model.TotalExperienceYears?.ToString() ?? "0"), "TotalExperienceYears");
+            content.Add(new StringContent(model.NoticePeriodDays.ToString()), "NoticePeriodDays");
+            content.Add(new StringContent(model.EducationLevel ?? ""), "EducationLevel");
+            content.Add(new StringContent(model.AvailableFrom ?? ""), "AvailableFrom");
+            content.Add(new StringContent(model.ExpectedSalary ?? ""), "ExpectedSalary");
+            content.Add(new StringContent(model.PreferredLocation ?? ""), "PreferredLocation");
+            content.Add(new StringContent(model.Skills ?? ""), "Skills");
 
-            // Add file
+            // Add file (resume)
             if (model.ResumeFile != null && model.ResumeFile.Length > 0)
             {
-                var stream = model.ResumeFile.OpenReadStream();
-                var fileContent = new StreamContent(stream);
+                var fileContent = new StreamContent(model.ResumeFile.OpenReadStream());
                 fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(model.ResumeFile.ContentType);
-                content.Add(fileContent, "ResumeFile", model.ResumeFile.FileName); // Must match API property name
+                content.Add(fileContent, "ResumeFile", model.ResumeFile.FileName);
             }
+ 
 
             var response = await _httpClient.PostAsync("api/JobApplications", content);
 
@@ -126,24 +136,9 @@ namespace HireFlow_MVC.Controllers
             return BadRequest();
         }
 
-        public async Task<IActionResult> ViewApplicationStatus()
+        public IActionResult ViewApplicationStatus()
         {
-            //var candidateIdString = HttpContext.Session.GetString("CandidateId");
-
-            //if (!string.IsNullOrEmpty(candidateIdString) && Guid.TryParse(candidateIdString, out Guid candidateId))
-            //{
-            //    var response = await _httpClient.GetAsync($"api/JobApplications/candidate/{candidateId}");
-
-            //    var content = await response.Content.ReadAsStringAsync();
-            //    // Deserialize JSON -> List of ViewModels
-            //    var applications = JsonConvert.DeserializeObject<List<JobApplicationViewModel>>(content);
-            //    return View(applications);
-            //}
-            //else
-            //{
-            //    TempData["ErrorMessage"] = "Session expired. Please log in again.";
-            //    return RedirectToAction("Login", "Account");
-            //}
+           
             return View();
         }
 

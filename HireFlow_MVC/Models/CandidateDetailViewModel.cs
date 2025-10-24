@@ -50,4 +50,20 @@ namespace HireFlow_MVC.Models
         public string? JobTitle { get; set; }
         public DateTime IssuedOn { get; set; }
     }
+
+    public class CandidateCardDTO
+    {
+        public string CandidateName { get; set; }
+        public string Position { get; set; }
+        public string Status { get; set; } // e.g., "Interview", "Applied"
+        public int MatchScore { get; set; } // 0-100
+        public string ImageUrl { get; set; }
+        public string Experience { get; set; }
+        public string Education { get; set; }
+        public DateTime AppliedDate { get; set; }
+        public List<string> Skills { get; set; } = new List<string>();
+    }
+
+
+
 }

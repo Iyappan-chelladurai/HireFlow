@@ -23,12 +23,15 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_Extensions_ApiDescription_Server Condition=" '$(PkgMicrosoft_Extensions_ApiDescription_Server)' == '' ">C:\Users\iyapp\.nuget\packages\microsoft.extensions.apidescription.server\6.0.5</PkgMicrosoft_Extensions_ApiDescription_Server>
+    <PkgPdfiumViewer Condition=" '$(PkgPdfiumViewer)' == '' ">C:\Users\iyapp\.nuget\packages\pdfiumviewer\2.13.0</PkgPdfiumViewer>
     <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">C:\Users\iyapp\.nuget\packages\microsoft.codeanalysis.analyzers\3.3.4</PkgMicrosoft_CodeAnalysis_Analyzers>
     <PkgMicrosoft_CodeAnalysis_AnalyzerUtilities Condition=" '$(PkgMicrosoft_CodeAnalysis_AnalyzerUtilities)' == '' ">C:\Users\iyapp\.nuget\packages\microsoft.codeanalysis.analyzerutilities\3.3.0</PkgMicrosoft_CodeAnalysis_AnalyzerUtilities>
     <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">C:\Users\iyapp\.nuget\packages\microsoft.entityframeworkcore.tools\8.0.18</PkgMicrosoft_EntityFrameworkCore_Tools>
     <PkgDocX Condition=" '$(PkgDocX)' == '' ">C:\Users\iyapp\.nuget\packages\docx\4.0.25105.5786</PkgDocX>
-    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.core\4.0.0.24</PkgAWSSDK_Core>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.core\4.0.0.32</PkgAWSSDK_Core>
     <PkgAWSSDK_Textract Condition=" '$(PkgAWSSDK_Textract)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.textract\4.0.1.9</PkgAWSSDK_Textract>
+    <PkgAWSSDK_SimpleNotificationService Condition=" '$(PkgAWSSDK_SimpleNotificationService)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.simplenotificationservice\4.0.1.6</PkgAWSSDK_SimpleNotificationService>
+    <PkgAWSSDK_Rekognition Condition=" '$(PkgAWSSDK_Rekognition)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.rekognition\4.0.2.6</PkgAWSSDK_Rekognition>
     <PkgAWSSDK_Comprehend Condition=" '$(PkgAWSSDK_Comprehend)' == '' ">C:\Users\iyapp\.nuget\packages\awssdk.comprehend\4.0.1</PkgAWSSDK_Comprehend>
   </PropertyGroup>
 </Project>

@@ -71,16 +71,42 @@ namespace HireFlow_API.Controllers
 
             return Ok(applications);
         }
-        /// <summary>
-        /// Score a candidate against a Job Role + Job Description
-        /// </summary>
-        [HttpPost("score")]
-        public async Task<IActionResult> ScoreCandidate( Guid JobApplicationId)
-        {
-            var result = await _candidateScorer.ScoreCandidateAsync( JobApplicationId);
+        ///// <summary>
+        ///// Score a candidate against a Job Role + Job Description
+        ///// </summary>
+        //[HttpPost("score")]
+        //public async Task<IActionResult> ScoreCandidate( Guid JobApplicationId)
+        //{
+        //    var result = await _candidateScorer.ScoreCandidateAsync(JobApplicationId);
 
+        //    return Ok(result);
+        //}
+
+        [HttpGet("GetCandidatesByJob/{jobId}")]
+        public async Task<IActionResult> GetCandidatesByJob(Guid jobId)
+        
+        {
+            var result = await _service.GetCandidatesForJobAsync(jobId);
+            if (result == null || !result.Any())
+                return NotFound("No candidates found for this job.");
             return Ok(result);
         }
+
+        [HttpGet("GetCandidatesForDropdown")]
+        public async Task<IActionResult> GetCandidatesForDropdown()
+        {
+            var candidates = await _service.GetCandidatesForDropdownAsync();
+            return Ok(candidates);
+        }
+
+
+        [HttpGet("interviewers-dropdown")]
+        public async Task<IActionResult> GetInterviewersForDropdown()
+        {
+            var interviewers = await _service.GetInterviewersForDropdownAsync();
+            return Ok(interviewers);
+        }
+
     }
 
     // ✅ DTO for request
@@ -89,5 +115,18 @@ namespace HireFlow_API.Controllers
      
         public string JobDescription { get; set; }
         public Microsoft.AspNetCore.Http.IFormFile Resume { get; set; }
+    }
+
+    public class InterviewerDropdownDto
+    {
+        public Guid UserId { get; set; } = Guid.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+    }
+    public class CandidateDropdownDto
+    {
+        public Guid ApplicationId { get; set; }
+        public string CandidateName { get; set; } = string.Empty;
+        public string JobTitle { get; set; } = string.Empty;
     }
 }

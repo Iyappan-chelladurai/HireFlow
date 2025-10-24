@@ -276,6 +276,13 @@
                 box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
             }
 
+            .auth-button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
         .auth-divider {
             display: flex;
             align-items: center;
@@ -427,6 +434,112 @@
             font-size: 0.9rem;
         }
 
+        /* OTP Verification Styles */
+        .otp-section {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .otp-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .otp-subtitle {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .otp-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+            .otp-input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                outline: none;
+            }
+
+        .otp-timer {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .otp-resend {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+            .otp-resend:hover {
+                color: var(--primary-dark);
+            }
+
+            .otp-resend.disabled {
+                color: var(--gray);
+                cursor: not-allowed;
+            }
+
+        /* Message Styles */
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .message-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .message-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .message-info {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        /* Phone Input Styles */
+        .phone-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
         /* Responsive Design */
         @@media (max-width: 768px) {
             .nav-menu
@@ -448,6 +561,24 @@
             gap: 10px;
         }
 
+        .otp-input-container {
+            gap: 8px;
+        }
+
+        .otp-input {
+            width: 45px;
+            height: 45px;
+        }
+
+        .phone-input-group {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .country-code {
+            width: 100%;
+        }
+
         }
 
         @@media (max-width: 576px) {
@@ -465,6 +596,16 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 10px;
+        }
+
+        .otp-input-container {
+            gap: 5px;
+        }
+
+        .otp-input {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
         }
 
         }
@@ -509,12 +650,13 @@
             </div>
         </div>
     </header>
-
+   
     <!-- Auth Container -->
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
                 <h2 class="auth-title">Welcome to Infoplus</h2>
+                <button type="button" id="skip-otp-button">Skip OTP</button>
                 <p class="auth-subtitle">Sign in to access your account</p>
             </div>
             <div class="auth-body">
@@ -523,13 +665,10 @@
                     <div class="auth-tab" id="register-tab">Register</div>
                 </div>
 
-             
                 <!-- Login Form -->
                 <form class="auth-form" id="login-form" method="post" action="/Account/Login">
-
                     <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
 
-                    
                     <div class="form-group">
                         <span style="align-content:center;">@Html.ValidationSummary(false, "", new { @class = "text-danger", @style = "font-size:14px;color:red;" }) </span>
                     </div>
@@ -538,7 +677,7 @@
                         <label for="login-email" class="form-label">Email Address</label>
                         <input type="email" id="login-email" name="email" class="form-input" placeholder="Enter your email" required>
                     </div>
-                   
+
                     <div class="form-group">
                         <label for="login-password" class="form-label">Password</label>
                         <div class="password-toggle">
@@ -556,10 +695,11 @@
                         </label>
                         <a href="#" class="forgot-password">Forgot password?</a>
                     </div>
-                   
+
                     <button type="submit" class="auth-button">Login to Account</button>
                 </form>
-                <!-- Register Form (Re-aligned in two columns) -->
+
+                <!-- Register Form -->
                 <form id="register-form" class="auth-form" style="display: none;"
                       method="post" action="/Account/Register" enctype="multipart/form-data">
 
@@ -586,8 +726,22 @@
 
                         <div class="form-group">
                             <label for="PhoneNumber" class="form-label">Phone Number</label>
-                            <input type="tel" id="PhoneNumber" name="PhoneNumber"
-                                   class="form-input" placeholder="Enter your phone number" required>
+                            <div class="phone-input-group">
+                                <select id="CountryCode" name="CountryCode" style="
+    font-size: small;
+    padding: 06px;width:80px;" class="form-input country-code" required>
+                                    <option value="+1">+1 (US)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                    <option value="+91">+91 (IN)</option>
+                                    <option value="+61">+61 (AU)</option>
+                                    <option value="+49">+49 (DE)</option>
+                                    <option value="+33">+33 (FR)</option>
+                                    <option value="+81">+81 (JP)</option>
+                                    <option value="+86">+86 (CN)</option>
+                                </select>
+                                <input type="tel" id="PhoneNumber" name="PhoneNumber"
+                                       class="form-input phone-number" placeholder="phone number" required>
+                            </div>
                         </div>
                     </div>
 
@@ -601,7 +755,6 @@
                                     <i class="far fa-eye"></i>
                                 </span>
                             </div>
-                          
                         </div>
 
                         <div class="form-group">
@@ -630,8 +783,28 @@
                         </label>
                     </div>
 
-                    <button type="submit" id="Register-button" class="auth-button">Create Account</button>
+                    <button type="button" id="register-button" class="auth-button">Create Account</button>
                 </form>
+
+                <!-- OTP Verification Section -->
+                <div class="otp-section" id="otp-section">
+                    <h3 class="otp-title">Verify Your Phone Number</h3>
+                    <p class="otp-subtitle" id="otp-subtitle">We've sent a 6-digit code to your phone number</p>
+
+                    <div class="otp-input-container">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5">
+                        <input type="text" class="otp-input" maxlength="1" data-index="6">
+                    </div>
+
+                    <p class="otp-timer" id="otp-timer">Resend code in <span id="countdown">60</span> seconds</p>
+                    <p class="otp-resend disabled" id="otp-resend">Resend Code</p>
+
+                    <button type="button" id="verify-otp-button" class="auth-button" style="margin-top: 20px;">Verify & Complete Registration</button>
+                </div>
 
                 <div class="auth-divider">
                     <span>Or continue with</span>
@@ -657,120 +830,281 @@
         </div>
     </div>
   
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Toggle between login and register forms
-        document.getElementById('switch-to-register').addEventListener('click', function(e) {
-            e.preventDefault();
-            showRegisterForm();
-        });
+        $(document).ready(function() {
+            let otpTimer;
+            let otpCountdown = 60;
+            let registrationData = null;
 
-        document.getElementById('switch-to-login').addEventListener('click', function(e) {
-            e.preventDefault();
-            showLoginForm();
-        });
+            // 👇 toggle this to false in production
+            const devMode = true;
 
-        document.getElementById('login-tab').addEventListener('click', function() {
-            showLoginForm();
-        });
+            // Initialize Country Code
+            $("#CountryCode").val("+91");
 
-        document.getElementById('register-tab').addEventListener('click', function() {
-            showRegisterForm();
-        });
+            // ---------------- FORM TOGGLE ----------------
+            $("#switch-to-register, #register-tab").on("click", function(e) {
+                e.preventDefault();
+                showRegisterForm();
+            });
 
-        function showLoginForm() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('register-form').style.display = 'none';
-            document.getElementById('login-footer').style.display = 'block';
-            document.getElementById('register-footer').style.display = 'none';
-            document.getElementById('login-tab').classList.add('active');
-            document.getElementById('register-tab').classList.remove('active');
-        }
+            $("#switch-to-login, #login-tab").on("click", function(e) {
+                e.preventDefault();
+                showLoginForm();
+            });
 
-        function showRegisterForm() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
-            document.getElementById('login-footer').style.display = 'none';
-            document.getElementById('register-footer').style.display = 'block';
-            document.getElementById('login-tab').classList.remove('active');
-            document.getElementById('register-tab').classList.add('active');
-        }
+            function showLoginForm() {
+                $("#login-form").show();
+                $("#register-form, #otp-section").hide();
+                $("#login-footer").show();
+                $("#register-footer").hide();
+                $("#login-tab").addClass("active");
+                $("#register-tab").removeClass("active");
+            }
 
-        // Toggle password visibility
-        document.querySelectorAll('.toggle-password').forEach(function(toggle) {
-            toggle.addEventListener('click', function() {
-                const input = this.previousElementSibling;
-                const icon = this.querySelector('i');
+            function showRegisterForm() {
+                $("#login-form, #otp-section").hide();
+                $("#register-form").show();
+                $("#login-footer").hide();
+                $("#register-footer").show();
+                $("#register-tab").addClass("active");
+                $("#login-tab").removeClass("active");
+            }
 
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
+            function showOTPSection() {
+                $("#login-form, #register-form, #login-footer, #register-footer").hide();
+                $("#otp-section").show();
+                $("#login-tab, #register-tab").removeClass("active");
+
+                // 👇 Add Skip OTP button dynamically if devMode is enabled
+                if (devMode && $("#skip-otp-button").length === 0) {
+                    $("#otp-section").append(`
+                        <button type="button" id="skip-otp-button" class="auth-button"
+                            style="margin-top: 10px; background-color: #64748b;">
+                            Skip OTP Verification (Dev)
+                        </button>
+                    `);
+                }
+            }
+
+            // ---------------- PASSWORD TOGGLE ----------------
+            $(".toggle-password").on("click", function() {
+                const input = $(this).prev("input");
+                const icon = $(this).find("i");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                    icon.removeClass("fa-eye").addClass("fa-eye-slash");
                 } else {
-                    input.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
+                    input.attr("type", "password");
+                    icon.removeClass("fa-eye-slash").addClass("fa-eye");
                 }
             });
-        });
 
-        // Form submission
-        // document.getElementById('login-form').addEventListener('submit', function(e) {
-        //  //   e.preventDefault();
-        //     // Add your login logic here
-        //     alert('Login functionality would be implemented here!');
-        // });
+            // ---------------- OTP INPUT ----------------
+            $(".otp-input").on("input", function() {
+                const index = parseInt($(this).data("index"));
+                const val = $(this).val();
 
-        // document.getElementById('register-form').addEventListener('submit', function(e) {
-        //     e.preventDefault();
-            
-        // });
+                if (val && !/^\d+$/.test(val)) {
+                    $(this).val("");
+                    return;
+                }
 
+                if (val && index < 6) {
+                    $(`.otp-input[data-index="${index + 1}"]`).focus();
+                }
 
-        // Mobile menu toggle
-        document.querySelector('.mobile-toggle').addEventListener('click', function() {
-            const navMenu = document.querySelector('.nav-menu');
-            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-        });
+                if (index === 6 && val) {
+                    const allFilled = $(".otp-input").toArray().every(i => $(i).val());
+                    if (allFilled) $("#verify-otp-button").focus();
+                }
+            });
 
-           $(document).ready(function () {
-            $("#Register-button").on("click", function (e) {   // ✅ lowercase "click"
-                e.preventDefault(); // stop full-page postback
+            $(".otp-input").on("keydown", function(e) {
+                const index = parseInt($(this).data("index"));
+                if (e.key === "Backspace" && !$(this).val() && index > 1) {
+                    $(`.otp-input[data-index="${index - 1}"]`).focus();
+                }
+            });
 
-                let form = $("#register-form")[0];
-                let formData = new FormData(form);
+            // ---------------- TIMER ----------------
+            function startOTPTimer() {
+                otpCountdown = 60;
+                $("#countdown").text(otpCountdown);
+                $("#otp-resend").addClass("disabled");
 
-                $.ajax({
-                    url: '@Url.Action("Register", "Account")',  // MVC Register action
+                otpTimer = setInterval(() => {
+                    otpCountdown--;
+                    $("#countdown").text(otpCountdown);
+                    if (otpCountdown <= 0) {
+                        clearInterval(otpTimer);
+                        $("#otp-resend").removeClass("disabled");
+                    }
+                }, 1000);
+            }
+
+            // ---------------- API CALLS ----------------
+            function sendSMSOTP(phoneNumber) {
+                return $.ajax({
+                    url: "https://localhost:7180/api/Account/Otp-send",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ phoneNumber })
+                });
+            }
+
+            function verifySMSOTP(phoneNumber, otp) {
+                return $.ajax({
+                    url: "https://localhost:7180/api/Account/Otp-verify",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ phoneNumber, otp })
+                });
+            }
+
+            function completeRegistration() {
+                const form = $("#register-form")[0];
+                const formData = new FormData(form);
+                return $.ajax({
+                    url: '@Url.Action("Register", "Account")',
                     type: "POST",
                     data: formData,
                     processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.success) {
-                            alert("✅ " + response.message);
-
-                            // 1. Reset form fields
-                            $("#register-form")[0].reset();
-
-                            // 2. Switch back to login tab
-                            showLoginForm();
-
-                            // 3. (Optional) Auto-focus email on login form
-                            $("#login-email").focus();
-                        } else {
-                            alert("⚠️ " + (response.message || "Registration failed."));
-                        }
-                    },
-                    error: function (xhr) {
-                        console.error("Error:", xhr.responseText);
-                        alert("❌ Registration failed. Please try again.");
-                    }
+                    contentType: false
                 });
+            }
+
+            // ---------------- MESSAGE ----------------
+            function showMessage(message, type = "info") {
+                $(".message").remove();
+                const msg = $(`<div class="message message-${type}">${message}</div>`);
+                $("#otp-section").prepend(msg);
+                if (type === "success") setTimeout(() => msg.fadeOut(300, () => msg.remove()), 4000);
+            }
+
+            function maskPhoneNumber(number) {
+                return number.replace(/(\d{6})(\d{4})/, "******$2");
+            }
+
+            // ---------------- REGISTER ----------------
+            $("#register-button").on("click", function(e) {
+                e.preventDefault();
+                const phoneNumber = $("#PhoneNumber").val().replace(/\D/g, "");
+                const countryCode = $("#CountryCode").val() || "+91";
+                const fullPhone = countryCode + phoneNumber;
+
+                if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
+                    alert("Please enter a valid 10-digit Phone Number");
+                    return;
+                }
+
+                const btn = $(this);
+                btn.prop("disabled", true).text("Sending OTP...");
+
+                sendSMSOTP(fullPhone)
+                    .done(res => {
+                        if (res.success || devMode) { // 👈 allow OTP skip even if backend mock
+                            showMessage("OTP sent successfully!", "success");
+                            $("#otp-subtitle").text(`We've sent a 6-digit code to ${maskPhoneNumber(phoneNumber)}`);
+                            registrationData = { phoneNumber: fullPhone };
+                            showOTPSection();
+                            startOTPTimer();
+                            $(".otp-input[data-index='1']").focus();
+                        } else {
+                            showMessage(res.message || "Failed to send OTP", "error");
+                        }
+                    })
+                    .fail(err => showMessage("Error sending OTP: " + err.statusText, "error"))
+                    .always(() => btn.prop("disabled", false).text("Create Account"));
+            });
+
+            // ---------------- VERIFY OTP ----------------
+            $("#verify-otp-button").on("click", function() {
+                const otp = $(".otp-input").map(function() { return $(this).val(); }).get().join("");
+                if (otp.length !== 6) {
+                    showMessage("Please enter a valid 6-digit OTP.", "error");
+                    return;
+                }
+
+                const btn = $(this);
+                btn.prop("disabled", true).text("Verifying...");
+
+                verifySMSOTP(registrationData.phoneNumber, otp)
+                    .done(res => {
+                        if (res.success) {
+                            showMessage("OTP verified successfully!", "success");
+                            completeRegistration()
+                                .done(r => {
+                                    if (r.success) {
+                                        showMessage("Registration successful!", "success");
+                                        clearInterval(otpTimer);
+                                        setTimeout(() => {
+                                            showLoginForm();
+                                            $("#login-email").focus();
+                                        }, 1500);
+                                    } else {
+                                        showMessage(r.message || "Registration failed.", "error");
+                                    }
+                                });
+                        } else {
+                            showMessage("Invalid OTP. Please try again.", "error");
+                            $(".otp-input").val("");
+                            $(".otp-input[data-index='1']").focus();
+                        }
+                    })
+                    .fail(err => showMessage("Error verifying OTP: " + err.statusText, "error"))
+                    .always(() => btn.prop("disabled", false).text("Verify & Complete Registration"));
+            });
+
+            // ---------------- RESEND OTP ----------------
+            $("#otp-resend").on("click", function() {
+                if (!$(this).hasClass("disabled")) {
+                    const phoneNumber = registrationData.phoneNumber;
+                    $(this).addClass("disabled");
+
+                    sendSMSOTP(phoneNumber)
+                        .done(res => {
+                            if (res.success) {
+                                showMessage("OTP resent successfully!", "success");
+                                startOTPTimer();
+                            } else {
+                                showMessage("Failed to resend OTP", "error");
+                                $(this).removeClass("disabled");
+                            }
+                        })
+                        .fail(() => {
+                            showMessage("Error resending OTP", "error");
+                            $(this).removeClass("disabled");
+                        });
+                }
+            });
+
+            // 👇 ---------------- SKIP OTP (DEV MODE) ----------------
+            $(document).on("click", "#skip-otp-button", function() {
+                const btn = $(this);
+                btn.prop("disabled", true).text("Completing registration...");
+
+                completeRegistration()
+                    .done(r => {
+                        if (r.success) {
+                            showMessage("Registration completed (dev skip).", "success");
+                            clearInterval(otpTimer);
+                            setTimeout(() => {
+                                showLoginForm();
+                                $("#login-email").focus();
+                            }, 1200);
+                        } else {
+                            showMessage(r.message || "Registration failed.", "error");
+                        }
+                    })
+                    .fail(() => showMessage("Error completing registration.", "error"))
+                    .always(() => btn.prop("disabled", false).text("Skip OTP Verification (Dev)"));
             });
         });
-
-
     </script>
+
+
 </body>
 </html>

@@ -23,12 +23,15 @@ namespace HireFlow_API.Model.DataModel
         [Required, MaxLength(255)]
         public string? OfferLetterPath { get; set; }
 
-        public DateTime? GeneratedOn { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "datetime")]
+        public DateTime? GeneratedOn { get; set; } = DateTime.Now;
 
+        [Column(TypeName = "datetime")]
         public DateTime? SentOn { get; set; }
 
         public bool IsAccepted { get; set; } = false;
 
+        [Column(TypeName = "datetime")]
         public DateTime? AcceptedOn { get; set; }
 
         public bool IsActive { get; set; } = true;

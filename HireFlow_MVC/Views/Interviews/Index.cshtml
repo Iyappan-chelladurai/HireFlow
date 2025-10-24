@@ -1,0 +1,1251 @@
+﻿@{
+
+    Layout = "_SystemLayout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Management | ModernTech Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7e22ce;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --status-applied: #93c5fd;
+            --status-viewed: #60a5fa;
+            --status-review: #f59e0b;
+            --status-shortlisted: #818cf8;
+            --status-interview: #a78bfa;
+            --status-accepted: #34d399;
+            --status-rejected: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+            .logo span {
+                color: var(--secondary);
+            }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+            .nav-link:hover {
+                color: var(--primary);
+            }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: var(--primary);
+                transition: width 0.3s;
+            }
+
+            .nav-link:hover::after {
+                width: 100%;
+            }
+
+        .nav-cta {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .nav-cta:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
+
+            .nav-cta::after {
+                display: none;
+            }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            z-index: 900;
+        }
+
+            .sidebar a {
+                color: white;
+                padding: 15px 25px;
+                display: block;
+                text-decoration: none;
+                transition: all 0.3s;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+                .sidebar a:hover, .sidebar a.active {
+                    background-color: rgba(255, 255, 255, 0.1);
+                    padding-left: 30px;
+                }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 100px 20px 40px;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+            .btn-outline:hover {
+                background-color: #f8fafc;
+            }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            background-color: white;
+            margin-bottom: 30px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .data-table th {
+                background-color: #f8fafc;
+                padding: 15px;
+                text-align: left;
+                font-weight: 600;
+                color: var(--gray);
+                border-bottom: 2px solid #e2e8f0;
+            }
+
+            .data-table td {
+                padding: 15px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .data-table tr:hover {
+                background-color: #f8fafc;
+            }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .badge-primary {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Interview Items */
+        .interview-item {
+            display: flex;
+            padding: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+            .interview-item:last-child {
+                border-bottom: none;
+            }
+
+        .interview-date {
+            min-width: 70px;
+            margin-right: 20px;
+        }
+
+        .date-box {
+            background-color: #f1f5f9;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .date-month {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        .date-day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .interview-details {
+            flex-grow: 1;
+        }
+
+            .interview-details h4 {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .interview-details p {
+                color: var(--gray);
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+
+        .interview-candidate {
+            background-color: #f1f5f9;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--dark);
+            display: inline-block;
+        }
+
+        /* Calendar */
+        .calendar-day {
+            height: 120px;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+            .calendar-day:hover {
+                background-color: #f8f9fa;
+            }
+
+            .calendar-day.today {
+                background-color: #e3f2fd;
+                border: 2px solid var(--primary);
+            }
+
+            .calendar-day.has-interview {
+                background-color: #e8f5e9;
+                cursor: pointer;
+            }
+
+                .calendar-day.has-interview:hover {
+                    background-color: #c8e6c9;
+                }
+
+        .interview-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Time Slot Selection */
+        .time-slot {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .time-slot:hover {
+                background-color: #f8f9fa;
+            }
+
+            .time-slot.selected {
+                background-color: #e3f2fd;
+                border-color: var(--primary);
+            }
+
+        .interview-type-badge {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+            .modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            transform: translateY(50px);
+            transition: transform 0.5s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+
+            .modal-close:hover {
+                color: var(--dark);
+            }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 992px) {
+            .sidebar
+
+        {
+            width: 200px;
+        }
+
+        .main-content {
+            margin-left: 200px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .nav-menu
+
+        {
+            display: none;
+        }
+
+        .mobile-toggle {
+            display: block;
+        }
+
+        .sidebar {
+            width: 70px;
+            padding-top: 90px;
+        }
+
+            .sidebar a span {
+                display: none;
+            }
+
+        .main-content {
+            margin-left: 70px;
+            padding: 90px 15px 30px;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .calendar-day {
+            height: 100px;
+            font-size: 0.9rem;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .sidebar
+
+        {
+            display: none;
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+
+        .modal {
+            padding: 30px 20px;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+   
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2 class="page-title">Interview Management</h2>
+                <button class="btn btn-primary" id="scheduleInterviewBtn">
+                    <i class="fas fa-plus"></i> Schedule Interview
+                </button>
+            </div>
+
+            <!-- Upcoming Interviews -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">Upcoming Interviews</h3>
+                    <a href="#" style="color: var(--primary);">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Position</th>
+                                <th>Interviewer</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
+                                        <div>John Smith</div>
+                                    </div>
+                                </td>
+                                <td>Frontend Developer</td>
+                                <td>Sarah Johnson</td>
+                                <td>Oct 15, 2023<br><small>10:00 AM - 11:00 AM</small></td>
+                                <td><span class="interview-type-badge" style="background-color: var(--primary); color: white;">Technical</span></td>
+                                <td><span class="status-badge badge-warning">Scheduled</span></td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
+                                        <div>Sarah Johnson</div>
+                                    </div>
+                                </td>
+                                <td>UX Designer</td>
+                                <td>Michael Brown</td>
+                                <td>Oct 16, 2023<br><small>2:00 PM - 3:00 PM</small></td>
+                                <td><span class="interview-type-badge" style="background-color: var(--secondary); color: white;">Culture Fit</span></td>
+                                <td><span class="status-badge badge-warning">Scheduled</span></td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
+                                        <div>Michael Brown</div>
+                                    </div>
+                                </td>
+                                <td>Backend Developer</td>
+                                <td>David Wilson</td>
+                                <td>Oct 17, 2023<br><small>11:00 AM - 12:00 PM</small></td>
+                                <td><span class="interview-type-badge" style="background-color: var(--primary); color: white;">Technical</span></td>
+                                <td><span class="status-badge badge-warning">Scheduled</span></td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
+                                        <div>Emily Davis</div>
+                                    </div>
+                                </td>
+                                <td>Product Manager</td>
+                                <td>Jennifer Lee</td>
+                                <td>Oct 18, 2023<br><small>9:30 AM - 10:30 AM</small></td>
+                                <td><span class="interview-type-badge" style="background-color: var(--secondary); color: white;">Culture Fit</span></td>
+                                <td><span class="status-badge badge-warning">Scheduled</span></td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
+                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interview Calendar & Completed Interviews -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+                <div>
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Interview Calendar - October 2023</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <h4 style="margin: 0;">October 2023</h4>
+                                <button class="btn btn-outline">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Sun</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Mon</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Tue</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Wed</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Thu</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Fri</th>
+                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Sat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="calendar-day">1</td>
+                                            <td class="calendar-day">2</td>
+                                            <td class="calendar-day">3</td>
+                                            <td class="calendar-day">4</td>
+                                            <td class="calendar-day">5</td>
+                                            <td class="calendar-day">6</td>
+                                            <td class="calendar-day">7</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="calendar-day">8</td>
+                                            <td class="calendar-day">9</td>
+                                            <td class="calendar-day">10</td>
+                                            <td class="calendar-day">11</td>
+                                            <td class="calendar-day">12</td>
+                                            <td class="calendar-day">13</td>
+                                            <td class="calendar-day">14</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="calendar-day">15</td>
+                                            <td class="calendar-day">16</td>
+                                            <td class="calendar-day today">
+                                                17
+                                                <span class="interview-badge">2</span>
+                                            </td>
+                                            <td class="calendar-day has-interview">
+                                                18
+                                                <span class="interview-badge">1</span>
+                                            </td>
+                                            <td class="calendar-day">19</td>
+                                            <td class="calendar-day">20</td>
+                                            <td class="calendar-day">21</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="calendar-day">22</td>
+                                            <td class="calendar-day">23</td>
+                                            <td class="calendar-day">24</td>
+                                            <td class="calendar-day">25</td>
+                                            <td class="calendar-day">26</td>
+                                            <td class="calendar-day">27</td>
+                                            <td class="calendar-day">28</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="calendar-day">29</td>
+                                            <td class="calendar-day">30</td>
+                                            <td class="calendar-day">31</td>
+                                            <td class="calendar-day"></td>
+                                            <td class="calendar-day"></td>
+                                            <td class="calendar-day"></td>
+                                            <td class="calendar-day"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Completed Interviews</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="display: flex; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
+                                <div style="margin-right: 15px;">
+                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <h4 style="margin-bottom: 5px;">Robert Wilson</h4>
+                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Frontend Developer</p>
+                                    <div>
+                                        <span class="status-badge badge-danger">Rejected</span>
+                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 14, 2023</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
+                                <div style="margin-right: 15px;">
+                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <h4 style="margin-bottom: 5px;">Jennifer Lee</h4>
+                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Product Manager</p>
+                                    <div>
+                                        <span class="status-badge badge-success">Passed</span>
+                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 13, 2023</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex;">
+                                <div style="margin-right: 15px;">
+                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <h4 style="margin-bottom: 5px;">David Kim</h4>
+                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">DevOps Engineer</p>
+                                    <div>
+                                        <span class="status-badge badge-success">Passed</span>
+                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 12, 2023</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Interview Statistics</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span>Scheduled Interviews</span>
+                                    <span>8</span>
+                                </div>
+                                <div style="height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 100%; background-color: var(--warning);"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span>Completed Interviews</span>
+                                    <span>12</span>
+                                </div>
+                                <div style="height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 100%; background-color: var(--primary);"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span>Passed Interviews</span>
+                                    <span>8</span>
+                                </div>
+                                <div style="height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 67%; background-color: var(--success);"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span>Rejected Interviews</span>
+                                    <span>4</span>
+                                </div>
+                                <div style="height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 33%; background-color: var(--error);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Interview Modal -->
+    <div class="modal-overlay" id="scheduleInterviewModal">
+        <div class="modal">
+            <button class="modal-close">&times;</button>
+            <h2 class="modal-title">Schedule New Interview</h2>
+            <p class="modal-subtitle">Fill out the form below to schedule a new interview</p>
+
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="candidateSelect" class="form-label">Select Candidate</label>
+                        <select class="form-select" id="candidateSelect">
+                            <option selected>Choose candidate...</option>
+                            <option value="1">John Smith - Frontend Developer</option>
+                            <option value="2">Sarah Johnson - UX Designer</option>
+                            <option value="3">Michael Brown - Backend Developer</option>
+                            <option value="4">Emily Davis - Product Manager</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="interviewerSelect" class="form-label">Select Interviewer</label>
+                        <select class="form-select" id="interviewerSelect">
+                            <option selected>Choose interviewer...</option>
+                            <option value="1">Sarah Johnson (Engineering Manager)</option>
+                            <option value="2">Michael Brown (Lead Designer)</option>
+                            <option value="3">David Wilson (CTO)</option>
+                            <option value="4">Jennifer Lee (Product Director)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="interviewDate" class="form-label">Interview Date</label>
+                        <input type="date" class="form-input" id="interviewDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="interviewType" class="form-label">Interview Type</label>
+                        <select class="form-select" id="interviewType">
+                            <option selected>Select type...</option>
+                            <option value="1">Technical Interview</option>
+                            <option value="2">Culture Fit Interview</option>
+                            <option value="3">Manager Interview</option>
+                            <option value="4">HR Interview</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Time Slot</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot1" style="display: none;">
+                            <label for="slot1" style="cursor: pointer; display: block;">
+                                9:00 AM - 10:00 AM
+                            </label>
+                        </div>
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot2" style="display: none;">
+                            <label for="slot2" style="cursor: pointer; display: block;">
+                                10:00 AM - 11:00 AM
+                            </label>
+                        </div>
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot3" style="display: none;">
+                            <label for="slot3" style="cursor: pointer; display: block;">
+                                11:00 AM - 12:00 PM
+                            </label>
+                        </div>
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot4" style="display: none;">
+                            <label for="slot4" style="cursor: pointer; display: block;">
+                                1:00 PM - 2:00 PM
+                            </label>
+                        </div>
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot5" style="display: none;">
+                            <label for="slot5" style="cursor: pointer; display: block;">
+                                2:00 PM - 3:00 PM
+                            </label>
+                        </div>
+                        <div class="time-slot text-center">
+                            <input type="radio" name="timeSlot" id="slot6" style="display: none;">
+                            <label for="slot6" style="cursor: pointer; display: block;">
+                                3:00 PM - 4:00 PM
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="interviewLocation" class="form-label">Interview Location</label>
+                    <input type="text" class="form-input" id="interviewLocation" placeholder="Enter location or video conference link">
+                </div>
+
+                <div class="form-group">
+                    <label for="interviewNotes" class="form-label">Notes/Agenda</label>
+                    <textarea class="form-textarea" id="interviewNotes" rows="3" placeholder="Add any notes or agenda items for the interview"></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelScheduleBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary">Schedule Interview</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+                $(document).ready(function () {
+
+            // Open Schedule Interview modal
+            $("#scheduleInterviewBtn").click(function () {
+                $("#scheduleInterviewModal").addClass("active");
+            });
+
+            // Close modal
+            $(".modal-close, #cancelScheduleBtn").click(function () {
+                $("#scheduleInterviewModal").removeClass("active");
+            });
+
+            // Optional: Close modal when clicking outside modal content
+            $("#scheduleInterviewModal").click(function (e) {
+                if ($(e.target).is("#scheduleInterviewModal")) {
+                    $(this).removeClass("active");
+                }
+            });
+
+            // Time slot selection
+            $(".time-slot").click(function () {
+                $(".time-slot").removeClass("selected");
+                $(this).addClass("selected");
+                $(this).find("input[type=radio]").prop("checked", true);
+            });
+
+        });
+
+             $(document).ready(function () {
+
+            // =========================
+            // 1️⃣ Load Candidates
+            // =========================
+            function loadCandidates() {
+                $.getJSON("https://localhost:7180/api/JobApplications/GetCandidatesForDropdown", function (candidates) {
+                    let options = '<option value="">Choose candidate...</option>';
+                    $.each(candidates, function (i, c) {
+                           console.log(candidates);
+                       // alert(i.ApplicationId);
+                        options += `<option value="${c.applicationId}">${c.candidateName} - ${c.jobTitle}</option>`;
+                    });
+                    $("#candidateSelect").html(options);
+                });
+            }
+
+            // =========================
+            // 2️⃣ Load Interviewers
+            // =========================
+            function loadInterviewers() {
+                $.getJSON("https://localhost:7180/api/JobApplications/interviewers-dropdown", function (interviewers) {
+                    let options = '<option value="">Choose interviewer...</option>';
+
+                    
+                    $.each(interviewers, function (i, intv) {
+                        console.log(interviewers);
+                        options += `<option value="${intv.userId}">${intv.fullName} (${intv.role})</option>`;
+                    });
+                    $("#interviewerSelect").html(options);
+                });
+            }
+
+            // =========================
+            // 3️⃣ Load Upcoming Interviews
+            // =========================
+            function loadUpcomingInterviews() {
+                $.getJSON("/api/InterviewSchedules?status=Scheduled", function (interviews) {
+                    let rows = "";
+                    $.each(interviews, function (i, iv) {
+                        rows += `
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center;">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right:12px;">
+                                    <div>${iv.candidate}</div>
+                                </div>
+                            </td>
+                            <td>${iv.position}</td>
+                            <td>${iv.interviewer}</td>
+                            <td>${new Date(iv.dateTime).toLocaleDateString()}<br>
+                                <small>${new Date(iv.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                            </td>
+                            <td><span class="interview-type-badge" style="background-color: ${iv.type=="Technical"?"#2563eb":"#7e22ce"}; color:white;">${iv.type}</span></td>
+                            <td><span class="status-badge badge-warning">${iv.status}</span></td>
+                            <td>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="btn btn-outline detailsBtn" data-id="${iv.id}">Details</button>
+                                    <button class="btn btn-outline rescheduleBtn" data-id="${iv.id}">Reschedule</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    });
+                    $("#upcomingInterviewsTable tbody").html(rows);
+                });
+            }
+
+            // =========================
+            // 4️⃣ Load Completed Interviews
+            // =========================
+            function loadCompletedInterviews() {
+                $.getJSON("/api/InterviewSchedules?status=Completed", function (interviews) {
+                    let rows = "";
+                    $.each(interviews, function (i, iv) {
+                        rows += `
+                        <tr>
+                            <td>${iv.candidate}</td>
+                            <td>${iv.position}</td>
+                            <td>${iv.interviewer}</td>
+                            <td>${new Date(iv.dateTime).toLocaleDateString()}<br>
+                                <small>${new Date(iv.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                            </td>
+                            <td><span class="interview-type-badge" style="background-color: ${iv.type=="Technical"?"#2563eb":"#7e22ce"}; color:white;">${iv.type}</span></td>
+                            <td><span class="status-badge badge-success">${iv.status}</span></td>
+                        </tr>`;
+                    });
+                    $("#completedInterviewsTable tbody").html(rows);
+                });
+            }
+
+            // =========================
+            // 5️⃣ Time Slot Selection
+            // =========================
+            $(document).on("click", ".time-slot", function () {
+                $(".time-slot").removeClass("selected");
+                $(this).addClass("selected");
+                $(this).find("input[type='radio']").prop("checked", true);
+            });
+
+            // =========================
+            // 6️⃣ Schedule Interview
+            // =========================
+            $("#scheduleInterviewModal .btn-primary").on("click", function () {
+                const candidateId = $("#candidateSelect").val();
+                const interviewerName = $("#interviewerSelect option:selected").text();
+                const interviewMode = $("#interviewType option:selected").text();
+                const meetingLink = $("#interviewLocation").val();
+                const date = $("#interviewDate").val();
+                 const roundNumber = $("#interviewType option:selected").val();
+                const selectedSlot = $(".time-slot.selected label").text().trim();
+
+                if (!candidateId || !date || !selectedSlot) {
+                    alert("⚠️ Please fill in all required fields!");
+                    return;
+                }
+
+                      const dateTimeStr = date + " " + selectedSlot.split(" - ")[0];
+        const scheduledDate = new Date(dateTimeStr); // no .toISOString()
+
+
+                const payload = {
+                    applicationId: candidateId,
+                    roundNumber: roundNumber,
+                    scheduledDate: scheduledDate,
+                    interviewerName: interviewerName,
+                    interviewMode: interviewMode,
+                    meetingLink: meetingLink,
+                    status: "Scheduled"
+                };
+
+                $.ajax({
+                    url: "https://localhost:7180/api/interviews/schedule",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    success: function () {
+                        alert("✅ Interview scheduled successfully!");
+                        $("#scheduleInterviewModal").modal("hide");
+                        $("form")[0].reset();
+                        $(".time-slot").removeClass("selected");
+                        loadUpcomingInterviews();
+                    },
+                    error: function (xhr) {
+                        console.error(xhr.responseText);
+                        alert("❌ Failed to schedule interview. Check console.");
+                    }
+                });
+            });
+
+            // =========================
+            // 7️⃣ Initialize everything
+            // =========================
+            loadCandidates();
+            loadInterviewers();
+            loadUpcomingInterviews();
+            loadCompletedInterviews();
+
+        });
+
+
+    </script>
+</body>
+</html>
