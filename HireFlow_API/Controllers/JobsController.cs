@@ -24,7 +24,7 @@ namespace HireFlow_API.Controllers
         {
             _jobService = jobService;
             _httpClientFactory = httpClientFactory;
-            _openAiKey = configuration["OpenAI:ApiKey"];
+            _openAiKey =  Environment.GetEnvironmentVariable("OPEN_API_KEY") ;
         }
 
 

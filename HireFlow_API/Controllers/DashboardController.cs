@@ -23,7 +23,7 @@ namespace HireFlow_MVC.Controllers
             // Replace this section with actual DB queries
             var stats = new DashboardStatsDto
             {
-                OpenPositions = await _context.Jobs.Where(a=>a.ClosingDate > DateTime.Now).Select(j => j.Openings).CountAsync(),
+                OpenPositions = await _context.Jobs.Where(a=>a.ClosingDate > DateTime.Now).Select(j => j.Openings).FirstOrDefaultAsync(),
                 Applications = await _context.JobApplications.Distinct().CountAsync(),
                 Interviews = await _context.InterviewScheduleDetails.Where(a=>a.IsActive).CountAsync(),
                 NewHires = await _context.JobApplications.CountAsync(a => a.ApplicationStatus == "Hired")

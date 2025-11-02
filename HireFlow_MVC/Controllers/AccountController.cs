@@ -38,6 +38,12 @@ namespace HireFlow_MVC.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Unauthorized()
+        {
+            return View();
+        }
+
 
 
         [HttpGet]

@@ -90,10 +90,24 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseStatusCodePages(context =>
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == 401 || response.StatusCode == 403)
+    {
+        response.Redirect("/Account/Unauthorized"); // your custom 401 page
+    }
+    return Task.CompletedTask;
+});
+
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints => { 
+    endpoints.MapControllers();
+});
 
 //app.UseExceptionHandler();
 

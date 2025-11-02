@@ -34,7 +34,8 @@ namespace HireFlow_API.Repositories
                 _logger.LogInformation("Fetching all jobs...");
 
                 return await _context.Jobs
-                    .AsNoTracking()
+                                      .Where(a => (a.JobStatus == 2 && a.ClosingDate < DateTime.Now.AddDays(-1)) || a.JobStatus != 2)
+                                      .AsNoTracking()
                     .Select(j => new JobDTO
                     {
                         JobId = j.JobId,
@@ -52,7 +53,7 @@ namespace HireFlow_API.Repositories
                         PostedBy = j.PostedBy,
                         JobStatus = j.JobStatus,
                         CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
-                    }).OrderByDescending(A=>A.PostedOn)
+                    }).OrderByDescending(A=>A.ClosingDate)
                     .ToListAsync();
             }
             catch (Exception ex)

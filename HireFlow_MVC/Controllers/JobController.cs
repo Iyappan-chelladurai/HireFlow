@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace HireFlow_MVC.Controllers
 {
-    [Authorize(Roles = "HR")]
+   
     public class JobController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -17,12 +17,13 @@ namespace HireFlow_MVC.Controllers
             _httpClient = httpClientFactory.CreateClient("HireFlowAPI");
         }
 
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public IActionResult PostJob()
         {
             return View(new JobViewModel());
         }
-
+        [Authorize(Roles = "HR")]
         [HttpPost]
         public async Task<JsonResult> PostJob([FromBody] JobViewModel model)
         {

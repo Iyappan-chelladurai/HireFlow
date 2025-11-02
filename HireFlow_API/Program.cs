@@ -159,6 +159,10 @@ Log.Logger = new LoggerConfiguration()
 // Use Serilog as the host logger
 builder.Host.UseSerilog();
 
+
+
+
+
 var app = builder.Build();
 
 
@@ -173,6 +177,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
  
 app.UseCors("AllowAll");
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();
