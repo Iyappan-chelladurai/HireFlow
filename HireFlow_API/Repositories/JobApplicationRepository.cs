@@ -15,7 +15,7 @@ namespace HireFlow_API.Repositories
 
         Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync(Guid JobId);
         Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
-        Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto);
+        Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto , bool isTrans = false);
         Task UpdateApplicationInfoAsync(JobApplicationDTO jobApplicationDto);
         Task DeleteApplicationByIdAsync(Guid applicationId);
         Task<bool> IsApplicationExistsAsync(Guid applicationId);
@@ -28,15 +28,36 @@ namespace HireFlow_API.Repositories
 
         Task<IList<InterviewerDropdownDto>> GetInterviewersForDropdownAsync();
 
+        Task<CandidateDisplayDto> GetCandidatesbyApplicationIdAsync(Guid JobApplicationId);
+
     }
 
     public class JobApplicationRepository : IJobApplicationRepository
     {
         private readonly ApplicationDbContext _context;
+        private bool _disposed = false;
 
         public JobApplicationRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                _disposed = true;
+            }
         }
 
         public async Task<IEnumerable<JobApplicationDTO>> GetAllApplicationsAsync(Guid jobId)
@@ -70,7 +91,7 @@ namespace HireFlow_API.Repositories
             return entity != null ? MapEntityToDTO(entity) : null;
         }
 
-        public async Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto)
+        public async Task<Guid> AddNewApplicationAsync(JobApplicationDTO jobApplicationDto , bool isTrans)
         {
 
             var entity = new JobApplication
@@ -85,7 +106,11 @@ namespace HireFlow_API.Repositories
 
 
             _context.JobApplications.Add(entity);
-            await _context.SaveChangesAsync();
+
+            if (!isTrans)
+            {
+                await _context.SaveChangesAsync();
+            }
 
             return entity.ApplicationId;
         }
@@ -193,6 +218,11 @@ namespace HireFlow_API.Repositories
             IList < CandidateDisplayDto > candidates = new List<CandidateDisplayDto>();
             try
             {
+
+
+                //var Exists = _context.InterviewScheduleDetails.Select(a => new { a.ApplicationId, a.InterviewMode } ).ToList();
+
+
                candidates = await (
                                               from app in _context.JobApplications
                                               join c in _context.CandidateDetails on app.CandidateId equals c.CandidateId
@@ -201,9 +231,9 @@ namespace HireFlow_API.Repositories
                                               join cs in _context.tbl_CandidatesJobScore on app.ApplicationId equals cs.JobApplicationId into csGroup
                                               from cs in csGroup.DefaultIfEmpty() // Left join, in case score is missing
                                               where (jobId == Guid.Empty ? 1 == 1 : app.JobId == jobId)
+                                           //   && ( Exists.Select(A=>A.InterviewMode).Count() < 3)
                                               select new CandidateDisplayDto
                                               {
-
                                                   ApplicationId = app.ApplicationId,
                                                   CandidateName = u.FullName,
                                                   CandidateEmail = u.Email,
@@ -215,10 +245,10 @@ namespace HireFlow_API.Repositories
                                                   MatchScore = cs.OverallFitScore,
                                                   ExpectedSalary = c.ExpectedSalary ?? 0m,
                                                   Department = j.Department,
-                                                  Location = j.Location
-
+                                                  Location = j.Location,
+                                                  ScoreFeedback = cs.Feedback,
                                               }
-                                          ).ToListAsync();
+                                          ).Distinct().ToListAsync();
 
             }
             catch (Exception ex)
@@ -226,15 +256,54 @@ namespace HireFlow_API.Repositories
                 throw ex;
 
             }
-
             return candidates;
         }
+
+        public async Task<CandidateDisplayDto> GetCandidatesbyApplicationIdAsync(Guid JobApplicationId)
+        {
+             CandidateDisplayDto  candidates;
+            try
+            {
+                return  await (from app in _context.JobApplications
+                                               join c in _context.CandidateDetails on app.CandidateId equals c.CandidateId
+                                               join u in _context.Users on c.UserId equals u.Id
+                                               join j in _context.Jobs on app.JobId equals j.JobId
+                                               join cs in _context.tbl_CandidatesJobScore on app.ApplicationId equals cs.JobApplicationId into csGroup
+                                               from cs in csGroup.DefaultIfEmpty() // Left join, in case score is missing
+                                               where app.ApplicationId == JobApplicationId
+                                               select new CandidateDisplayDto
+                                               {
+                                                   ApplicationId = app.ApplicationId,
+                                                   CandidateName = u.FullName,
+                                                   CandidateEmail = u.Email,
+                                                   ApplicationStatus = app.ApplicationStatus,
+                                                   JobTitle = j.JobTitle,
+                                                   EducationLevel = c.EducationLevel ?? "",
+                                                   AppliedOn = app.AppliedOn,
+                                                   Skills = c.Skills ?? "",
+                                                   MatchScore = cs.OverallFitScore,
+                                                   ExpectedSalary = c.ExpectedSalary ?? 0m,
+                                                   Department = j.Department,
+                                                   Location = j.Location,
+                                                   ScoreFeedback = cs.Feedback,
+                                               }
+                                           ).FirstOrDefaultAsync() ?? new CandidateDisplayDto();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+          
+        }
+
 
         public async Task<IList<CandidateDropdownDto>> GetCandidatesForDropdownAsync()
         {
             return await _context.JobApplications
-                .Include(a => a.Candidate.User)
-                .Include(a => a.Job)
+                .Include(a => a.Candidate).ThenInclude(a=>a.User)
+                .Include(a => a.Job).Where(a=>a.IsOfferAccepted != true && a.ApplicationStatus == "Shortlisted")
                 .Select(a => new CandidateDropdownDto
                 {
                     ApplicationId = a.ApplicationId,
@@ -256,11 +325,8 @@ namespace HireFlow_API.Repositories
                     Role = role.Name
                 }
             ).ToListAsync();
-
             return result;
         }
-
-
     }
 
     public class CandidateDisplayDto
@@ -287,5 +353,12 @@ namespace HireFlow_API.Repositories
         public int? MatchScore { get; set; }
 
         public string? Location { get; set; }
+
+        public string ScoreFeedback { get; set; }
+
+        public string ResumeFileName { get; set; }
+
+        public string candidateSummary { get; set; }
+
     }
 }

@@ -767,8 +767,16 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
+       
+
         $(document).ready(function () {
             // Open Modal on Apply Button Click
+
+
+
+
+
             $(".apply-btn").on("click", function (e) {
                 e.preventDefault();
 
@@ -778,6 +786,20 @@
                 $("#modal-job-title").text(jobTitle);
                 $("#jobId").val(jobId);
                 $("#candidateId").val("@CandidateId"); // Razor injects CandidateId
+
+                 document.getElementById("current-employment").value = "Software Engineer";
+            document.getElementById("experience").value = "3.5";
+            document.getElementById("education").value = "Bachelor's in Computer Science";
+            document.getElementById("notice-period").value = "30";
+            document.getElementById("available-from").value = new Date().toISOString().split("T")[0];
+            document.getElementById("expected-salary").value = "600000";
+            document.getElementById("preferred-location").value = "Chennai / Remote";
+            document.getElementById("skills").value = "C#, ASP.NET Core, SQL Server, JavaScript, Azure DevOps";
+
+
+
+
+
 
                 $("#application-modal").addClass("active");
                 $("body").css("overflow", "hidden");
@@ -818,14 +840,14 @@
                     processData: false,
                     contentType: false,
                     success: function () {
-                        alert("✅ Application submitted successfully!");
+                        alert(" Application submitted successfully!");
                         $("#application-modal").removeClass("active");
                         $("body").css("overflow", "auto");
                         $("#job-application-form")[0].reset();
                         $("#file-name").text("Max file size: 5MB (PDF, DOC, DOCX)");
                     },
                     error: function (xhr) {
-                        alert("❌ Failed to submit application: " + xhr.responseText);
+                        alert(" Failed to submit application: " + xhr.responseText);
                     }
                 });
             });

@@ -7,9 +7,9 @@
 
     var UserId = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 }
-
 <!-- Include stylesheet -->
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 <style>
     :root {
         --primary: #2563eb;
@@ -162,7 +162,8 @@
             gap: 12px;
         }
 
-            .sidebar a:hover, .sidebar a.active {
+            .sidebar a:hover,
+            .sidebar a.active {
                 background-color: rgba(255, 255, 255, 0.1);
                 padding-left: 30px;
             }
@@ -369,499 +370,7 @@
         color: #374151;
     }
 
-    /* Candidate Cards */
-    .candidate-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 25px;
-    }
-
-    .candidate-card {
-        background-color: white;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .candidate-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-
-    .candidate-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 20px;
-    }
-
-    .candidate-status {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-
-    .status-new {
-        background-color: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status-screening {
-        background-color: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status-interview {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-
-    .status-offered {
-        background-color: #d1fae5;
-        color: #065f46;
-    }
-
-    .status-hired {
-        background-color: #d1fae5;
-        color: #065f46;
-    }
-
-    .status-rejected {
-        background-color: #fee2e2;
-        color: #b91c1c;
-    }
-
-    .match-score {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: white;
-        font-size: 0.9rem;
-    }
-
-    .score-high {
-        background-color: var(--success);
-    }
-
-    .score-medium {
-        background-color: var(--warning);
-    }
-
-    .score-low {
-        background-color: var(--error);
-    }
-
-    .candidate-image {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin: 0 auto 15px;
-        display: block;
-        border: 3px solid #e0f2fe;
-    }
-
-    .candidate-name {
-        font-size: 1.2rem;
-        font-weight: 600;
-        text-align: center;
-        margin-bottom: 5px;
-    }
-
-    .candidate-position {
-        color: var(--gray);
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .candidate-details {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .candidate-detail {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.9rem;
-    }
-
-    .candidate-detail-label {
-        color: var(--gray);
-    }
-
-    .candidate-skills {
-        margin-bottom: 20px;
-    }
-
-    .skills-label {
-        font-size: 0.9rem;
-        color: var(--gray);
-        margin-bottom: 8px;
-    }
-
-    .skills-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .skill-badge {
-        padding: 5px 10px;
-        background-color: #e0f2fe;
-        color: var(--primary);
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
-
-    .candidate-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: auto;
-    }
-
-    .btn {
-        padding: 10px;
-        border-radius: 8px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s;
-        border: none;
-        text-align: center;
-        font-size: 0.9rem;
-    }
-
-    .btn-outline {
-        background-color: transparent;
-        border: 1px solid var(--primary);
-        color: var(--primary);
-    }
-
-        .btn-outline:hover {
-            background-color: #f8fafc;
-        }
-
-    .btn-primary {
-        background-color: var(--primary);
-        color: white;
-    }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-
-    .btn-success {
-        background-color: var(--success);
-        color: white;
-    }
-
-        .btn-success:hover {
-            background-color: #0d966c;
-        }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 30px;
-    }
-
-    .pagination-item {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        background-color: white;
-        color: var(--dark);
-        font-weight: 500;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-        .pagination-item:hover {
-            background-color: #f8fafc;
-        }
-
-        .pagination-item.active {
-            background-color: var(--primary);
-            color: white;
-        }
-
-    /* Modal Styles */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-        padding: 20px;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s;
-    }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-    .modal {
-        background-color: white;
-        border-radius: 15px;
-        width: 100%;
-        max-width: 900px;
-        max-height: 90vh;
-        overflow-y: auto;
-        padding: 40px;
-        position: relative;
-        transform: translateY(50px);
-        transition: transform 0.5s;
-    }
-
-    .modal-overlay.active .modal {
-        transform: translateY(0);
-    }
-
-    .modal-close {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: var(--gray);
-        transition: color 0.3s;
-        background: none;
-        border: none;
-    }
-
-        .modal-close:hover {
-            color: var(--dark);
-        }
-
-    .modal-title {
-        font-size: 1.8rem;
-        margin-bottom: 5px;
-    }
-
-    .modal-subtitle {
-        color: var(--gray);
-        margin-bottom: 30px;
-    }
-
-    /* Candidate Profile Modal */
-    .candidate-profile-header {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .candidate-profile-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #e0f2fe;
-    }
-
-    .candidate-profile-info {
-        flex: 1;
-    }
-
-    .candidate-profile-name {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .candidate-profile-position {
-        font-size: 1.2rem;
-        color: var(--gray);
-        margin-bottom: 15px;
-    }
-
-    .candidate-profile-contact {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .contact-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--gray);
-    }
-
-    .profile-section {
-        margin-bottom: 30px;
-    }
-
-    .profile-section-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e2e8f0;
-    }
-
-    .profile-section-content {
-        line-height: 1.8;
-    }
-
-    .experience-item, .education-item {
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-        .experience-item:last-child, .education-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-    .experience-title, .education-title {
-        font-weight: 600;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-    }
-
-    .experience-company, .education-institution {
-        font-weight: 500;
-        color: var(--primary);
-        margin-bottom: 5px;
-    }
-
-    .experience-date, .education-date {
-        color: var(--gray);
-        font-size: 0.9rem;
-        margin-bottom: 10px;
-    }
-
-    .experience-description {
-        color: var(--dark);
-    }
-
-    .skills-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .skill-tag {
-        padding: 8px 15px;
-        background-color: #e0f2fe;
-        color: var(--primary);
-        border-radius: 20px;
-        font-weight: 500;
-    }
-
-    /* Responsive Design */
-    @@media (max-width: 992px) {
-        .sidebar {
-            width: 200px;
-        }
-
-        .main-content {
-            margin-left: 200px;
-        }
-
-        .filter-row {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-
-    @@media (max-width: 768px) {
-        .nav-menu {
-            display: none;
-        }
-
-        .mobile-toggle {
-            display: block;
-        }
-
-        .sidebar {
-            width: 70px;
-            padding-top: 90px;
-        }
-
-            .sidebar a span {
-                display: none;
-            }
-
-        .main-content {
-            margin-left: 70px;
-            padding: 90px 15px 30px;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .filter-row {
-            grid-template-columns: 1fr;
-        }
-
-        .candidate-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .candidate-profile-header {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .candidate-profile-contact {
-            justify-content: center;
-        }
-    }
-
-    @@media (max-width: 576px) {
-        .sidebar {
-            display: none;
-        }
-
-        .main-content {
-            margin-left: 0;
-        }
-
-        .candidate-actions {
-            grid-template-columns: 1fr;
-        }
-
-        .modal {
-            padding: 30px 20px;
-        }
-    }
-
-    /* Button Styles */
+    /* Buttons */
     .btn {
         padding: 12px 24px;
         border-radius: 8px;
@@ -971,7 +480,9 @@
         font-weight: 500;
     }
 
-    .form-input, .form-select, .form-textarea {
+    .form-input,
+    .form-select,
+    .form-textarea {
         width: 100%;
         padding: 12px 15px;
         border: 1px solid #ddd;
@@ -981,7 +492,9 @@
         transition: border-color 0.3s;
     }
 
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -1005,25 +518,91 @@
         margin-top: 30px;
     }
 
-    /* Responsive Design for Modal */
+    /* Responsive Design */
+    @@media (max-width: 992px) {
+        .sidebar
+
+    {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    }
+
     @@media (max-width: 768px) {
-        .form-row {
-            grid-template-columns: 1fr;
+        .nav-menu
+
+    {
+        display: none;
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        width: 70px;
+        padding-top: 90px;
+    }
+
+        .sidebar a span {
+            display: none;
         }
 
-        .modal {
-            padding: 30px 20px;
+    .main-content {
+        margin-left: 70px;
+        padding: 90px 15px 30px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal {
+        padding: 30px 20px;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+        .modal-footer .btn {
+            width: 100%;
         }
 
-        .modal-footer {
-            flex-direction: column;
-        }
+    }
 
-            .modal-footer .btn {
-                width: 100%;
-            }
+    @@media (max-width: 576px) {
+        .sidebar
+
+    {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
     }
 </style>
+
 
 <!-- Main Content -->
 <div class="main-content">
@@ -1037,53 +616,9 @@
             </button>
         </div>
 
-        <div class="search-filters">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label class="filter-label">Status</label>
-                    <select class="filter-select">
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="draft">Draft</option>
-                        <option value="closed">Closed</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Department</label>
-                    <select class="filter-select">
-                        <option value="">All Departments</option>
-                        <option value="engineering">Engineering</option>
-                        <option value="design">Design</option>
-                        <option value="product">Product</option>
-                        <option value="marketing">Marketing</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Location</label>
-                    <select class="filter-select">
-                        <option value="">All Locations</option>
-                        <option value="remote">Remote</option>
-                        <option value="san-francisco">San Francisco</option>
-                        <option value="new-york">New York</option>
-                        <option value="austin">Austin</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Sort By</label>
-                    <select class="filter-select">
-                        <option value="newest">Newest First</option>
-                        <option value="applications">Most Applications</option>
-                        <option value="title">Job Title</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
         <div class="table-responsive">
-            <table class="data-table">
+            <!-- Replaced original manual table with DataTable while keeping original classes/IDs -->
+            <table id="jobTable" class="data-table">
                 <thead>
                     <tr>
                         <th>S No</th>
@@ -1096,138 +631,16 @@
                     </tr>
                 </thead>
                 <tbody id="job-table-body">
-                    <!-- AJAX will load rows here -->
+                    <!-- DataTable will populate rows here -->
                 </tbody>
             </table>
         </div>
 
 
-        <div class="pagination">
-            <div class="pagination-item active">1</div>
-            <div class="pagination-item">2</div>
-            <div class="pagination-item">3</div>
-            <div class="pagination-item">Next</div>
-        </div>
     </div>
 
-    <!-- Candidates View -->
-    <div id="candidates-view" style="display: none;">
-        <div class="page-header">
-            <div>
-                <div class="back-button" id="back-to-jobs">
-                    <i class="fas fa-arrow-left"></i> Back to Jobs
-                </div>
-                <h2 class="page-title" id="candidates-job-title">Candidates for Frontend Developer</h2>
-            </div>
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="Search candidates...">
-                <button class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="search-filters">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label class="filter-label">Status</label>
-                    <select class="filter-select">
-                        <option value="">All Status</option>
-                        <option value="new">New</option>
-                        <option value="screening">Screening</option>
-                        <option value="interview">Interview</option>
-                        <option value="offered">Offered</option>
-                        <option value="hired">Hired</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Match Score</label>
-                    <select class="filter-select">
-                        <option value="">All Scores</option>
-                        <option value="high">High (80-100%)</option>
-                        <option value="medium">Medium (50-79%)</option>
-                        <option value="low">Low (0-49%)</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Experience</label>
-                    <select class="filter-select">
-                        <option value="">All Experience</option>
-                        <option value="intern">Intern</option>
-                        <option value="entry">Entry Level</option>
-                        <option value="mid">Mid Level</option>
-                        <option value="senior">Senior Level</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Sort By</label>
-                    <select class="filter-select">
-                        <option value="newest">Newest First</option>
-                        <option value="score">Match Score</option>
-                        <option value="name">Name</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- View Toggle -->
-        <div class="view-toggle">
-            <button class="view-toggle-btn active" id="grid-view-btn">
-                <i class="fas fa-th-large"></i> Grid View
-            </button>
-            <button class="view-toggle-btn" id="table-view-btn">
-                <i class="fas fa-table"></i> Table View
-            </button>
-        </div>
-
-        <!-- Candidate Grid View -->
-        <div class="candidate-grid" id="candidate-grid">
-            <!-- Candidate cards will be inserted here by JavaScript -->
-        </div>
-
-        <!-- Candidate Table View -->
-        <div class="table-responsive" id="candidate-table" style="display: none;">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Candidate</th>
-                        <th>Status</th>
-                        <th>Match Score</th>
-                        <th>Experience</th>
-                        <th>Education</th>
-                        <th>Applied</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="candidate-table-body">
-                    <!-- Candidate rows will be inserted here by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="pagination">
-            <div class="pagination-item active">1</div>
-            <div class="pagination-item">2</div>
-            <div class="pagination-item">3</div>
-            <div class="pagination-item">Next</div>
-        </div>
-    </div>
-</div>
 </div>
 
-<!-- Candidate Profile Modal -->
-<div class="modal-overlay" id="candidate-profile-modal">
-    <div class="modal">
-        <button class="modal-close">&times;</button>
-        <div id="candidate-profile-content">
-            <!-- Candidate profile content will be inserted here by JavaScript -->
-        </div>
-    </div>
-</div>
 
 <!-- Create Job Modal -->
 <div class="modal-overlay" id="createJobModal">
@@ -1359,12 +772,18 @@
 </div>
 
 
+<!-- DataTables and CKEditor includes -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/html-support.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
          $(function () {
         const $createJobModal = $('#createJobModal');
         const $jobForm = $('#jobForm');
@@ -1391,13 +810,10 @@
         });
     });
 
-
-
-
             // Mobile menu toggle
-            document.querySelector('.mobile-toggle').addEventListener('click', function() {
+            document.querySelector('.mobile-toggle')?.addEventListener('click', function() {
                 const navMenu = document.querySelector('.nav-menu');
-                navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+                if (navMenu) navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
             });
 
             // Sample candidate data with detailed resume information
@@ -1615,7 +1031,7 @@
             };
 
             // View toggle functions
-            const jobsView = document.getElementById('jobs-view');
+            const jobsView = document.getElementById('jobs-view') || document.querySelector('.main-content');
             const candidatesView = document.getElementById('candidates-view');
             const candidateGrid = document.getElementById('candidate-grid');
             const candidateTable = document.getElementById('candidate-table');
@@ -1633,134 +1049,253 @@
             // Current job ID for candidates view
             let currentJobId = null;
 
+            // Initialize CKEditor for jobDescription
+            let editorInstance;
+    ClassicEditor
+      .create(document.querySelector('#jobDescription'), {
+        toolbar: [
+          'heading', '|',
+          'bold', 'italic', 'underline', '|',
+          'bulletedList', 'numberedList', '|',
+          'link', 'undo', 'redo'
+        ],
+        placeholder: 'Enter job description here...',
+        htmlSupport: {
+          allow: [
+            {
+              name: /.*/,            // allow all elements
+              attributes: true,      // allow all attributes
+              classes: true,         // allow all classes
+              styles: true           // allow all inline styles
+            }
+          ]
+        }
+      })
+      .then(editor => {
+        editorInstance = editor;
+      })
+      .catch(console.error);
+
+
+    $(document).ready(function () {
+
+        // 🔹 Generate Job Description (AI)
+        $("#generateDescriptionBtn").on("click", function () {
+            const jobData = {
+                jobTitle: $("#jobTitle").val(),
+                department: $("#department").val(),
+                location: $("#location").val(),
+                skills: $("#skills").val(),
+                experience: $("#experience").val(),
+                JobSummary: $("#jobSummary").val(),
+                JobDescription: $("#jobDescription").val(),
+                education: $("#education").val(),
+                salary: parseFloat($("#salary").val()) || null,
+                employmentType: $("#employmentType").val(),
+                openings: parseInt($("#openings").val()) || 0,
+                closingDate: $("#closingDate").val(),
+                postedBy: $("#postedBy").val() || null
+            };
+
+            if (!jobData.jobTitle || !jobData.department || !jobData.location) {
+                alert("Please fill Job Title, Department and Location before generating description.");
+                return;
+            }
+
+            $.ajax({
+                url: "https://localhost:7180/api/Jobs/generate-jd",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(jobData),
+                success: function (data) {
+                    // populate CKEditor and summary
+                     if (editorInstance) {
+                        editorInstance.setData(data.jobDescriptionHtml || "<p>No description generated.</p>");
+                    }
+                    $("#jobSummary").val(data.jobSummary || "");
+                },
+                error: function (xhr) {
+                    console.error("Error generating description:", xhr.responseText);
+                    alert("Something went wrong while generating description.");
+                }
+            });
+        });
+
+        //🔹 Save Draft
+        $("#saveDraftBtn").on("click", function () {
+            submitJobForm(true);
+        });
+
+        // 🔹 Publish Job
+        $("#jobForm").on("submit", function (e) {
+            e.preventDefault();
+            submitJobForm(false);
+        });
+
+        // 🔹 Common Save Function
+          function submitJobForm(isDraft) {
+        const jobData = {
+            JobTitle: $("#jobTitle").val(),
+            JobSummary: $("#jobSummary").val(),
+            JobDescription: editorInstance ? editorInstance.getData() : $("#jobDescription").val(),
+            Department: $("#department").val(),
+            Location: $("#location").val(),
+            Skills: $("#skills").val(),
+            Salary: parseFloat($("#salary").val()) || null,
+            EmploymentType: $("#employmentType").val(),
+            Openings: parseInt($("#openings").val()) || 1,
+            ClosingDate: $("#closingDate").val() || null,
+            Experience: $("#experience").val(),
+            Education: $("#education").val(),
+            PostedBy: $("#postedBy").val(), // should be Guid if set
+            IsActive: !isDraft
+        };
+
+        console.log("Posting Job Data:", jobData);
+
+        $.ajax({
+            url: '@Url.Action("PostJob", "Job")',
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(jobData),
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    $("#jobForm")[0].reset();
+                    $("#createJobModal").removeClass('active');
+                    // reload DataTable if exists
+                    if ($.fn.dataTable.isDataTable('#jobTable')) {
+                        $('#jobTable').DataTable().ajax.reload();
+                    } else {
+                        loadJobs(); // fallback
+                    }
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error saving job:", xhr.responseText);
+                alert("Error: " + (xhr.responseJSON?.message || "Unable to save job"));
+            }
+        });
+    }
+
+        // 🔹 Cancel button
+        $("#cancelBtn").on("click", function () {
+            $("#createJobModal").removeClass('active');
+        });
+
+        // --------------------
+        // DataTable Initialization (replaces original loadJobs)
+        // --------------------
+        // Include a small loader CSS in page - DataTables will show processing element
+        // Initialize DataTable for #jobTable and preserve original columns
+        if ($.fn.dataTable) {
+            const jobTable = $('#jobTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetAllJobs", "Job")',
+                    dataSrc: '',
+                    beforeSend: function() {
+                        // let DataTable show it's processing
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: 'jobTitle',
+                        render: function (data, type, row) {
+                            return `<span class="job-title-cell" data-job-id="${row.jobId}">${data}</span>`;
+                        }
+                    },
+                    { data: 'department' },
+                    { data: 'location' },
+                    { data: 'candidateCount', defaultContent: '0' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            // Assuming jobStatus: 1=draft,0=active,2=closed (as in earlier partial)
+                            const JobStatus = row.jobStatus == 1 ? "draft" : row.jobStatus == 0 ? "active" : "closed";
+                            return `<span class="status-badge status-${JobStatus}">${JobStatus}</span>`;
+                        }
+                    },
+                    {
+                        data: 'closingDate',
+                        render: function (data) {
+                            if (!data) return '';
+                            const d = new Date(data);
+                            if (isNaN(d)) return data;
+                            return d.toLocaleDateString();
+                        }
+                    }
+                ],
+                order: [[6, 'desc']], // sort by closing date default
+                responsive: true,
+                processing: true,
+                serverSide: false,
+                pageLength: 10,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'print'
+                ],
+                language: {
+                    zeroRecords: "No jobs found — try adjusting your filters.",
+                    loadingRecords: "Loading jobs...",
+                    processing: "<div class='datatable-loader'><div class='spinner'></div><p>Fetching jobs...</p></div>"
+                }
+            });
+
+            // When job title clicked, show candidates
+            $(document).on('click', '.job-title-cell', function () {
+                const jobId = $(this).data('job-id');
+                // Keep existing behavior which navigated earlier to list of applications:
+                window.location.href = "https://localhost:7149/JobApplications/ListAllApplications?JobId=" + jobId;
+                // Or use showCandidates for client-side view:
+                showCandidates(jobId);
+            });
+
+            // Filters example - reloading DataTable with params (optional)
+            $('#filter-status, #filter-dept, #filter-location, #filter-sort').on('change', function () {
+                // Build query params as needed by your API. Example below sends as DataTable ajax.url call.
+                const status = $('#filter-status').val();
+                const dept = $('#filter-dept').val();
+                const location = $('#filter-location').val();
+                const sort = $('#filter-sort').val();
+
+                // Rebuild URL or pass params via ajax.data - here simple append query params
+                let url = '@Url.Action("GetAllJobs", "Job")';
+                const q = [];
+                if (status) q.push('status=' + encodeURIComponent(status));
+                if (dept) q.push('dept=' + encodeURIComponent(dept));
+                if (location) q.push('location=' + encodeURIComponent(location));
+                if (sort) q.push('sort=' + encodeURIComponent(sort));
+                if (q.length) url += '?' + q.join('&');
+
+                jobTable.ajax.url(url).load();
+            });
+
+            // Expose jobTable for other functions
+            window._jobTable = jobTable;
+        }
+
+        // --------------------
+        // Candidate rendering functions (unchanged except small safeguards)
+        // --------------------
+
             // Function to show candidates for a specific job
             function showCandidates(jobId) {
                 currentJobId = jobId;
 
+                // If you want to navigate to server-side list, uncomment below:
+                // window.location.href = "https://localhost:7149/JobApplications/ListAllApplications?JobId=" + currentJobId;
 
- 
-                   window.location.href = "https://localhost:7149/JobApplications/ListAllApplications?JobId=" + currentJobId;
-
-
-                // Update job title
-                candidatesJobTitle.textContent = `Candidates for ${jobTitles[jobId]}`;
-
-                // Clear existing candidate cards and table rows
-                candidateGrid.innerHTML = '';
-                candidateTableBody.innerHTML = '';
-
-                // Get candidates for this job
-                const candidates = candidatesData[jobId] || [];
-
-                // Create candidate cards and table rows
-                candidates.forEach(candidate => {
-                    createCandidateCard(candidate);
-                    createCandidateTableRow(candidate);
-                });
-
-                // Show the grid view by default
-                candidateGrid.style.display = 'grid';
-                candidateTable.style.display = 'none';
-
-                // Switch views
-                jobsView.style.display = 'none';
-                candidatesView.style.display = 'block';
             }
 
-            // Function to create candidate card
-            function createCandidateCard(candidate) {
-                const scoreClass = candidate.score >= 80 ? 'score-high' :
-                                 candidate.score >= 50 ? 'score-medium' : 'score-low';
-
-                const card = document.createElement('div');
-                card.className = 'candidate-card';
-                card.innerHTML = `
-                    <div class="candidate-header">
-                        <span class="candidate-status status-${candidate.status}">${candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}</span>
-                        <div class="match-score ${scoreClass}">${candidate.score}%</div>
-                    </div>
-
-                    <img src="${candidate.image}" alt="${candidate.name}" class="candidate-image">
-                    <h3 class="candidate-name">${candidate.name}</h3>
-                    <p class="candidate-position">Applied for: ${candidate.position}</p>
-
-                    <div class="candidate-details">
-                        <div class="candidate-detail">
-                            <span class="candidate-detail-label">Experience:</span>
-                            <span>${candidate.experience}</span>
-                        </div>
-                        <div class="candidate-detail">
-                            <span class="candidate-detail-label">Education:</span>
-                            <span>${candidate.education}</span>
-                        </div>
-                        <div class="candidate-detail">
-                            <span class="candidate-detail-label">Applied:</span>
-                            <span>${candidate.applied}</span>
-                        </div>
-                    </div>
-
-                    <div class="candidate-skills">
-                        <div class="skills-label">Skills:</div>
-                        <div class="skills-list">
-                            ${candidate.skills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
-                        </div>
-                    </div>
-
-                    <div class="candidate-actions">
-                        <button class="btn btn-outline view-profile-btn" data-candidate-id="${candidate.id}">View Profile</button>
-                        ${candidate.status === 'applied' ? '<button class="btn btn-primary">Shortlist</button>' : ''}
-                        ${candidate.status === 'on-Hold' ? '<button class="btn btn-primary">Schedule Interview</button>' : ''}
-                        ${candidate.status === 'offered' ? '<button class="btn btn-primary">Manage Offer</button>' : ''}
-                        ${candidate.status === 'hired' ? '<button class="btn btn-success">Start Onboarding</button>' : ''}
-                    </div>
-                `;
-
-                // Add event listener to view profile button
-                const viewProfileBtn = card.querySelector('.view-profile-btn');
-                viewProfileBtn.addEventListener('click', function() {
-                    showCandidateProfile(candidate);
-                });
-
-                candidateGrid.appendChild(card);
-            }
-
-            // Function to create candidate table row
-            function createCandidateTableRow(candidate) {
-                const scoreClass = candidate.score >= 80 ? 'score-high' :
-                                 candidate.score >= 50 ? 'score-medium' : 'score-low';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${candidate.image}" alt="${candidate.name}" style="width: 40px; height: 40px; border-radius: 50%;">
-                            <div>
-                                <div style="font-weight: 600;">${candidate.name}</div>
-                                <div style="font-size: 0.8rem; color: var(--gray);">${candidate.position}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="candidate-status status-${candidate.status}">${candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}</span></td>
-                    <td><div class="match-score ${scoreClass}" style="width: 40px; height: 40px; font-size: 0.8rem;">${candidate.score}%</div></td>
-                    <td>${candidate.experience}</td>
-                    <td>${candidate.education}</td>
-                    <td>${candidate.applied}</td>
-                    <td>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline view-profile-btn" data-candidate-id="${candidate.id}" style="padding: 8px;">View Profile</button>
-                            <button class="btn btn-primary" style="padding: 8px;">Action</button>
-                        </div>
-                    </td>
-                `;
-
-                // Add event listener to view profile button
-                const viewProfileBtn = row.querySelector('.view-profile-btn');
-                viewProfileBtn.addEventListener('click', function() {
-                    showCandidateProfile(candidate);
-                });
-
-                candidateTableBody.appendChild(row);
-            }
+       
 
             // Function to show candidate profile modal
             function showCandidateProfile(candidate) {
@@ -1875,7 +1410,7 @@
             }
 
              $(document).on('click', '.job-title-cell' , function() {
-                
+
          const jobId = $(this).data('job-id');
        // alert(jobId);
         showCandidates(jobId);
@@ -1912,139 +1447,15 @@
                 }
             });
 
-            let editorInstance;
-    ClassicEditor
-      .create(document.querySelector('#jobDescription'), {
-        toolbar: [
-          'heading', '|',
-          'bold', 'italic', 'underline', '|',
-          'bulletedList', 'numberedList', '|',
-          'link', 'undo', 'redo'
-        ],
-        placeholder: 'Enter job description here...',
-        htmlSupport: {
-          allow: [
-            {
-              name: /.*/,            // allow all elements
-              attributes: true,      // allow all attributes
-              classes: true,         // allow all classes
-              styles: true           // allow all inline styles
-            }
-          ]
-        }
-      })
-      .then(editor => {
-        editorInstance = editor;
-      })
-      .catch(console.error);
-
-
-    $(document).ready(function () {
-
-        // 🔹 Generate Job Description (AI)
-        $("#generateDescriptionBtn").on("click", function () {
-            const jobData = {
-                jobTitle: $("#jobTitle").val(),
-                department: $("#department").val(),
-                location: $("#location").val(),
-                skills: $("#skills").val(),
-                experience: $("#experience").val(),
-                JobSummary: $("#jobSummary").val(),
-                JobDescription: $("#jobDescription").val(),
-                education: $("#education").val(),
-                salary: parseFloat($("#salary").val()) || null,
-                employmentType: $("#employmentType").val(),
-                openings: parseInt($("#openings").val()) || 0,
-                closingDate: $("#closingDate").val(),
-                postedBy: $("#postedBy").val() || null
-            };
-
-            if (!jobData.jobTitle || !jobData.department || !jobData.location) {
-                alert("Please fill Job Title, Department and Location before generating description.");
-                return;
-            }
-
-            $.ajax({
-                url: "https://localhost:7180/api/Jobs/generate-jd",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(jobData),
-                success: function (data) {
-                    alert(data.jobDescriptionHtml)
-                     if (editorInstance) {
-                         alert("");
-            // CKEditor method to set HTML content
-            editorInstance.setData(data.jobDescriptionHtml || "<p>No description generated.</p>");
-        }
-
-                 $("#jobSummary").val(data.jobSummary);
-
-                },
-                error: function (xhr) {
-                    console.error("Error generating description:", xhr.responseText);
-                    alert("Something went wrong while generating description.");
-                }
-            });
+        // Cancel fallback close handlers for createJobModal
+        $(document).on('click', '.modal-close', function () {
+            $('.modal-overlay').removeClass('active');
+            $('body').css('overflow', 'auto');
         });
 
-        //🔹 Save Draft
-        $("#saveDraftBtn").on("click", function () {
-            submitJobForm(true);
-        });
-
-        // 🔹 Publish Job
-        $("#jobForm").on("submit", function (e) {
-            e.preventDefault();
-            submitJobForm(false);
-        });
-
-        // 🔹 Common Save Function
-          function submitJobForm(isDraft) {
-        const jobData = {
-            JobTitle: $("#jobTitle").val(),
-            JobSummary: $("#jobSummary").val(),
-            JobDescription: $("#jobDescription").val(),
-            Department: $("#department").val(),
-            Location: $("#location").val(),
-            Skills: $("#skills").val(),
-            Salary: parseFloat($("#salary").val()) || null,
-            EmploymentType: $("#employmentType").val(),
-            Openings: parseInt($("#openings").val()) || 1,
-            ClosingDate: $("#closingDate").val() || null,
-            Experience: $("#experience").val(),
-            Education: $("#education").val(),
-            PostedBy: $("#postedBy").val(), // should be Guid if set
-            IsActive: !isDraft
-        };
-
-        console.log("Posting Job Data:", jobData);
-
-        $.ajax({
-            url: '@Url.Action("PostJob", "Job")',
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(jobData),
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message);
-                    $("#jobForm")[0].reset();
-                    $("#createJobModal").hide();
-                } else {
-                    alert("Error: " + response.message);
-                }
-            },
-            error: function (xhr) {
-                console.error("Error saving job:", xhr.responseText);
-                alert("Error: " + (xhr.responseJSON?.message || "Unable to save job"));
-            }
-        });
-    }
-
-        // 🔹 Cancel button
-        $("#cancelBtn").on("click", function () {
-            $("#createJobModal").hide();
-        });
+        // If any older code attempted to call loadJobs, DataTable handles it now
     });
+
      $(document).ready(function() {
         function loadJobs() {
              const tbody = $('#job-table-body');
@@ -2081,12 +1492,11 @@
             });
         }
 
-        // Initial load
-        loadJobs();
+        // Initial load - if DataTable is present it already loaded; fallback only
+        if (!$.fn.dataTable || !$('#jobTable').DataTable) {
+            loadJobs();
+        }
     });
-
-
-
 
 </script>
 
@@ -2097,13 +1507,16 @@
                 document.getElementById(target).textContent = e.target.value || document.getElementById(target).dataset.default;
             });
         };
-        document.getElementById('preview-title').dataset.default = '[Job Title]';
-        document.getElementById('preview-dept').dataset.default = '[Department]';
-        document.getElementById('preview-desc').dataset.default = '[Short description here]';
+        // guard for preview elements (they may not exist in this view)
+        if (document.getElementById('preview-title')) {
+            document.getElementById('preview-title').dataset.default = '[Job Title]';
+            document.getElementById('preview-dept').dataset.default = '[Department]';
+            document.getElementById('preview-desc').dataset.default = '[Short description here]';
 
-        updatePreview('[name="JobTitle"]', 'preview-title');
-        updatePreview('[name="Department"]', 'preview-dept');
-        updatePreview('[name="JobDescription"]', 'preview-desc');
+            updatePreview('[name="JobTitle"]', 'preview-title');
+            updatePreview('[name="Department"]', 'preview-dept');
+            updatePreview('[name="JobDescription"]', 'preview-desc');
+        }
     </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

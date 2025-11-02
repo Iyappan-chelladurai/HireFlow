@@ -1,4 +1,5 @@
-﻿using HireFlow_API.Model.DataModel;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using HireFlow_API.Model.DataModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -106,17 +107,13 @@ public class RescheduleDto
 
     public class CompleteInterviewDto
     {
-        [Required]
-        public Guid InterviewId { get; set; }
+        public string Candidate { get; set; }
+     
+        public DateTime? Date { get; set; }
 
-        [MaxLength(1000)]
-        public string? Feedback { get; set; }
-
-        [MaxLength(50)]
         public string? Result { get; set; }
-
-        [MaxLength(100)]
-        public string? UpdatedBy { get; set; }
+         
+        public string? Position { get; set; }
     }
 
     public class ScheduleInterviewDto
@@ -142,6 +139,9 @@ public class RescheduleDto
         public int RoundNumber { get; set; } // optional if you want to track rounds
 
         public string Status { get; set; } = "Scheduled";
+
+        public string interviewLocation { get; set; }
+
     }
 
 

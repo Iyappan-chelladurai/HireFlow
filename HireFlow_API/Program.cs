@@ -40,14 +40,16 @@ builder.Services.AddScoped<IJobService,  JobService>();
 builder.Services.AddScoped<ICandidateDocumentsRepository, CandidateDocumentsRepository>();
 builder.Services.AddScoped<ICandidateDocumentsService, CandidateDocumentsService>();
 
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<ICandidateScoringService , CandidateScoringService>();
 
+builder.Services.AddScoped<ICandidateScoringService , CandidateScoringService>();
 builder.Services.AddScoped<ICandidateDetailRepository, CandidateDetailRepository>();
 builder.Services.AddScoped<ICandidateDetailService, CandidateDetailService>();
 
 builder.Services.AddScoped<IInterviewScheduleRepository, InterviewScheduleRepository>();
 builder.Services.AddScoped<IInterviewScheduleService, InterviewScheduleService>();
+
 
 builder.Services.AddMemoryCache();
 

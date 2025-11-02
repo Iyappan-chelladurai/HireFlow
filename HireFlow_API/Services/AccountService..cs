@@ -172,21 +172,21 @@ namespace HireFlow_API.Services
                 // Check if the message was sent successfully
                 if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine("✅ SMS sent successfully!");
+                    Console.WriteLine(" SMS sent successfully!");
                     Console.WriteLine($"MessageId: {response.MessageId}");
                 }
                 else
                 {
-                    Console.WriteLine($"⚠️ SMS send failed. Status code: {response.HttpStatusCode}");
+                    Console.WriteLine($" SMS send failed. Status code: {response.HttpStatusCode}");
                 }
             }
             catch (Amazon.SimpleNotificationService.AmazonSimpleNotificationServiceException snsEx)
             {
-                Console.WriteLine($"❌ SNS error: {snsEx.Message}");
+                Console.WriteLine($" SNS error: {snsEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ General error: {ex.Message}");
+                Console.WriteLine($" General error: {ex.Message}");
             }
 
 

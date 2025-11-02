@@ -87,12 +87,6 @@ namespace HireFlow_MVC.Controllers
             }
         }
 
-
-
-
-
-
-
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
@@ -130,6 +124,7 @@ namespace HireFlow_MVC.Controllers
                 var fullName = jwtToken.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value;
                 var candidateId = jwtToken.Claims.FirstOrDefault(c => c.Type == "candidateid")?.Value;
                 var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                var IsNewCandidate = jwtToken.Claims.FirstOrDefault(c => c.Type == "IsNewCandidate");
 
                 // Save to session
                 HttpContext.Session.SetString("UserId", userId ?? "");
@@ -139,11 +134,18 @@ namespace HireFlow_MVC.Controllers
                 HttpContext.Session.SetString("CandidateId", candidateId ?? "");
                 HttpContext.Session.SetString("UserRole", role ?? "");
                 HttpContext.Session.SetString("JwtToken", responseData.JwtToken);
+                HttpContext.Session.SetString("IsNewCandidate", IsNewCandidate.Value.ToString());
 
 
                 if (role.ToLower() == "candidate")
                 {
+
+                    if(IsNewCandidate.Value == "1")
+                    {
                         return returnUrl == null ? RedirectToAction("ViewApplicationStatus", "JobApplications") : Redirect(returnUrl);
+                    }
+
+                        return returnUrl == null ? RedirectToAction("AllJobs", "Job") : Redirect(returnUrl);
                 }
                 else
                 {
@@ -163,6 +165,7 @@ namespace HireFlow_MVC.Controllers
             HttpContext.Session.Remove("AuthToken");
             return RedirectToAction("Login");
         }
+
 
     }
 }

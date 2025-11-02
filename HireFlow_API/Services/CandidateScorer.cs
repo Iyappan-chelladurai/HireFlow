@@ -11,6 +11,7 @@ using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
 using HireFlow_API.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -29,9 +30,11 @@ using Document = Amazon.Textract.Model.Document;
 public interface ICandidateScoringService
 {
     Task<CandidateScoreResult> ScoreCandidateAsync(JobApplicationDTO jobApplication);
+
+     Task<string> ScoreCandidatesAsync();
 }
 
-    public class CandidateScoringService : ICandidateScoringService
+public class CandidateScoringService : ICandidateScoringService
 {
     private readonly IJobService _jobService;
     private readonly IJobApplicationRepository _jobApplicationRepository;
@@ -59,8 +62,8 @@ public interface ICandidateScoringService
         }
 
         // AWS Credentials
-        var accessKey = _config["AwsSettings:AccessKey"];
-        var secretKey = _config["AwsSettings:SecretAccessKey"];
+        var accessKey =  Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+        var secretKey =  Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
         var region = RegionEndpoint.GetBySystemName(_config["AwsSettings:Region"]);
 
         var awsCreds = new BasicAWSCredentials(accessKey, secretKey);
@@ -68,13 +71,46 @@ public interface ICandidateScoringService
         _textractClient = new AmazonTextractClient(awsCreds, region);
         _comprehendClient = new AmazonComprehendClient(awsCreds, region);
 
-        _openAiKey = _config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key missing");
+        _openAiKey = Environment.GetEnvironmentVariable("OPEN_API_KEY") ?? throw new ArgumentNullException("OpenAI API key missing");
     }
+
+
+    public async Task<string> ScoreCandidatesAsync()
+    {
+        var ScroedApps = _dbContext.tbl_CandidatesJobScore.Select(a => a.JobApplicationId).ToList();
+        var JobApps = await _dbContext.JobApplications.Include(a => a.Candidate).Include(a => a.Candidate.User).Include(a => a.Job)
+                                .Where(a => (a.ApplicationStatus == "Applied"  || a.ApplicationStatus == "On Hold") && !ScroedApps.Contains(a.ApplicationId)).ToListAsync();
+
+        if (JobApps == null)
+            return "No  Candidates found...";
+
+         foreach (var item in JobApps)
+        {
+            JobApplicationDTO jobApp = new JobApplicationDTO();
+
+            jobApp.ApplicationId = item.ApplicationId;
+            jobApp.CandidateName = item.Candidate.User.FullName;
+            jobApp.CurrentJobTitle = item.Candidate.CurrentJobTitle;
+            jobApp.TotalExperienceYears = Convert.ToInt32(item.Candidate.TotalExperienceYears);
+            jobApp.NoticePeriodDays = item.Candidate.NoticePeriodDays;
+            jobApp.EducationLevel = item.Candidate.EducationLevel;
+            jobApp.JobId = item.JobId;
+            jobApp.JobDesc = item.Job.JobDescription;
+            jobApp.JobTitle = item.Job.JobTitle;
+            jobApp.AvailableFrom = item.Candidate.AvailableFrom;
+            jobApp.PreferredLocation = item.Candidate.PreferredLocation;
+            jobApp.Skills = item.Candidate.Skills;
+
+            await ScoreCandidateAsync(jobApp);
+        }
+        return "  Candidates Scored...";
+    }
+
 
     public async Task<CandidateScoreResult> ScoreCandidateAsync(JobApplicationDTO jobApplication)
     {
         var app = await _jobApplicationRepository.GetApplicationByIdAsync(jobApplication.ApplicationId);
-        var job = await _jobService.RetrieveJobByIdAsync(app.JobId);
+      //  var job = await _jobService.RetrieveJobByIdAsync(app.JobId);
 
         if (string.IsNullOrEmpty(app.ResumePath) || !File.Exists(app.ResumePath))
             throw new FileNotFoundException("Resume file not found.", app.ResumePath);
@@ -102,7 +138,7 @@ public interface ICandidateScoringService
         // --------------------------
         // 3️⃣ Call ChatGPT for scoring
         // --------------------------
-        var result = await GetCandidateScoresFromChatGPT(resumeText, job.JobDescription, jobApplication);
+        var result = await GetCandidateScoresFromChatGPT(resumeText, jobApplication.JobDesc, jobApplication);
 
         // --------------------------
         // 4️⃣ Save/update DB
@@ -228,12 +264,16 @@ public interface ICandidateScoringService
     // --------------------------
     private async Task<CandidateScoreResult> GetCandidateScoresFromChatGPT(string resumeText, string jobDescription, JobApplicationDTO jobApplication)
     {
-
-        var body = new
+        CandidateScoreResult result = new CandidateScoreResult();
+        try
         {
-            model = "gpt-4o-mini",
-            messages = new[]
+
+
+            var body = new
             {
+                model = "gpt-4o-mini",
+                messages = new[]
+                {
         new
         {
             role = "system",
@@ -261,55 +301,80 @@ public interface ICandidateScoringService
                     "
         }
     },
-            temperature = 0
-        };
-
-
-        var req = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
-        req.Headers.Add("Authorization", $"Bearer {_openAiKey}");
-        req.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-
-        var res = await _httpClient.SendAsync(req);
-        var resJson = await res.Content.ReadAsStringAsync();
-
-        string json;
-        try
-        {
-            using var doc = JsonDocument.Parse(resJson);
-            json = doc.RootElement
-                      .GetProperty("choices")[0]
-                      .GetProperty("message")
-                      .GetProperty("content")
-                      .GetString() ?? "{}";
-        }
-        catch
-        {
-            json = "{}";
-        }
-
-        CandidateScoreResult result;
-        try
-        {
-            result = JsonConvert.DeserializeObject<CandidateScoreResult>(json);
-        }
-        catch
-        {
-            result = new CandidateScoreResult
-            {
-                JobApplicationId = jobApplication.ApplicationId,
-                ResumeMatchScore = 50,
-                SkillsMatchScore = 50,
-                ExperienceScore = 50,
-                OverallFitScore = 50,
-                Feedback = "AI evaluation failed. Default scores applied.",
-                EvaluatedBy = "System",
-                EvaluatedOn = DateTime.UtcNow
+                temperature = 0
             };
+
+
+            var req = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
+            req.Headers.Add("Authorization", $"Bearer {_openAiKey}");
+            req.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+
+            var res = await _httpClient.SendAsync(req);
+            var resJson = await res.Content.ReadAsStringAsync();
+
+
+
+
+            string json;
+            try
+            {
+                using var doc = JsonDocument.Parse(resJson);
+                json = doc.RootElement
+                          .GetProperty("choices")[0]
+                          .GetProperty("message")
+                          .GetProperty("content")
+                          .GetString() ?? "{}";
+            }
+            catch
+            {
+                json = "{}";
+            }
+
+            // ✅ Clean JSON so Newtonsoft won't fail
+            json = json.Trim();
+            if (json.StartsWith("```"))
+            {
+                int startIndex = json.IndexOf('{');
+                int endIndex = json.LastIndexOf('}');
+                if (startIndex >= 0 && endIndex >= 0)
+                {
+                    json = json.Substring(startIndex, endIndex - startIndex + 1);
+                }
+            }
+
+            try
+            {
+                result = JsonConvert.DeserializeObject<CandidateScoreResult>(json);
+            }
+            catch
+            {
+                result = new CandidateScoreResult
+                {
+                    JobApplicationId = jobApplication.ApplicationId,
+                    ResumeMatchScore = 50,
+                    SkillsMatchScore = 50,
+                    ExperienceScore = 50,
+                    OverallFitScore = 50,
+                    Feedback = "AI evaluation failed. Default scores applied.",
+                    EvaluatedBy = "System",
+                    EvaluatedOn = DateTime.UtcNow
+                };
+            }
+
+            result.JobApplicationId = jobApplication.ApplicationId;
+            result.EvaluatedBy = "ChatGPT";
+            result.EvaluatedOn = DateTime.UtcNow;
+
         }
 
-        result.JobApplicationId = jobApplication.ApplicationId;
-        result.EvaluatedBy = "ChatGPT";
-        result.EvaluatedOn = DateTime.UtcNow;
+        catch (Exception ex)
+        { 
+        
+        
+        }
+
+
+ 
         return result;
     }
 }

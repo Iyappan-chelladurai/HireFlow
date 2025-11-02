@@ -646,6 +646,9 @@
                   "CandidateEmail": {
                     "type": "string"
                   },
+                  "JobDesc": {
+                    "type": "string"
+                  },
                   "NoticePeriodDays": {
                     "type": "integer",
                     "format": "int32"
@@ -666,6 +669,9 @@
                   "AvailableFrom": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "JobLocation": {
+                    "type": "string"
                   },
                   "ExpectedSalary": {
                     "type": "number",
@@ -723,6 +729,9 @@
                 "CandidateEmail": {
                   "style": "form"
                 },
+                "JobDesc": {
+                  "style": "form"
+                },
                 "NoticePeriodDays": {
                   "style": "form"
                 },
@@ -739,6 +748,9 @@
                   "style": "form"
                 },
                 "AvailableFrom": {
+                  "style": "form"
+                },
+                "JobLocation": {
                   "style": "form"
                 },
                 "ExpectedSalary": {
@@ -854,6 +866,18 @@
               "format": "uuid"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/JobApplications/score": {
+      "post": {
+        "tags": [
+          "JobApplications"
         ],
         "responses": {
           "200": {
@@ -1612,15 +1636,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "applicationStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "interviewFeedback": {
-            "maxLength": 1000,
-            "type": "string",
-            "nullable": true
-          },
           "offerSentOn": {
             "type": "string",
             "format": "date-time",
@@ -1632,6 +1647,21 @@
           "onboardedOn": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "interviewFeedback": {
+            "type": "string",
+            "nullable": true
+          },
+          "applicationStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusHistories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobApplicationStatusHistory"
+            },
             "nullable": true
           }
         },
@@ -1664,6 +1694,10 @@
             "type": "string",
             "nullable": true
           },
+          "jobDesc": {
+            "type": "string",
+            "nullable": true
+          },
           "noticePeriodDays": {
             "type": "integer",
             "format": "int32"
@@ -1687,6 +1721,10 @@
           "availableFrom": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "jobLocation": {
+            "type": "string",
             "nullable": true
           },
           "expectedSalary": {
@@ -1731,6 +1769,43 @@
           "totalExperienceYears": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobApplicationStatusHistory": {
+        "required": [
+          "applicationId",
+          "statusId"
+        ],
+        "type": "object",
+        "properties": {
+          "jobApplicationHistoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobApplication": {
+            "$ref": "#/components/schemas/JobApplication"
+          },
+          "statusId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MST_ApplicationStatus"
+          },
+          "changedOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remarks": {
+            "maxLength": 1000,
+            "type": "string",
             "nullable": true
           }
         },
@@ -1822,6 +1897,39 @@
           },
           "rememberMe": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MST_ApplicationStatus": {
+        "required": [
+          "applicationStatusName"
+        ],
+        "type": "object",
+        "properties": {
+          "applicationStatusId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicationStatusName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "applicationDescription": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "jobApplicationHistories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobApplicationStatusHistory"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1944,6 +2052,10 @@
             "format": "int32"
           },
           "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "interviewLocation": {
             "type": "string",
             "nullable": true
           }

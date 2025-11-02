@@ -1,4 +1,5 @@
 ﻿using HireFlow_MVC.Models; // DTOs for MVC (same as API DTOs or mapped versions)
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Text.Json;
 
 namespace HireFlow_MVC.Controllers
 {
+
+    [Authorize(Roles = "HR")]
     public class InterviewsController : Controller
     {
         private readonly HttpClient _httpClient;

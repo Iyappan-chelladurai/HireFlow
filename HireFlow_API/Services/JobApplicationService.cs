@@ -1,8 +1,10 @@
 ﻿using HireFlow_API.Controllers;
+using HireFlow_API.Model;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
 using Microsoft.CodeAnalysis.Elfie.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace HireFlow_API.Services
@@ -20,7 +22,10 @@ namespace HireFlow_API.Services
         Task<IEnumerable<CandidateDropdownDto>> GetCandidatesForDropdownAsync();
 
         Task<IEnumerable<InterviewerDropdownDto>> GetInterviewersForDropdownAsync();
-    
+
+        Task<CandidateDisplayDto> GetCandidatesbyApplicationIdAsync(Guid JobApplicationId);
+
+
 
 
 }
@@ -30,27 +35,30 @@ namespace HireFlow_API.Services
         private readonly IJobApplicationRepository _repository;
         private readonly ICandidateDocumentsRepository _candidateDocumentsRepository;
         private readonly IConfiguration _configuration;
-        private readonly IEmailRepository _emailRepository;
+        private readonly IEmailService _emailService;
         private readonly ICandidateScoringService _candidateScorer;
         private readonly ICandidateDetailService _CandidateDetailService;
         private readonly ILogger<JobApplicationService> _logger;
+        private readonly ApplicationDbContext _dbContext;
 
         public JobApplicationService(
             IJobApplicationRepository repository,
             IConfiguration configuration,
             ICandidateDocumentsRepository candidateDocumentsRepository,
-            IEmailRepository emailRepository,
+            IEmailService emailService,
             ICandidateScoringService candidateScoringService,
             ILogger<JobApplicationService> logger,
-            ICandidateDetailService candidateDetailService)
+            ICandidateDetailService candidateDetailService ,
+            ApplicationDbContext dbContext)
         {
             _repository = repository;
             _configuration = configuration;
             _candidateDocumentsRepository = candidateDocumentsRepository;
-            _emailRepository = emailRepository;
+            _emailService = emailService;
             _candidateScorer = candidateScoringService;
             _logger = logger;
             _CandidateDetailService = candidateDetailService;
+            _dbContext = dbContext;
         }
 
         public async Task<IEnumerable<JobApplicationDTO>> RetrieveAllApplicationsAsync(Guid JobId)
@@ -91,116 +99,104 @@ namespace HireFlow_API.Services
             if (jobApplication.ResumeFile == null || jobApplication.ResumeFile.Length == 0)
                 throw new ArgumentException("Resume file is required.");
 
-            // Validate file type (allow only PDF or DOCX)
+          
             var allowedExtensions = new[] { ".pdf", ".docx" };
             var fileExtension = Path.GetExtension(jobApplication.ResumeFile.FileName).ToLower();
 
             if (!allowedExtensions.Contains(fileExtension))
                 throw new ArgumentException("Only PDF or DOCX files are allowed.");
 
-            // Validate file size (max 5 MB)
+           
             const long maxFileSize = 5 * 1024 * 1024;
             if (jobApplication.ResumeFile.Length > maxFileSize)
                 throw new ArgumentException("File size exceeds 5 MB.");
 
-            try
-            {
-                // Ensure directory exists
-                var resumePath = _configuration["FilePath:ResumePath"];
-                Directory.CreateDirectory(resumePath);
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-                // Generate unique file path
-                var filePath = Path.Combine(resumePath, Guid.NewGuid() + fileExtension);
-                jobApplication.ResumePath = filePath;
-
-                // Save file asynchronously
-                await using (var stream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await jobApplication.ResumeFile.CopyToAsync(stream);
-                }
 
-                // Add job application to repository
-                var appId = await _repository.AddNewApplicationAsync(jobApplication);
+                    var resumePath = _configuration["FilePath:ResumePath"];
+                    Directory.CreateDirectory(resumePath);
 
-
-                var candidateDetails = new CandidateDetail
-                {
-                    CurrentJobTitle = jobApplication.CurrentJobTitle,
-                    TotalExperienceYears = jobApplication.TotalExperienceYears,
-                    NoticePeriodDays = jobApplication.NoticePeriodDays,
-                    EducationLevel = jobApplication.EducationLevel,
-                   AvailableFrom = jobApplication.AvailableFrom,
-                    PreferredLocation = jobApplication.PreferredLocation,
-                   ExpectedSalary = jobApplication.ExpectedSalary,
-                    Skills = jobApplication.Skills,
-
-                };
-
-                await _CandidateDetailService.UpdateCandidateAsync(candidateDetails);
+                    var filePath = Path.Combine(resumePath, Guid.NewGuid() + fileExtension);
+                    jobApplication.ResumePath = filePath;
 
 
-
-                 // Save candidate document details
-                 var candidateDocumentDetail = new CandidateDocumentDetail
-                {
-                    DocumentDetailId = Guid.NewGuid(),
-                    CandidateId = jobApplication.CandidateId,
-                    FilePath = filePath,
-                    FileName = jobApplication.ResumeFile.FileName,
-                    FileExtension = fileExtension,
-                    DocumentTypeId = 3,
-                    UploadedOn = DateTime.Now,
-                    IsFraudDetected = false,
-                    IsVerified = false,
-                    FraudScore = 0,
-                    IsActive = true,
-                    FileSizeInMB = Math.Round((decimal)jobApplication.ResumeFile.Length / (1024 * 1024), 2)
-                };
-
-                await _candidateDocumentsRepository.AddAsync(candidateDocumentDetail);
-
-              var Candidate = await _CandidateDetailService.GetApplicationByIdAsync(appId);
+                    await using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await jobApplication.ResumeFile.CopyToAsync(stream);
+                    }
 
 
-                // Read email template
-                var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Email", "JobApplied.html");
-                var htmlTemplate = await File.ReadAllTextAsync(templatePath);
+                    var appId = await _repository.AddNewApplicationAsync(jobApplication , true);
 
-                // Replace placeholders dynamically
-                var candidateName = Candidate.CandidateName ?? "Candidate";
-                var jobTitle = Candidate.JobTitle ?? "Applied Job";
 
-                var body = htmlTemplate
-                    .Replace("{{CandidateName}}", candidateName)
-                    .Replace("{{JobTitle}}", jobTitle)
-                    .Replace("{{CompanyName}}", "");
+                    var candidateDetails = new CandidateDetail
+                    {
+                        CandidateId = jobApplication.CandidateId,
+                        CurrentJobTitle = jobApplication.CurrentJobTitle,
+                        TotalExperienceYears = jobApplication.TotalExperienceYears,
+                        NoticePeriodDays = jobApplication.NoticePeriodDays,
+                        EducationLevel = jobApplication.EducationLevel,
+                        AvailableFrom = jobApplication.AvailableFrom,
+                        PreferredLocation = jobApplication.PreferredLocation,
+                        ExpectedSalary = jobApplication.ExpectedSalary,
+                        Skills = jobApplication.Skills,
 
-                // Send email asynchronously
-                var emailRequest = new EmailRequestDTO
-                {
-                    FromEmailAddress = "hireflowofficial@gmail.com",
-                    ToEmailAddresses = new List<string> { "Iyappadhoni6@gmail.com" ?? "no-reply@example.com" },
-                    EmailSubject = $"{jobTitle} Application Received",
-                    HtmlEmailBody = body
-                };
+                    };
 
-                await _emailRepository.SendEmail(emailRequest);
+                    await _CandidateDetailService.UpdateCandidateAsync(candidateDetails ,true);
 
+
+                    var candidateDocumentDetail = new CandidateDocumentDetail
+                    {
+                        DocumentDetailId = Guid.NewGuid(),
+                        CandidateId = jobApplication.CandidateId,
+                        FilePath = filePath,
+                        FileName = jobApplication.ResumeFile.FileName,
+                        FileExtension = fileExtension,
+                        DocumentTypeId = 3,
+                        UploadedOn = DateTime.Now,
+                        IsFraudDetected = false,
+                        IsVerified = false,
+                        FraudScore = 0,
+                        IsActive = true,
+                        FileSizeInMB = Math.Round((decimal)jobApplication.ResumeFile.Length / (1024 * 1024), 2)
+                    };
+
+                    await _candidateDocumentsRepository.AddAsync(candidateDocumentDetail, true);
+
+
+
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
 
                 jobApplication.ApplicationId = appId;
 
                 // Score candidate
-                var score = await _candidateScorer.ScoreCandidateAsync(jobApplication);
+                //  var score = await _candidateScorer.ScoreCandidateAsync(jobApplication);
 
-                _logger.LogInformation("Candidate {CandidateId} submitted application {ApplicationId} successfully.", jobApplication.CandidateId, appId);
+                var Candidate = await _CandidateDetailService.GetApplicationByIdAsync(appId);
 
-                return jobApplication;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error submitting application for CandidateId {CandidateId}", jobApplication.CandidateId);
-                throw;
-            }
+                await _emailService.JobAppliedEmail(Candidate.CandidateName, Candidate.JobTitle, Candidate.JobLocation);
+
+                    _logger.LogInformation("Candidate {CandidateId} submitted application {ApplicationId} successfully.", jobApplication.CandidateId, appId);
+                    return jobApplication;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+
+                    if (File.Exists(jobApplication.ResumePath))
+                        File.Delete(jobApplication.ResumePath);
+
+
+                    _logger.LogError(ex, "Error submitting application for CandidateId {CandidateId}", jobApplication.CandidateId);
+                    throw;
+                }
+
+        
         }
 
         public async Task<bool> UpdateExistingApplicationAsync(Guid applicationId, JobApplicationDTO jobApplication)
@@ -245,6 +241,11 @@ namespace HireFlow_API.Services
         public async Task<IEnumerable<InterviewerDropdownDto>> GetInterviewersForDropdownAsync()
         {
             return await _repository.GetInterviewersForDropdownAsync();
+        }
+
+        public async Task<CandidateDisplayDto> GetCandidatesbyApplicationIdAsync(Guid JobApplicationId)
+        {
+            return await _repository.GetCandidatesbyApplicationIdAsync(JobApplicationId);
         }
     }
 }

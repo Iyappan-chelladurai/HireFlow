@@ -68,19 +68,25 @@ namespace HireFlow_API.Repositories
             {
                 _logger.LogInformation("Fetching job with Id {JobId}", jobId);
 
-                return await _context.Jobs
-                    .AsNoTracking()
-                    .Where(j => j.JobId == jobId)
-                    .Select(j => new JobDTO
-                    {
-                        JobId = j.JobId,
-                        JobTitle = j.JobTitle,
-                        JobSummary = j.JobSummary,
-                        JobDescription = j.JobDescription,
-                        Department = j.Department,
-                        Location = j.Location
-                    })
-                    .FirstOrDefaultAsync();
+                _context.Dispose();
+                using (var context = _context)
+                {
+                    return await context.Jobs
+                   .AsNoTracking()
+                   .Where(j => j.JobId == jobId)
+                   .Select(j => new JobDTO
+                   {
+                       JobId = j.JobId,
+                       JobTitle = j.JobTitle,
+                       JobSummary = j.JobSummary,
+                       JobDescription = j.JobDescription,
+                       Department = j.Department,
+                       Location = j.Location
+                   })
+                   .FirstOrDefaultAsync();
+                }
+
+               
             }
             catch (Exception ex)
             {

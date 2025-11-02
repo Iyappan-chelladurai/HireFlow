@@ -401,6 +401,11 @@
         "IsRequired": false
       },
       {
+        "Name": "JobDesc",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "NoticePeriodDays",
         "Type": "System.Int32",
         "IsRequired": false
@@ -428,6 +433,11 @@
       {
         "Name": "AvailableFrom",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobLocation",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -566,6 +576,16 @@
     "Method": "GetInterviewersForDropdown",
     "RelativePath": "api/JobApplications/interviewers-dropdown",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.JobApplicationsController",
+    "Method": "ScoreCandidate",
+    "RelativePath": "api/JobApplications/score",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [],

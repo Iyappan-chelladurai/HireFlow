@@ -2,12 +2,14 @@
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HireFlow_API.Controllers
 {
  
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "HR")]
     public class InterviewScheduleController : ControllerBase
     {
         private readonly IInterviewScheduleService _service;
@@ -20,6 +22,9 @@ namespace HireFlow_API.Controllers
         [HttpGet("upcoming")]
         public async Task<IActionResult> GetUpcoming()
         {
+
+            var token = Request.Headers["Authorization"].ToString();
+
             var interviews = await _service.GetUpcomingInterviewsAsync();
             return Ok(interviews);
         }
@@ -39,6 +44,7 @@ namespace HireFlow_API.Controllers
             return Ok(interview);
         }
         [HttpPost("schedule")]
+     
         public async Task<IActionResult> Schedule([FromBody] ScheduleInterviewDto dto)
         {
             if (!ModelState.IsValid)

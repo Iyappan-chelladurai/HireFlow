@@ -8,7 +8,7 @@ namespace HireFlow_API.Repositories
     {
         Task<IEnumerable<CandidateDocumentDetail>> GetAllAsync();
         Task<CandidateDocumentDetail> GetByIdAsync(Guid id);
-        Task AddAsync(CandidateDocumentDetail entity);
+        Task AddAsync(CandidateDocumentDetail entity, bool isTrans);
         Task UpdateAsync(CandidateDocumentDetail entity);
         Task DeleteAsync(Guid id);
         Task<bool> ExistsAsync(Guid id);
@@ -33,10 +33,14 @@ namespace HireFlow_API.Repositories
             return await _context.CandidateDocumentDetails.FindAsync(id);
         }
 
-        public async Task AddAsync(CandidateDocumentDetail entity)
+        public async Task AddAsync(CandidateDocumentDetail entity , bool isTrans = false)
         {
             _context.CandidateDocumentDetails.Add(entity);
-            await _context.SaveChangesAsync();
+            
+            if (!isTrans)
+            {
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateAsync(CandidateDocumentDetail entity)

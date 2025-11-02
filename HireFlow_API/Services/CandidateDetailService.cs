@@ -9,7 +9,7 @@ namespace HireFlow_API.Services
         Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
         Task<string> CreateCandidateAsync(UserAccount user);
 
-        Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate);
+        Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate , bool isTrans = false);
     }
 
     public class CandidateDetailService : ICandidateDetailService
@@ -56,9 +56,9 @@ namespace HireFlow_API.Services
             return candidates;
         }
 
-        public async Task<bool>  UpdateCandidateAsync(CandidateDetail updatedCandidate)
+        public async Task<bool>  UpdateCandidateAsync(CandidateDetail updatedCandidate , bool isTrans = false)
         {
-            var candidates = await _candidateRepository.UpdateCandidateAsync(updatedCandidate);
+            var candidates = await _candidateRepository.UpdateCandidateAsync(updatedCandidate , isTrans);
             return candidates;
         }
 

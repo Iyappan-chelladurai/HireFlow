@@ -1,4 +1,5 @@
 ﻿using HireFlow_MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Text.Json;
 
 namespace HireFlow_MVC.Controllers
 {
+    [Authorize(Roles = "HR")]
     public class JobController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -29,6 +31,9 @@ namespace HireFlow_MVC.Controllers
 
             try
             {
+
+             
+
                 var response = await _httpClient.PostAsJsonAsync("api/Jobs/", model);
 
                 if (response.IsSuccessStatusCode)
@@ -44,6 +49,7 @@ namespace HireFlow_MVC.Controllers
         }
 
 
+        [Authorize(Roles = "Candidate")]
         [HttpGet]
         public async Task<IActionResult> AllJobs()
         {

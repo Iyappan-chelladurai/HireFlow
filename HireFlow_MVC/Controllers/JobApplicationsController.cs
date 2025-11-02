@@ -1,4 +1,5 @@
 ﻿using HireFlow_MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -136,6 +137,7 @@ namespace HireFlow_MVC.Controllers
             return BadRequest();
         }
 
+        [Authorize(Roles = "Candidate")]
         public IActionResult ViewApplicationStatus()
         {
            

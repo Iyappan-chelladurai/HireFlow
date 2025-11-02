@@ -18,7 +18,7 @@ namespace HireFlow_API.Services
             _jwtSettings = jwtOptions.Value;
         }
 
-        public  string GenerateToken(UserAccount user,CandidateDetail candidate , string role)
+        public  string GenerateToken(UserAccount user,CandidateDetail candidate , string role , bool isNewCandidate)
         {
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
@@ -26,14 +26,14 @@ namespace HireFlow_API.Services
 
             var candidateid = candidate == null ? "" : candidate.CandidateId.ToString();
 
-
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
                 new Claim(ClaimTypes.Name, user.UserName),                 
                 new Claim(ClaimTypes.Email, user.Email),                    
                 new Claim("FullName", user.FullName),
-                new Claim("candidateid",candidateid),    
+                new Claim("candidateid",candidateid),
+                 new Claim("IsNewCandidate",isNewCandidate ? "1" : "0"),
                 new Claim(ClaimTypes.Role, role),                      
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

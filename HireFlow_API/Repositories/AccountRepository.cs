@@ -76,13 +76,25 @@ namespace HireFlow_API.Repositories
 
             var candidate =  _context.CandidateDetails.Where(a=>a.UserId == user.Id).FirstOrDefault();
 
+            bool IsNewCandidate = false;
+
+            if (candidate != null)
+            {
+
+                IsNewCandidate = _context.JobApplications
+                                            .Where(a => a.CandidateId == candidate.CandidateId)
+                                            .Count() == 0 ? false : true;
+            }
+
+           
+
             user.LastLoginTimestamp = DateTime.Now;
             
             await _context.SaveChangesAsync();
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var token = _jwtTokenService.GenerateToken(user, candidate,  roles.FirstOrDefault());
+            var token = _jwtTokenService.GenerateToken(user, candidate,  roles.FirstOrDefault() , IsNewCandidate);
             return token;
         }
 

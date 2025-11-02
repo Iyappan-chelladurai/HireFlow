@@ -12,7 +12,7 @@ namespace HireFlow_API.Repositories
         Task<string> CreateCandidateAsync(UserAccount user);
 
         Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId);
-        Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate);
+        Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate , bool isTrans = false);
         Task<List<CandidateCardDTO>> GetAllCandidateCardsAsync();
     }
 
@@ -28,7 +28,7 @@ namespace HireFlow_API.Repositories
 
         public async Task<JobApplicationDTO?> GetApplicationByIdAsync(Guid applicationId)
         {
-            return await _context.JobApplications
+            return await _context.JobApplications.Include(s=> s.Job)
                 .AsNoTracking()
                 .Where(j => j.ApplicationId == applicationId)
                 .Select(j => new JobApplicationDTO
@@ -36,13 +36,13 @@ namespace HireFlow_API.Repositories
                     ApplicationId = j.ApplicationId,
                     AppliedOn = j.AppliedOn,
                     ApplicationStatus = j.ApplicationStatus,
+                    JobLocation = j.Job.Location,
                     JobTitle = j.Job.JobTitle,
                     CandidateName = j.Candidate.User.FullName,   // make sure UserAccount has FullName
                     CandidateEmail = j.Candidate.User.Email      // make sure UserAccount has Email
                 })
                 .FirstOrDefaultAsync();
         }
-
 
         public async Task<string> CreateCandidateAsync(UserAccount user)
         {
@@ -67,7 +67,7 @@ namespace HireFlow_API.Repositories
                 return "Error " + ex.Message;
             }
         }
-        public async Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate)
+        public async Task<bool> UpdateCandidateAsync(CandidateDetail updatedCandidate , bool isTrnas = false)
         {
             if (updatedCandidate == null)
                 throw new ArgumentNullException(nameof(updatedCandidate));
@@ -90,8 +90,11 @@ namespace HireFlow_API.Repositories
                 existingCandidate.PreferredLocation = updatedCandidate.PreferredLocation;
 
                 _context.CandidateDetails.Update(existingCandidate);
-                await _context.SaveChangesAsync();
 
+                if (!isTrnas)
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return true; // update successful
             }
             catch (Exception ex)

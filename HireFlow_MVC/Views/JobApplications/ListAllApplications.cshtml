@@ -741,8 +741,9 @@
 
     <!-- Candidate Profile Modal -->
     <div class="modal-overlay" id="candidate-profile-modal">
-        <div class="modal">
+        <div class="modal" style="display:block">
             <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
+
             <div class="candidate-profile-header mb-4" id="modal-profile-header">
                 <!-- Profile header will be dynamically inserted here -->
             </div>
@@ -770,12 +771,28 @@
                 </div>
             </div>
 
-            <div class="profile-section">
+            <div class="profile-section mb-4">
                 <h3 class="profile-section-title">Interview Feedback</h3>
                 <div class="profile-section-content" id="modal-interview-feedback">
                     <!-- Interview feedback will be dynamically inserted here -->
                 </div>
             </div>
+
+            <!-- ✅ Action Buttons -->
+            <div class="modal-footer d-flex justify-content-end gap-3 mt-4">
+                <button type="button" class="btn btn-primary" id="btn-shortlist">
+                    Shortlist
+                </button>
+
+                <button type="button" class="btn btn-warning text-dark" id="btn-hold">
+                     Put on Hold
+                </button>
+
+                <button type="button" class="btn btn-danger" id="btn-reject">
+                    Reject
+                </button>
+            </div>
+
         </div>
     </div>
 
@@ -926,11 +943,10 @@
                     $grid.append(candidateCard);
                 });
 
-                // Re-bind event listeners for the new cards
-                $('.view-profile-btn').click(function() {
-                    const candidateData = JSON.parse($(this).data('candidate').replace(/&#39;/g, "'"));
-                    openCandidateModal(candidateData);
-                });
+                $('.view-profile-btn').click(function () {
+            const candidateData = $(this).data('candidate');
+            openCandidateModal(candidateData);
+        });
             }
 
             function initializeDataTable() {
@@ -979,14 +995,18 @@
                         },
                         {
                             data: null,
-                            render: function(data, type, row) {
-                                return `
-                                    <button class="btn btn-sm btn-outline-primary view-profile-btn"
-                                            data-candidate='${JSON.stringify(row).replace(/'/g, "&#39;")}'>
-                                        <i class="fas fa-user-circle"></i> View Profile
-                                    </button>
-                                `;
-                            }
+                                   render: function (data, type, row) {
+            const safeData = JSON.stringify(row)
+                .replace(/"/g, '&quot;') // escape double quotes
+                .replace(/'/g, '&#39;'); // escape single quotes
+
+            return `
+                <button class="btn btn-sm btn-outline-primary view-profile-btn"
+                        data-candidate="${safeData}">
+                    <i class="fas fa-user-circle"></i> View Profile
+                </button>
+            `;
+        }
                         }
                     ],
                     responsive: true,
@@ -1081,9 +1101,13 @@
             }
 
             function openCandidateModal(candidate) {
-                const matchScore = candidate.matchScore || calculateMatchScore(candidate);
+
+                 $('#candidate-profile-modal').addClass('active');
+
+              const matchScore = candidate.matchScore ;
                 const scoreClass = getScoreClass(matchScore);
 
+              
                 $('#modal-profile-header').html(`
                     <div class="candidate-profile-header">
                         <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(candidate.candidateName || 'Candidate')}&background=2563eb&color=fff&size=120"
@@ -1091,14 +1115,17 @@
                         <div class="candidate-profile-info">
                             <h2 class="candidate-profile-name">${candidate.candidateName || 'Unknown Candidate'}</h2>
                             <p class="candidate-profile-position">${candidate.jobTitle || 'No Title'}</p>
-                            <div class="match-score ${scoreClass}">${matchScore}% Match</div>
+                            <div class="match-score ${scoreClass}">${candidate.matchScore}%</div>
                         </div>
+
+                 <div class="">
+                 View Resume
+                    </div>
                     </div>
                 `);
 
                 $('#modal-summary').html(`
-                    <p>${candidate.candidateName || 'The candidate'} applied for the ${candidate.jobTitle || 'position'} on ${formatDate(candidate.appliedOn) || 'an unknown date'}.</p>
-                    <p class="mb-0"><strong>Cover Letter:</strong> ${candidate.coverLetter || 'No cover letter provided.'}</p>
+                 <p><strong>Score Feedback:</strong> ${candidate.scoreFeedback || 'Not specified'}</p>
                 `);
 
                 $('#modal-skills').html(renderSkills(candidate.skills) || '<span class="text-muted">No skills listed</span>');
@@ -1112,6 +1139,12 @@
                         <div class="col-md-6">
                             <p><strong>Education:</strong> ${candidate.educationLevel || 'Not specified'}</p>
                             <p><strong>Expected Salary:</strong> ${formatSalary(candidate.expectedSalary)}</p>
+                        </div>
+                          </div>
+                          <div class="row">
+                         <div class="col-md-12">
+                                              <p>${candidate.candidateName || 'The candidate'} applied for the ${candidate.jobTitle || 'position'} on ${formatDate(candidate.appliedOn) || 'an unknown date'}.</p>
+
                         </div>
                     </div>
                 `);
@@ -1148,15 +1181,7 @@
                 $('#candidate-grid, #candidate-table').hide();
             }
 
-            function calculateMatchScore(candidate) {
-                let score = 70;
-                if (candidate.educationLevel) {
-                    if (candidate.educationLevel.includes('Master') || candidate.educationLevel.includes('MBA')) score += 10;
-                    else if (candidate.educationLevel.includes('Bachelor')) score += 5;
-                }
-                if (candidate.applicationStatus === 'Interview' || candidate.applicationStatus === 'Offered') score += 10;
-                return Math.min(100, Math.max(0, score));
-            }
+         
 
             // Global function for candidate actions
             window.handleCandidateAction = function(applicationId) {

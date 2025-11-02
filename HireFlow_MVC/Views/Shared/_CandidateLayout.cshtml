@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var JWT = HttpContextAccessor.HttpContext?.Session.GetString("JwtToken");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -38,7 +42,6 @@
 
     <!-- Main Content -->
     <div class="flex-1 md:ml-64 flex flex-col">
-        
         <!-- Top Bar -->
         <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
             <!-- Search Bar -->
@@ -58,9 +61,17 @@
         <main class="p-6 flex-grow">
             @RenderBody()
         </main>
-
-    
     </div>
+
+    <script>
+                        $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' +  '@JWT'
+            }
+        });
+        
+
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

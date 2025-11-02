@@ -19,16 +19,20 @@ namespace HireFlow_API.Model
 
         public DbSet<CandidateDocumentDetail> CandidateDocumentDetails { get; set; }
 
+        public DbSet<Job> Jobs { get; set; }
+
         public DbSet<JobApplication> JobApplications { get; set; }
 
-        public DbSet<Job> Jobs { get; set; }
+        public DbSet<CandidateJobScore> tbl_CandidatesJobScore { get; set; }
+
+        public DbSet<MST_ApplicationStatus> MST_ApplicationStatus { get; set; }
+
+        public DbSet<JobApplicationStatusHistory> JobApplicationStatusHistory { get; set; }
 
         public DbSet<OfferLetter> OfferLetters { get; set; }
 
         public DbSet<OnboardingStatus> OnboardingStatusTable { get; set; }
 
-        public DbSet<CandidateJobScore> tbl_CandidatesJobScore { get; set; }
- 
         public DbSet<InterviewScheduleDetail> InterviewScheduleDetails { get; set; }
 
 

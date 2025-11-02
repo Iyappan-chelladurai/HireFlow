@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HireFlow_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65f165f65d8fe76961c61b8e17b3c28c60deafbf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5166d23f51f51c44641af0b52e3544433d94e455")]
 [assembly: System.Reflection.AssemblyProductAttribute("HireFlow_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HireFlow_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

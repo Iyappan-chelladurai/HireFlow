@@ -12,6 +12,8 @@
         public string? CandidateName { get; set; }
         public string? CandidateEmail { get; set; }
 
+        public string? JobDesc { get; set; }
+
         public int NoticePeriodDays { get; set; } = 0;
 
         public string? ResumePath { get; set; }
@@ -22,6 +24,8 @@
         public string? EducationLevel { get; set; }
 
         public DateTime? AvailableFrom { get; set; }
+
+        public string? JobLocation { get; set; }
 
         public decimal? ExpectedSalary { get; set; }
         public string? PreferredLocation { get; set; }

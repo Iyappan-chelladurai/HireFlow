@@ -5,6 +5,7 @@ using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
 using HireFlow_API.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -60,7 +61,6 @@ namespace HireFlow_API.Controllers
             return CreatedAtAction(nameof(GetApplicationDetails), new { id = created.ApplicationId }, created);
         }
 
-    
         [HttpGet("candidate/{candidateId:guid}")]
         public async Task<IActionResult> GetApplicationsByCandidateId(Guid candidateId)
         {
@@ -71,16 +71,26 @@ namespace HireFlow_API.Controllers
 
             return Ok(applications);
         }
-        ///// <summary>
-        ///// Score a candidate against a Job Role + Job Description
-        ///// </summary>
-        //[HttpPost("score")]
-        //public async Task<IActionResult> ScoreCandidate( Guid JobApplicationId)
-        //{
-        //    var result = await _candidateScorer.ScoreCandidateAsync(JobApplicationId);
+        /// <summary>
+        /// Score a candidate against a Job Role + Job Description
+        /// </summary>
+        [HttpPost("score")]
+        public async Task<IActionResult> ScoreCandidate( )
+        {
+            try
+            {
+                await _candidateScorer.ScoreCandidatesAsync();
 
-        //    return Ok(result);
-        //}
+                return Ok("Candidates Scroed...");
+            }
+            catch (Exception ex)
+            {
+                return Ok("Errror while Candidates Scoring..." + ex);
+            }
+            
+
+            
+        }
 
         [HttpGet("GetCandidatesByJob/{jobId}")]
         public async Task<IActionResult> GetCandidatesByJob(Guid jobId)

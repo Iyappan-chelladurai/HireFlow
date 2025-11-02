@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var JWT = HttpContextAccessor.HttpContext?.Session.GetString("JwtToken");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -146,6 +150,12 @@
 
 
     <script>
+          $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' +  '@JWT'
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
             const dropdowns = document.querySelectorAll('.dropdown-toggle');
             dropdowns.forEach(drop => {

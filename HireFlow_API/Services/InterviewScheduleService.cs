@@ -6,8 +6,8 @@ namespace HireFlow_API.Services
 {
     public interface IInterviewScheduleService
     {
-        Task<IEnumerable<InterviewScheduleDetail>> GetUpcomingInterviewsAsync();
-        Task<IEnumerable<InterviewScheduleDetail>> GetCompletedInterviewsAsync();
+        Task<IEnumerable<UpcomingInterviewDto>> GetUpcomingInterviewsAsync();
+        Task<IEnumerable<CompleteInterviewDto>> GetCompletedInterviewsAsync();
         Task<InterviewScheduleDetail?> GetInterviewByIdAsync(Guid id);
         Task<InterviewScheduleDetail> ScheduleInterviewAsync(ScheduleInterviewDto dto);
         Task<InterviewScheduleDetail?> RescheduleInterviewAsync(Guid id, DateTime newDate, string reason);
@@ -18,15 +18,22 @@ namespace HireFlow_API.Services
     {
         private readonly IInterviewScheduleRepository _repository;
 
-        public InterviewScheduleService(IInterviewScheduleRepository repository)
+        private readonly IEmailService _emailService;
+
+        private readonly IJobApplicationService _jobApplicationService;
+
+        public InterviewScheduleService(IInterviewScheduleRepository repository, IEmailService emailService,
+                                                                IJobApplicationService jobApplicationService)
         {
             _repository = repository;
+            _emailService = emailService;
+            _jobApplicationService = jobApplicationService;
         }
 
-        public async Task<IEnumerable<InterviewScheduleDetail>> GetUpcomingInterviewsAsync()
+        public async Task<IEnumerable<UpcomingInterviewDto>> GetUpcomingInterviewsAsync()
             => await _repository.GetUpcomingAsync();
 
-        public async Task<IEnumerable<InterviewScheduleDetail>> GetCompletedInterviewsAsync()
+        public async Task<IEnumerable<CompleteInterviewDto>> GetCompletedInterviewsAsync()
             => await _repository.GetCompletedAsync();
 
         public async Task<InterviewScheduleDetail?> GetInterviewByIdAsync(Guid id)
@@ -44,12 +51,20 @@ namespace HireFlow_API.Services
                 MeetingLink = dto.MeetingLink,
                 RoundNumber = dto.RoundNumber,
                 Status = dto.Status,
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
             };
+
+
+
 
             await _repository.AddAsync(interview);
             await _repository.SaveChangesAsync();
+
+
+            var candidate = await _jobApplicationService.GetCandidatesbyApplicationIdAsync(dto.ApplicationId);
+
+            _emailService.InterviewScheduledEmail(dto, candidate.CandidateName, candidate.JobTitle);
 
             return interview;
         }

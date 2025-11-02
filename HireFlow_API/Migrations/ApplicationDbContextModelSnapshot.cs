@@ -372,8 +372,8 @@ namespace HireFlow_API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("InterviewFeedback")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsOfferAccepted")
                         .HasColumnType("bit");
@@ -399,6 +399,57 @@ namespace HireFlow_API.Migrations
                     b.HasIndex("JobId");
 
                     b.ToTable("JobApplications");
+                });
+
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.JobApplicationStatusHistory", b =>
+                {
+                    b.Property<Guid>("JobApplicationHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ChangedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("JobApplicationHistoryId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("JobApplicationStatusHistory");
+                });
+
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.MST_ApplicationStatus", b =>
+                {
+                    b.Property<Guid>("ApplicationStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ApplicationStatusName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ApplicationStatusId");
+
+                    b.ToTable("MST_ApplicationStatus");
                 });
 
             modelBuilder.Entity("HireFlow_API.Model.DataModel.OfferLetter", b =>
@@ -773,6 +824,25 @@ namespace HireFlow_API.Migrations
                     b.Navigation("Job");
                 });
 
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.JobApplicationStatusHistory", b =>
+                {
+                    b.HasOne("HireFlow_API.Model.DataModel.JobApplication", "JobApplication")
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireFlow_API.Model.DataModel.MST_ApplicationStatus", "Status")
+                        .WithMany("JobApplicationHistories")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobApplication");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("HireFlow_API.Model.DataModel.OfferLetter", b =>
                 {
                     b.HasOne("HireFlow_API.Model.DataModel.CandidateDetail", "Candidate")
@@ -873,6 +943,16 @@ namespace HireFlow_API.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("OfferLetters");
+                });
+
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.JobApplication", b =>
+                {
+                    b.Navigation("StatusHistories");
+                });
+
+            modelBuilder.Entity("HireFlow_API.Model.DataModel.MST_ApplicationStatus", b =>
+                {
+                    b.Navigation("JobApplicationHistories");
                 });
 #pragma warning restore 612, 618
         }

@@ -26,10 +26,18 @@
 
     public class UpcomingInterviewDto
     {
+
+        public string Candidate { get; set; }
+        public string Position { get; set; }
+
+        public string? Status { get; set; }
         public DateTime Date { get; set; }
         public string TimeRange { get; set; }
-        public string Position { get; set; }
-        public string Candidate { get; set; }
+
+        public string? Interviewer { get; set; }
+        public string Type { get; set; }
+
+
     }
 
 }

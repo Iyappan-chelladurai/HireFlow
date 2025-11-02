@@ -1,6 +1,8 @@
-﻿@{
-
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@{
+    
     Layout = "_SystemLayout";
+    var JWT = HttpContextAccessor.HttpContext?.Session.GetString("JwtToken");
 }
 
 <!DOCTYPE html>
@@ -641,6 +643,36 @@
             }
 
         }
+
+        .calendar-day {
+            height: 70px;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .today {
+            background-color: #dbeafe !important;
+            border: 2px solid #1d4ed8 !important;
+        }
+
+        .has-interview {
+            background-color: #fdf2f8 !important;
+            border: 2px solid #db2777 !important;
+        }
+
+        .interview-badge {
+            background: #e11d48;
+            color: #fff;
+            padding: 2px 5px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            margin-left: 3px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -663,7 +695,7 @@
                     <a href="#" style="color: var(--primary);">View All</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="data-table">
+                    <table class="data-table" id="upcomingInterviewsTable">
                         <thead>
                             <tr>
                                 <th>Candidate</th>
@@ -676,82 +708,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
-                                        <div>John Smith</div>
-                                    </div>
-                                </td>
-                                <td>Frontend Developer</td>
-                                <td>Sarah Johnson</td>
-                                <td>Oct 15, 2023<br><small>10:00 AM - 11:00 AM</small></td>
-                                <td><span class="interview-type-badge" style="background-color: var(--primary); color: white;">Technical</span></td>
-                                <td><span class="status-badge badge-warning">Scheduled</span></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
-                                        <div>Sarah Johnson</div>
-                                    </div>
-                                </td>
-                                <td>UX Designer</td>
-                                <td>Michael Brown</td>
-                                <td>Oct 16, 2023<br><small>2:00 PM - 3:00 PM</small></td>
-                                <td><span class="interview-type-badge" style="background-color: var(--secondary); color: white;">Culture Fit</span></td>
-                                <td><span class="status-badge badge-warning">Scheduled</span></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
-                                        <div>Michael Brown</div>
-                                    </div>
-                                </td>
-                                <td>Backend Developer</td>
-                                <td>David Wilson</td>
-                                <td>Oct 17, 2023<br><small>11:00 AM - 12:00 PM</small></td>
-                                <td><span class="interview-type-badge" style="background-color: var(--primary); color: white;">Technical</span></td>
-                                <td><span class="status-badge badge-warning">Scheduled</span></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right: 12px;" alt="Candidate">
-                                        <div>Emily Davis</div>
-                                    </div>
-                                </td>
-                                <td>Product Manager</td>
-                                <td>Jennifer Lee</td>
-                                <td>Oct 18, 2023<br><small>9:30 AM - 10:30 AM</small></td>
-                                <td><span class="interview-type-badge" style="background-color: var(--secondary); color: white;">Culture Fit</span></td>
-                                <td><span class="status-badge badge-warning">Scheduled</span></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Details</button>
-                                        <button class="btn btn-outline" style="padding: 8px 12px;">Reschedule</button>
-                                    </div>
-                                </td>
-                            </tr>
+                         
+              
                         </tbody>
                     </table>
                 </div>
@@ -762,15 +720,18 @@
                 <div>
                     <div class="dashboard-card">
                         <div class="card-header">
-                            <h3 class="card-title">Interview Calendar - October 2023</h3>
+                            <h3 class="card-title">Interview Calendar</h3>
                         </div>
+
                         <div style="padding: 20px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                                <button class="btn btn-outline">
+                                <button id="prevMonthBtn" class="btn btn-outline">
                                     <i class="fas fa-chevron-left"></i> Previous
                                 </button>
-                                <h4 style="margin: 0;">October 2023</h4>
-                                <button class="btn btn-outline">
+
+                                <h4 id="calendarTitle" style="margin: 0;"></h4>
+
+                                <button id="nextMonthBtn" class="btn btn-outline">
                                     Next <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -781,121 +742,32 @@
                                         <tr>
                                             <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Sun</th>
                                             <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Mon</th>
-                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Tue</th>
-                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Wed</th>
-                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Thu</th>
-                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Fri</th>
-                                            <th style="text-align: center; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0;">Sat</th>
+                                            <th style="text-align: center; padding: 10px;background-color: #f8fafc; border: 1px solid #e2e8f0;">Tue</th>
+                                            <th style="text-align: center; padding: 10px;background-color: #f8fafc; border: 1px solid #e2e8f0;">Wed</th>
+                                            <th style="text-align: center; padding: 10px;background-color: #f8fafc; border: 1px solid #e2e8f0;">Thu</th>
+                                            <th style="text-align: center; padding: 10px;background-color: #f8fafc; border: 1px solid #e2e8f0;">Fri</th>
+                                            <th style="text-align: center; padding: 10px;background-color: #f8fafc; border: 1px solid #e2e8f0;">Sat</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="calendar-day">1</td>
-                                            <td class="calendar-day">2</td>
-                                            <td class="calendar-day">3</td>
-                                            <td class="calendar-day">4</td>
-                                            <td class="calendar-day">5</td>
-                                            <td class="calendar-day">6</td>
-                                            <td class="calendar-day">7</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="calendar-day">8</td>
-                                            <td class="calendar-day">9</td>
-                                            <td class="calendar-day">10</td>
-                                            <td class="calendar-day">11</td>
-                                            <td class="calendar-day">12</td>
-                                            <td class="calendar-day">13</td>
-                                            <td class="calendar-day">14</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="calendar-day">15</td>
-                                            <td class="calendar-day">16</td>
-                                            <td class="calendar-day today">
-                                                17
-                                                <span class="interview-badge">2</span>
-                                            </td>
-                                            <td class="calendar-day has-interview">
-                                                18
-                                                <span class="interview-badge">1</span>
-                                            </td>
-                                            <td class="calendar-day">19</td>
-                                            <td class="calendar-day">20</td>
-                                            <td class="calendar-day">21</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="calendar-day">22</td>
-                                            <td class="calendar-day">23</td>
-                                            <td class="calendar-day">24</td>
-                                            <td class="calendar-day">25</td>
-                                            <td class="calendar-day">26</td>
-                                            <td class="calendar-day">27</td>
-                                            <td class="calendar-day">28</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="calendar-day">29</td>
-                                            <td class="calendar-day">30</td>
-                                            <td class="calendar-day">31</td>
-                                            <td class="calendar-day"></td>
-                                            <td class="calendar-day"></td>
-                                            <td class="calendar-day"></td>
-                                            <td class="calendar-day"></td>
-                                        </tr>
-                                    </tbody>
+
+                                    <tbody id="calendarBody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
 
+
                 <div>
                     <div class="dashboard-card">
                         <div class="card-header">
                             <h3 class="card-title">Completed Interviews</h3>
                         </div>
-                        <div style="padding: 20px;">
-                            <div style="display: flex; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
-                                <div style="margin-right: 15px;">
-                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
-                                </div>
-                                <div style="flex-grow: 1;">
-                                    <h4 style="margin-bottom: 5px;">Robert Wilson</h4>
-                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Frontend Developer</p>
-                                    <div>
-                                        <span class="status-badge badge-danger">Rejected</span>
-                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 14, 2023</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="display: flex; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
-                                <div style="margin-right: 15px;">
-                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
-                                </div>
-                                <div style="flex-grow: 1;">
-                                    <h4 style="margin-bottom: 5px;">Jennifer Lee</h4>
-                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Product Manager</p>
-                                    <div>
-                                        <span class="status-badge badge-success">Passed</span>
-                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 13, 2023</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="display: flex;">
-                                <div style="margin-right: 15px;">
-                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="Candidate">
-                                </div>
-                                <div style="flex-grow: 1;">
-                                    <h4 style="margin-bottom: 5px;">David Kim</h4>
-                                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">DevOps Engineer</p>
-                                    <div>
-                                        <span class="status-badge badge-success">Passed</span>
-                                        <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">Oct 12, 2023</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="completedInterviewsContainer" style="padding: 20px;">
+                            <!-- Dynamic Data Will Load Here -->
                         </div>
                     </div>
+
 
                     <div class="dashboard-card">
                         <div class="card-header">
@@ -950,7 +822,7 @@
 
     <!-- Schedule Interview Modal -->
     <div class="modal-overlay" id="scheduleInterviewModal">
-        <div class="modal">
+        <div class="modal" style="display: block;">
             <button class="modal-close">&times;</button>
             <h2 class="modal-title">Schedule New Interview</h2>
             <p class="modal-subtitle">Fill out the form below to schedule a new interview</p>
@@ -961,22 +833,19 @@
                         <label for="candidateSelect" class="form-label">Select Candidate</label>
                         <select class="form-select" id="candidateSelect">
                             <option selected>Choose candidate...</option>
-                            <option value="1">John Smith - Frontend Developer</option>
-                            <option value="2">Sarah Johnson - UX Designer</option>
-                            <option value="3">Michael Brown - Backend Developer</option>
-                            <option value="4">Emily Davis - Product Manager</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="interviewerSelect" class="form-label">Select Interviewer</label>
-                        <select class="form-select" id="interviewerSelect">
-                            <option selected>Choose interviewer...</option>
-                            <option value="1">Sarah Johnson (Engineering Manager)</option>
-                            <option value="2">Michael Brown (Lead Designer)</option>
-                            <option value="3">David Wilson (CTO)</option>
-                            <option value="4">Jennifer Lee (Product Director)</option>
+                        <label for="interviewType" class="form-label">Interview Type</label>
+                        <select class="form-select" id="interviewType">
+                            <option selected>Select type...</option>
+                            <option value="1">Technical</option>
+                            <option value="2">Culture Fit</option>
+                            <option value="3">Manager </option>
+                            <option value="4">HR </option>
                         </select>
                     </div>
+                  
                 </div>
 
                 <div class="form-row">
@@ -985,13 +854,9 @@
                         <input type="date" class="form-input" id="interviewDate">
                     </div>
                     <div class="form-group">
-                        <label for="interviewType" class="form-label">Interview Type</label>
-                        <select class="form-select" id="interviewType">
-                            <option selected>Select type...</option>
-                            <option value="1">Technical Interview</option>
-                            <option value="2">Culture Fit Interview</option>
-                            <option value="3">Manager Interview</option>
-                            <option value="4">HR Interview</option>
+                        <label for="interviewerSelect" class="form-label">Select Interviewer</label>
+                        <select class="form-select" id="interviewerSelect">
+                            <option selected>Choose interviewer...</option>
                         </select>
                     </div>
                 </div>
@@ -1058,6 +923,93 @@
 
     <script>
 
+                $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' +  '@JWT'
+            }
+        });
+                let currentDate = new Date();
+        let interviewData = [];
+
+        function loadCalendar() {
+            let month = currentDate.getMonth();
+            let year = currentDate.getFullYear();
+
+            $("#calendarTitle").text(
+                currentDate.toLocaleString("default", { month: "long" }) + " " + year
+            );
+
+            let firstDay = new Date(year, month, 1).getDay();
+            let lastDate = new Date(year, month + 1, 0).getDate();
+
+            let html = "<tr>";
+            let count = 0;
+
+            for (let i = 0; i < firstDay; i++) {
+                html += `<td class="calendar-day"></td>`;
+                count++;
+            }
+
+          
+
+            for (let d = 1; d <= lastDate; d++) {
+                let date = new Date(year, month, d);
+                let dayStr = date.toDateString();
+
+                let interviewsForDay = interviewData.filter(iv =>
+                    new Date(iv.date).toDateString() === dayStr
+                     
+                );
+
+                let badge = interviewsForDay.length > 0 ?
+                    `<span class="interview-badge">${interviewsForDay.length}</span>` : "";
+
+                 
+
+                let classList = "calendar-day";
+                if (interviewsForDay.length > 0) classList += " has-interview";
+                if (dayStr === new Date().toDateString()) classList += " today";
+
+                html += `
+                <td class="${classList}">
+                    ${d}
+                    ${badge}
+                </td>`;
+
+                count++;
+                if (count % 7 === 0) {
+                    html += "</tr><tr>";
+                }
+            }
+
+            html += "</tr>";
+            $("#calendarBody").html(html);
+        }
+
+        function loadInterviews() {
+            $.getJSON("https://localhost:7180/api/InterviewSchedule/completed", function (data) {
+                interviewData = data;
+                alert(interviewData);
+                loadCalendar();
+            });
+        }
+
+        // Navigation
+        $("#prevMonthBtn").click(function () {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            loadCalendar();
+        });
+
+        $("#nextMonthBtn").click(function () {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            loadCalendar();
+        });
+
+        // Initial Load
+        $(document).ready(function () {
+            loadInterviews();
+        });
+
                 $(document).ready(function () {
 
             // Open Schedule Interview modal
@@ -1109,7 +1061,6 @@
             function loadInterviewers() {
                 $.getJSON("https://localhost:7180/api/JobApplications/interviewers-dropdown", function (interviewers) {
                     let options = '<option value="">Choose interviewer...</option>';
-
                     
                     $.each(interviewers, function (i, intv) {
                         console.log(interviewers);
@@ -1123,28 +1074,28 @@
             // 3️⃣ Load Upcoming Interviews
             // =========================
             function loadUpcomingInterviews() {
-                $.getJSON("/api/InterviewSchedules?status=Scheduled", function (interviews) {
+                $.getJSON("https://localhost:7180/api/InterviewSchedule/upcoming", function (interviews) {
                     let rows = "";
+                    console.table(interviews)
                     $.each(interviews, function (i, iv) {
                         rows += `
                         <tr>
                             <td>
                                 <div style="display:flex; align-items:center;">
-                                    <img src="https://via.placeholder.com/40" class="rounded-circle" style="margin-right:12px;">
+                                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(iv.candidate)}&background=2563eb&color=fff&size=40" class="rounded-circle" style="margin-right:12px;">
                                     <div>${iv.candidate}</div>
                                 </div>
                             </td>
                             <td>${iv.position}</td>
                             <td>${iv.interviewer}</td>
-                            <td>${new Date(iv.dateTime).toLocaleDateString()}<br>
-                                <small>${new Date(iv.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                            <td>${new Date(iv.date).toLocaleDateString()}<br>
+                                <small>${new Date(iv.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
                             </td>
                             <td><span class="interview-type-badge" style="background-color: ${iv.type=="Technical"?"#2563eb":"#7e22ce"}; color:white;">${iv.type}</span></td>
                             <td><span class="status-badge badge-warning">${iv.status}</span></td>
                             <td>
                                 <div style="display:flex; gap:8px;">
-                                    <button class="btn btn-outline detailsBtn" data-id="${iv.id}">Details</button>
-                                    <button class="btn btn-outline rescheduleBtn" data-id="${iv.id}">Reschedule</button>
+                                    <button class="btn btn-outline detailsBtn" data-id="${iv.id}">Action</button>
                                 </div>
                             </td>
                         </tr>`;
@@ -1156,25 +1107,34 @@
             // =========================
             // 4️⃣ Load Completed Interviews
             // =========================
-            function loadCompletedInterviews() {
-                $.getJSON("/api/InterviewSchedules?status=Completed", function (interviews) {
-                    let rows = "";
-                    $.each(interviews, function (i, iv) {
-                        rows += `
-                        <tr>
-                            <td>${iv.candidate}</td>
-                            <td>${iv.position}</td>
-                            <td>${iv.interviewer}</td>
-                            <td>${new Date(iv.dateTime).toLocaleDateString()}<br>
-                                <small>${new Date(iv.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
-                            </td>
-                            <td><span class="interview-type-badge" style="background-color: ${iv.type=="Technical"?"#2563eb":"#7e22ce"}; color:white;">${iv.type}</span></td>
-                            <td><span class="status-badge badge-success">${iv.status}</span></td>
-                        </tr>`;
-                    });
-                    $("#completedInterviewsTable tbody").html(rows);
+        function loadCompletedInterviews() {
+            $.getJSON("https://localhost:7180/api/InterviewSchedule/completed", function (interviews) {
+                let output = "";
+                  console.table(interviews)
+                $.each(interviews, function (i, iv) {
+                    output += `
+                        <div style="display: flex; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
+                            <div style="margin-right: 15px;">
+                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(iv.candidate)}&background=2563eb&color=fff&size=120" class="rounded-circle" alt="Candidate">
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <h4 style="margin-bottom: 5px;">${iv.candidate}</h4>
+                                <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">${iv.position}</p>
+                                <div>
+                                    <span class="status-badge ${iv.Result == "Passed" ? "badge-success" : "badge-danger"}">${iv.result}</span>
+                                    <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
+                                        ${new Date(iv.date).toLocaleDateString()}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 });
-            }
+
+                $("#completedInterviewsContainer").html(output);
+            });
+        }
+
 
             // =========================
             // 5️⃣ Time Slot Selection
@@ -1212,25 +1172,25 @@
                     scheduledDate: scheduledDate,
                     interviewerName: interviewerName,
                     interviewMode: interviewMode,
-                    meetingLink: meetingLink,
+                    interviewLocation: meetingLink,
                     status: "Scheduled"
                 };
 
                 $.ajax({
-                    url: "https://localhost:7180/api/interviews/schedule",
+                    url: "https://localhost:7180/api/InterviewSchedule/schedule",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(payload),
                     success: function () {
-                        alert("✅ Interview scheduled successfully!");
-                        $("#scheduleInterviewModal").modal("hide");
+                        alert(" Interview scheduled successfully!");
+                       $("#scheduleInterviewModal").removeClass("active");
                         $("form")[0].reset();
                         $(".time-slot").removeClass("selected");
                         loadUpcomingInterviews();
                     },
                     error: function (xhr) {
                         console.error(xhr.responseText);
-                        alert("❌ Failed to schedule interview. Check console.");
+                        alert(" Failed to schedule interview. Check console.");
                     }
                 });
             });

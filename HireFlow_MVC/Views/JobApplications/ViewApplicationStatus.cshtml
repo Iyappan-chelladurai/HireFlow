@@ -458,49 +458,43 @@
 
         /* Responsive Design */
         @@media (max-width: 992px) {
-            .dashboard-grid
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
 
-        {
-            grid-template-columns: 1fr;
-        }
-
-        .status-cards {
-            grid-template-columns: 1fr;
-        }
-
+            .status-cards {
+                grid-template-columns: 1fr;
+            }
         }
 
         @@media (max-width: 768px) {
-            .nav-menu
+            .nav-menu {
+                display: none;
+            }
 
-        {
-            display: none;
-        }
+            .mobile-toggle {
+                display: block;
+            }
 
-        .mobile-toggle {
-            display: block;
-        }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
 
-        .dashboard-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-        }
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
 
-        .profile-details {
-            grid-template-columns: 1fr;
-        }
+            .job-item, .interview-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
 
-        .job-item, .interview-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .job-meta, .interview-meta {
-            flex-wrap: wrap;
-        }
-
+            .job-meta, .interview-meta {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
@@ -525,7 +519,7 @@
                     <p>Here's your application status and upcoming interviews</p>
                 </div>
                 <div class="user-profile">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Michael Chen">
+                    <img src="https://ui-avatars.com/api/?name= @Context.Session.GetString("UserName")&background=2563eb&color=fff&size=120" alt="@Context.Session.GetString("UserName")">
                     <span>@Context.Session.GetString("UserName")</span>
                 </div>
             </div>
@@ -626,7 +620,7 @@
                         </div>
                     </div>
 
-                    <div class="content-card">
+               @*      <div class="content-card">
                         <div class="card-header">
                             <h2>Profile Details</h2>
                             <a href="#" class="view-all">Edit Profile</a>
@@ -678,7 +672,7 @@
                             <button class="btn btn-primary">Download Resume</button>
                             <button class="btn btn-outline">Edit Profile</button>
                         </div>
-                    </div>
+                    </div> *@
                 </div>
             </div>
         </div>
@@ -713,7 +707,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-          
+
              var candidateId = '@Context.Session.GetString("CandidateId")';
         console.log(candidateId);
 
