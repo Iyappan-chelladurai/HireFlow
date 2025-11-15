@@ -1,8 +1,13 @@
-﻿using HireFlow_API.Model.DTOs;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using HireFlow_API.Model.DataModel;
+using HireFlow_API.Model.DTOs;
 using HireFlow_API.Services;
-using Microsoft.AspNetCore.Mvc;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace HireFlow_API.Controllers
 {
@@ -14,9 +19,13 @@ namespace HireFlow_API.Controllers
     {
         private readonly IInterviewScheduleService _service;
 
-        public InterviewScheduleController(IInterviewScheduleService service)
+        private readonly HttpClient _httpClient;
+
+        public InterviewScheduleController(IInterviewScheduleService service , HttpClient httpClient )
         {
             _service = service;
+            _httpClient = httpClient;
+           
         }
 
         [HttpGet("upcoming")]
@@ -70,7 +79,39 @@ namespace HireFlow_API.Controllers
         }
 
 
+        [AllowAnonymous]
+        [HttpPost("Interview/GenerateInterviewQA")]
+        public async Task<IActionResult> GenerateInterviewQA([FromBody] Guid interviewId)
+        {
+
+            var InterviewQuestions = await _service.GenerateInterviewQAAsync(interviewId);
+            if (InterviewQuestions == null) return NotFound();
+            return Ok(InterviewQuestions);
+
+        }
     }
+
+
+
+public class ResumeRequest
+{
+        public Guid? interviewId { get; set; } 
+        public string ResumeText { get; set; } = string.Empty;
+}
+    public class InterviewQuestion
+    {
+        public string Category { get; set; }
+        public string Question { get; set; }
+        public string Difficulty { get; set; }
+        public List<string> Tags { get; set; } = new();
+    }
+    public class InterviewQuestionResponse
+    {
+        public List<InterviewQuestion> Questions { get; set; } = new();
+        public string Error { get; set; }
+        public string RawResponse { get; set; }
+    }
+
 
     public class RescheduleDto
     {

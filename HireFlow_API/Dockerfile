@@ -1,14 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 8080
-
+# Stage 1: Build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY . .
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
 
-FROM base AS final
+# Copy the csproj and restore dependencies
+COPY ["HireFlow_API.csproj", "./"]
+RUN dotnet restore "HireFlow_API.csproj"
+
+# Copy all files and build the app
+COPY . .
+RUN dotnet publish "HireFlow_API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Stage 2: Create runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "HireFlow_API.dll"]

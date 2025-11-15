@@ -1,0 +1,8 @@
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.csproj.AssemblyReference.cache
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.GeneratedMSBuildEditorConfig.editorconfig
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.AssemblyInfoInputs.cache
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.AssemblyInfo.cs
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.csproj.CoreCompileInputs.cache
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.MvcApplicationPartsAssemblyInfo.cs
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.MvcApplicationPartsAssemblyInfo.cache
+C:\IYAPPAN\Projects\Project\Project\HireFlow\CandidateDocumentsProcessor\obj\Debug\net8.0\CandidateDocumentsProcessor.sourcelink.json

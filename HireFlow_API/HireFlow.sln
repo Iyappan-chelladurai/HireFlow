@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HireFlow_API", "HireFlow_API.csproj", "{FA2C7C8D-AF48-4175-8F70-4971D1959DA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandidateDocumentsProcessor", "..\CandidateDocumentsProcessor\CandidateDocumentsProcessor.csproj", "{42EA187D-A64A-4B6B-BC73-B25056DD1CF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FA2C7C8D-AF48-4175-8F70-4971D1959DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA2C7C8D-AF48-4175-8F70-4971D1959DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA2C7C8D-AF48-4175-8F70-4971D1959DA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42EA187D-A64A-4B6B-BC73-B25056DD1CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42EA187D-A64A-4B6B-BC73-B25056DD1CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42EA187D-A64A-4B6B-BC73-B25056DD1CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42EA187D-A64A-4B6B-BC73-B25056DD1CF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -30,6 +30,8 @@ namespace HireFlow_API.Repositories
 
         Task<CandidateDisplayDto> GetCandidatesbyApplicationIdAsync(Guid JobApplicationId);
 
+        Task<string> GetCandidateResumeByInterviewId(Guid interviewId);
+
     }
 
     public class JobApplicationRepository : IJobApplicationRepository
@@ -213,6 +215,25 @@ namespace HireFlow_API.Repositories
 
             return data;
         }
+
+        public async Task<string> GetCandidateResumeByInterviewId(Guid interviewId)
+        {
+            var resumePath = await _context.InterviewScheduleDetails
+                .Include(app => app.JobApplication)
+                .Where(inv => inv.InterviewId == interviewId)
+                .Select(app => app.JobApplication.ResumePath)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(resumePath))
+                return null;
+
+            if (!File.Exists(resumePath))
+                return null;
+            
+            string resumeText = await File.ReadAllTextAsync(resumePath);
+            return resumeText;
+        }
+
         public async Task<IList<CandidateDisplayDto>> GetCandidatesForJobAsync(Guid jobId)
         {
             IList < CandidateDisplayDto > candidates = new List<CandidateDisplayDto>();

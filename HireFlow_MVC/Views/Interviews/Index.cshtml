@@ -671,7 +671,247 @@
             font-size: 0.7rem;
             margin-left: 3px;
         }
+        /* Interview Questions Modal Styles */
+        .questions-container {
+            margin-top: 20px;
+        }
 
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+            .questions-header h3 {
+                margin: 0;
+                color: var(--dark);
+            }
+
+        .interview-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .interview-date {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .questions-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: var(--gray);
+        }
+
+            .filter-btn.active,
+            .filter-btn:hover {
+                background: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+            /* Scrollbar styling */
+            .questions-list::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .questions-list::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+            }
+
+            .questions-list::-webkit-scrollbar-thumb {
+                background: var(--primary);
+                border-radius: 10px;
+            }
+
+                .questions-list::-webkit-scrollbar-thumb:hover {
+                    background: var(--primary-dark);
+                }
+
+        .question-item {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+            .question-item:hover {
+                border-color: var(--primary);
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+            }
+
+            .question-item.technical {
+                border-left: 4px solid var(--primary);
+            }
+
+            .question-item.behavioral {
+                border-left: 4px solid var(--success);
+            }
+
+            .question-item.scenario {
+                border-left: 4px solid var(--warning);
+            }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .question-number {
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .question-category {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+            .question-category.technical {
+                background-color: #dbeafe;
+                color: var(--primary);
+            }
+
+            .question-category.behavioral {
+                background-color: #d1fae5;
+                color: var(--success);
+            }
+
+            .question-category.scenario {
+                background-color: #fef3c7;
+                color: var(--warning);
+            }
+
+        .question-text {
+            font-weight: 500;
+            color: var(--dark);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .question-difficulty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+            .difficulty-dot.easy {
+                background-color: var(--success);
+            }
+
+            .difficulty-dot.medium {
+                background-color: var(--warning);
+            }
+
+            .difficulty-dot.hard {
+                background-color: var(--error);
+            }
+
+        .question-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .question-tag {
+            background-color: #f1f5f9;
+            color: var(--gray);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .questions-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Print Styles */
+        @@media print {
+            .modal-footer, .questions-filters, .questions-stats
+
+        {
+            display: none !important;
+        }
+
+        .questions-list {
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        .question-item {
+            break-inside: avoid;
+            border: 1px solid #000 !important;
+        }
+
+        }
 
     </style>
 </head>
@@ -920,7 +1160,57 @@
             </form>
         </div>
     </div>
+    <!-- Add this modal to your HTML after the existing modals -->
+    <div class="modal-overlay" id="interviewQuestionsModal">
+        <div class="modal" style="display: block; max-width: 900px;">
+            <button class="modal-close">&times;</button>
+            <h2 class="modal-title">Interview Questions</h2>
+            <p class="modal-subtitle" id="interviewDetails">Interview with <span id="candidateName"></span> for <span id="positionName"></span></p>
 
+            <div class="questions-container">
+                <div class="questions-header">
+                    <h3>Interview Questions</h3>
+                    <div class="interview-info">
+                        <span class="status-badge badge-info" id="interviewStatus">Scheduled</span>
+                        <span class="interview-date" id="interviewDateTime"></span>
+                    </div>
+                </div>
+
+                <div class="questions-filters">
+                    <button class="filter-btn active" data-category="all">All Questions</button>
+                    <button class="filter-btn" data-category="Technical">Technical</button>
+                    <button class="filter-btn" data-category="Behavioral">Behavioral</button>
+                    <button class="filter-btn" data-category="Scenario">Scenario-Based</button>
+                </div>
+
+                <div class="questions-list" id="questionsList">
+                    <!-- Questions will be loaded here dynamically -->
+                </div>
+
+                <div class="questions-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalQuestions">0</span>
+                        <span class="stat-label">Total Questions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="technicalCount">0</span>
+                        <span class="stat-label">Technical</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="behavioralCount">0</span>
+                        <span class="stat-label">Behavioral</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="closeQuestionsBtn">Close</button>
+                <button type="button" class="btn btn-primary" id="printQuestionsBtn">
+                    <i class="fas fa-print"></i> Print Questions
+                </button>
+            </div>
+        </div>
+    </div>
     <script>
 
                 $.ajaxSetup({
@@ -1095,7 +1385,7 @@
                             <td><span class="status-badge badge-warning">${iv.status}</span></td>
                             <td>
                                 <div style="display:flex; gap:8px;">
-                                    <button class="btn btn-outline detailsBtn" data-id="${iv.id}">Action</button>
+                                    <button class="btn btn-outline detailsBtn" data-id="${iv.interviewId}">Action</button>
                                 </div>
                             </td>
                         </tr>`;
@@ -1205,7 +1495,228 @@
 
         });
 
+                // Add this to your existing JavaScript
 
+               function loadInterviewQuestions(interviewId) {
+            // Show loading spinner
+            $("#questionsList").html(`
+                <div style="text-align:center; padding:20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#555;"></i>
+                    <p>Generating interview questions...</p>
+                </div>
+            `);
+
+            $.ajax({
+                url: "https://localhost:7180/Interview/GenerateInterviewQA",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(interviewId), // send the Guid directly
+                success: function (response) {
+                    // Handle stringified or parsed responses
+                    let questions = [];
+
+                    if (typeof response === "string") {
+                        try {
+                            questions = JSON.parse(response);
+                        } catch {
+                            console.error("Invalid response JSON:", response);
+                        }
+                    } else if (Array.isArray(response)) {
+                        questions = response;
+                    } else if (response.questionsAndAnswers) {
+                        // if your API wraps the questions
+                        questions = JSON.parse(response.questionsAndAnswers);
+                    }
+
+                    if (questions.length > 0) {
+                        displayQuestions(questions);
+                        updateQuestionStats(questions);
+                    } else {
+                        showSampleQuestions();
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error loading interview questions:", xhr);
+                    showSampleQuestions();
+                }
+            });
+        }
+
+
+        // Function to display questions in the modal
+        function displayQuestions(questions) {
+            const questionsList = $("#questionsList");
+            questionsList.empty();
+
+            if (questions.length === 0) {
+                questionsList.html(`
+                    <div class="no-questions">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 15px;"></i>
+                        <p style="color: var(--gray); text-align: center;">No questions available for this interview.</p>
+                    </div>
+                `);
+                return;
+            }
+
+            questions.forEach((question, index) => {
+                const difficultyClass = getDifficultyClass(question.difficulty);
+                const categoryClass = question.category?.toLowerCase() || 'technical';
+
+                const questionItem = `
+                    <div class="question-item ${categoryClass}" data-category="${categoryClass}">
+                        <div class="question-header">
+                            <span class="question-number">Q${index + 1}</span>
+                            <span class="question-category ${categoryClass}">${question.category || 'Technical'}</span>
+                        </div>
+                        <div class="question-text">${question.questionText}</div>
+                        <div class="question-difficulty">
+                            <span class="difficulty-dot ${difficultyClass}"></span>
+                            <span>${question.difficulty || 'Medium'} difficulty</span>
+                        </div>
+                        ${question.tags ? `
+                        <div class="question-tags">
+                            ${question.tags.map(tag => `<span class="question-tag">${tag}</span>`).join('')}
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                questionsList.append(questionItem);
+            });
+        }
+
+        // Function to update question statistics
+        function updateQuestionStats(questions) {
+            $("#totalQuestions").text(questions.length);
+
+            const technicalCount = questions.filter(q =>
+                q.category === 'Technical' || !q.category
+            ).length;
+            const behavioralCount = questions.filter(q =>
+                q.category === 'Behavioral'
+            ).length;
+            const scenarioCount = questions.filter(q =>
+                q.category === 'Scenario'
+            ).length;
+
+            $("#technicalCount").text(technicalCount);
+            $("#behavioralCount").text(behavioralCount);
+        }
+
+        // Helper function to get difficulty class
+        function getDifficultyClass(difficulty) {
+            if (!difficulty) return 'medium';
+
+            const difficultyLower = difficulty.toLowerCase();
+            if (difficultyLower.includes('easy')) return 'easy';
+            if (difficultyLower.includes('hard')) return 'hard';
+            return 'medium';
+        }
+
+        // Function to show sample questions (fallback)
+        function showSampleQuestions() {
+            const sampleQuestions = [
+                {
+                    questionText: "Explain the concept of dependency injection and how it's implemented in .NET Core.",
+                    category: "Technical",
+                    difficulty: "Medium",
+                    tags: [".NET", "Dependency Injection", "Architecture"]
+                },
+                {
+                    questionText: "What are the differences between SQL Server stored procedures and functions?",
+                    category: "Technical",
+                    difficulty: "Easy",
+                    tags: ["SQL", "Database", "Stored Procedures"]
+                },
+                {
+                    questionText: "How would you optimize a slow-running database query?",
+                    category: "Technical",
+                    difficulty: "Hard",
+                    tags: ["SQL", "Performance", "Optimization"]
+                },
+                {
+                    questionText: "Tell me about a time you had to deal with a difficult team member.",
+                    category: "Behavioral",
+                    difficulty: "Medium",
+                    tags: ["Teamwork", "Communication"]
+                },
+                {
+                    questionText: "Describe a situation where you had to learn a new technology quickly to complete a project.",
+                    category: "Behavioral",
+                    difficulty: "Medium",
+                    tags: ["Learning", "Adaptability"]
+                },
+                {
+                    questionText: "How do you handle conflicting priorities when working on multiple projects?",
+                    category: "Scenario",
+                    difficulty: "Medium",
+                    tags: ["Time Management", "Prioritization"]
+                }
+            ];
+
+            displayQuestions(sampleQuestions);
+            updateQuestionStats(sampleQuestions);
+        }
+
+        // Open Interview Questions modal
+        $(document).on("click", ".detailsBtn", function() {
+            const interviewId = $(this).data("id");
+
+            // Get interview details from the table row
+            const row = $(this).closest("tr");
+            const candidateName = row.find("td:first-child div:last-child").text();
+            const position = row.find("td:nth-child(2)").text();
+            const dateTimeText = row.find("td:nth-child(4)").text().split("\n");
+            const date = dateTimeText[0];
+            const time = dateTimeText[1] ? dateTimeText[1].trim() : "";
+            const status = row.find(".status-badge").text();
+
+            // Populate modal with interview details
+            $("#candidateName").text(candidateName);
+            $("#positionName").text(position);
+            $("#interviewStatus").text(status);
+            $("#interviewDateTime").text(`${date} ${time}`);
+
+            // Load interview questions
+            loadInterviewQuestions(interviewId);
+
+            // Show the modal
+            $("#interviewQuestionsModal").addClass("active");
+        });
+
+        // Close modal
+        $("#closeQuestionsBtn, #interviewQuestionsModal .modal-close").click(function() {
+            $("#interviewQuestionsModal").removeClass("active");
+        });
+
+        // Close modal when clicking outside
+        $("#interviewQuestionsModal").click(function(e) {
+            if ($(e.target).is("#interviewQuestionsModal")) {
+                $(this).removeClass("active");
+            }
+        });
+
+        // Filter questions by category
+        $(document).on("click", ".filter-btn", function() {
+            const category = $(this).data("category");
+
+            // Update active filter button
+            $(".filter-btn").removeClass("active");
+            $(this).addClass("active");
+
+            // Filter questions
+            if (category === 'all') {
+                $(".question-item").show();
+            } else {
+                $(".question-item").hide();
+                $(`.question-item[data-category="${category}"]`).show();
+            }
+        });
+
+        // Print questions
+        $("#printQuestionsBtn").click(function() {
+            window.print();
+        });
     </script>
 </body>
 </html>

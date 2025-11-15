@@ -270,6 +270,22 @@
   },
   {
     "ContainingType": "HireFlow_API.Controllers.InterviewScheduleController",
+    "Method": "GenerateInterviewQA",
+    "RelativePath": "api/InterviewSchedule/Interview/GenerateInterviewQA",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "interviewId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HireFlow_API.Controllers.InterviewScheduleController",
     "Method": "Reschedule",
     "RelativePath": "api/InterviewSchedule/reschedule/{id}",
     "HttpMethod": "PUT",

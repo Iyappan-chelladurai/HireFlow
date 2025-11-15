@@ -26,7 +26,7 @@
 
     public class UpcomingInterviewDto
     {
-
+        public Guid? interviewId { get; set; }
         public string Candidate { get; set; }
         public string Position { get; set; }
 

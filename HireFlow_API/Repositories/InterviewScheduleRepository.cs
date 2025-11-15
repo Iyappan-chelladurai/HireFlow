@@ -46,15 +46,16 @@ namespace HireFlow_API.Repositories
                                  .OrderBy(i => i.ScheduledDate)
                                  .AsNoTracking()
                                  .Select(a => new UpcomingInterviewDto
-                                                  {
-                                                         Candidate = a.JobApplication.Candidate.User.FullName,
-                                                         Position = a.JobApplication.Job.JobTitle,
-                                                         Interviewer = a.InterviewerName,
-                                                         Date = a.ScheduledDate,
-                                                         Status = a.Status,
-                                                         Type = a.InterviewMode
+                                 {
+                                     interviewId = a.InterviewId,
+                                     Candidate = a.JobApplication.Candidate.User.FullName,
+                                     Position = a.JobApplication.Job.JobTitle,
+                                     Interviewer = a.InterviewerName,
+                                     Date = a.ScheduledDate,
+                                     Status = a.Status,
+                                     Type = a.InterviewMode
 
-                                                     }).ToListAsync();
+                                 }).ToListAsync();
 
         }
 

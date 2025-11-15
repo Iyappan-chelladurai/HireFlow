@@ -7,7 +7,6 @@ using System.Text.Json;
 
 namespace HireFlow_MVC.Controllers
 {
-   
     public class JobController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -32,9 +31,6 @@ namespace HireFlow_MVC.Controllers
 
             try
             {
-
-             
-
                 var response = await _httpClient.PostAsJsonAsync("api/Jobs/", model);
 
                 if (response.IsSuccessStatusCode)
