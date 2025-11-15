@@ -1395,3 +1395,5 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\refin
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\HireFlow_API.pdb
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\HireFlow_API.genruntimeconfig.cache
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Debug\net8.0\ref\HireFlow_API.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll

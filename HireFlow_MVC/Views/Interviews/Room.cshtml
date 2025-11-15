@@ -1,0 +1,244 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+<div>
+  
+    <video id="remoteVideo" autoplay playsinline></video>
+</div>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Interview Room</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f4f6f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background: #1a73e8;
+            color: #fff;
+            padding: 15px 25px;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            height: calc(100vh - 70px);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .video-section {
+            background: #000;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-box {
+            background: #111;
+            border-radius: 12px;
+            height: 45%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .video-box video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .panel-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            height: 33%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .panel-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px;
+        }
+
+        .control-btn {
+            background: #1a73e8;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+            .control-btn:hover {
+                background: #155fc1;
+            }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Online Interview Room
+        <div>HR vs Candidate</div>
+    </div>
+
+    <div class="main-container">
+        <div class="video-section">
+            <div class="video-box">
+              @*   <video id="remoteVideo"></video> *@
+                <video id="localVideo" autoplay playsinline></video>
+                <div class="label">Candidate</div>
+            </div>
+            <div class="video-box">
+                <video id="localVideo"></video>
+                <div class="label">You (HR)</div>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <div class="panel-box">
+                <div class="panel-title">Chat</div>
+                <div style="height: 80%; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 8px; background: #fafafa;"></div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-title">Notes</div>
+                <textarea style="width: 100%; height: 80%; border-radius: 8px; padding: 10px; border: 1px solid #ccc;"></textarea>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-title">Interview Questions</div>
+                <ul style="padding-left: 20px; height: 80%; overflow-y: auto;">
+                    <li>Tell me about yourself.</li>
+                    <li>Explain OOP concepts.</li>
+                    <li>What is dependency injection?</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+
+        <button class="control-btn" id="startCall">Start Call</button>
+        <button class="control-btn" id="shareScreen">Share Screen</button>
+        <button class="control-btn">Share Screen</button>
+    </div>
+</body>
+</html>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+<script src="/js/interview.js"></script>
+
+<script>
+
+        const roomId = window.location.pathname.split('/').pop();
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(`/interviewHub?roomId=${roomId}`)
+        .build();
+
+    let peer = new RTCPeerConnection({
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+    });
+
+    let localVideo = document.getElementById("localVideo");
+    let remoteVideo = document.getElementById("remoteVideo");
+
+    // Add local stream to peer
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+            localVideo.srcObject = stream;
+            stream.getTracks().forEach(track => peer.addTrack(track, stream));
+        });
+
+    peer.ontrack = (event) => {
+        remoteVideo.srcObject = event.streams[0];
+    };
+
+    // ICE Candidate exchange
+    peer.onicecandidate = (event) => {
+        if (event.candidate) {
+            connection.invoke("SendIceCandidate", roomId, JSON.stringify(event.candidate));
+        }
+    };
+
+    // SignalR events
+    connection.on("ReceiveOffer", async (offer) => {
+        await peer.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
+        let answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
+        connection.invoke("SendAnswer", roomId, JSON.stringify(answer));
+    });
+
+    connection.on("ReceiveAnswer", async (answer) => {
+        await peer.setRemoteDescription(new RTCSessionDescription(JSON.parse(answer)));
+    });
+
+    connection.on("ReceiveIceCandidate", async (candidate) => {
+        await peer.addIceCandidate(JSON.parse(candidate));
+    });
+
+    // Buttons
+    document.getElementById("startCall").onclick = async () => {
+        let offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        connection.invoke("SendOffer", roomId, JSON.stringify(offer));
+    };
+
+    document.getElementById("shareScreen").onclick = async () => {
+        let stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        let screenTrack = stream.getTracks()[0];
+        let sender = peer.getSenders().find(s => s.track.kind === "video");
+        sender.replaceTrack(screenTrack);
+    };
+
+    // Start SignalR
+    connection.start();
+
+
+</script>

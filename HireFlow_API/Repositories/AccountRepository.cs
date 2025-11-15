@@ -41,27 +41,25 @@ namespace HireFlow_API.Repositories
         }
 
 
-        public async Task<string> CreateUserAsync(UserAccount user, string password ,string role)
+        public async Task<string> CreateUserAsync(UserAccount user, string password, string role)
         {
             var result = await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return $"Failed to create user: {errors}";
+            }
+
             user.SecurityStamp = Guid.NewGuid().ToString();
             await _userManager.AddToRoleAsync(user, role);
 
-            if (role.ToLower()  == "candidate")
+            if (role.Equals("candidate", StringComparison.OrdinalIgnoreCase))
             {
-                ICandidateDetailRepository candidateDetailRepository = new CandidateDetailRepository(_context);
+                var candidateDetailRepository = new CandidateDetailRepository(_context);
                 await candidateDetailRepository.CreateCandidateAsync(user);
             }
 
-
-            if (result.Succeeded)
-            {
-                return $"User '{user.UserName}' created ";
-            }
-
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-
-            return $"Failed to create user: {errors}";
+            return $"User '{user.UserName}' created successfully.";
         }
 
         public async Task<string?> LoginAsync(string email, string password, bool rememberMe)
@@ -74,27 +72,15 @@ namespace HireFlow_API.Repositories
             if (!result.Succeeded)
                 return null;
 
-            var candidate =  _context.CandidateDetails.Where(a=>a.UserId == user.Id).FirstOrDefault();
-
-            bool IsNewCandidate = false;
-
-            if (candidate != null)
-            {
-
-                IsNewCandidate = _context.JobApplications
-                                            .Where(a => a.CandidateId == candidate.CandidateId)
-                                            .Count() == 0 ? false : true;
-            }
-
-           
+            var candidate = await _context.CandidateDetails.FirstOrDefaultAsync(a => a.UserId == user.Id);
+            var isNewCandidate = candidate != null && await _context.JobApplications.AnyAsync(a => a.CandidateId == candidate.CandidateId);
 
             user.LastLoginTimestamp = DateTime.Now;
-            
             await _context.SaveChangesAsync();
 
             var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtTokenService.GenerateToken(user, candidate, roles.FirstOrDefault(), isNewCandidate);
 
-            var token = _jwtTokenService.GenerateToken(user, candidate,  roles.FirstOrDefault() , IsNewCandidate);
             return token;
         }
 
@@ -107,8 +93,7 @@ namespace HireFlow_API.Repositories
         {
             foreach (var roleName in roleNames)
             {
-                var roleExists = await _roleManager.RoleExistsAsync(roleName);
-                if (!roleExists)
+                if (!await _roleManager.RoleExistsAsync(roleName))
                 {
                     var role = new IdentityRole<Guid>
                     {
@@ -125,20 +110,19 @@ namespace HireFlow_API.Repositories
         public async Task<string> SeedDefaultUsersAsync()
         {
             var usersToCreate = new List<(string UserName, string FullName, string Email, string Password, string Role, string Phone)>
-    {
-        ("Admin", "Admin", "admin@hireflow.com", "Admin@123", "Admin", "8098776961"),
-        ("kavya.ramesh", "Kavya Ramesh", "kavya.ramesh@hireflow.com", "HRTeam@123", "HR", "8098776961"),
-        ("aravind.kumar", "Aravind Kumar", "aravind.kumar@hireflow.com", "ITTeam@123", "IT Team", "8098776961"),
-        ("vignesh.raj", "Vignesh Raj", "vignesh.raj@hireflow.com", "Interviewer@123", "Interviewer", "8098776961"),
-        ("sneha.subramanian", "Sneha Subramanian", "sneha.subramanian@hireflow.com", "Manager@123", "Manager", "8098776961")
-    };
+            {
+                ("Admin", "Admin", "admin@hireflow.com", "Admin@123", "Admin", "8098776961"),
+                ("kavya.ramesh", "Kavya Ramesh", "kavya.ramesh@hireflow.com", "HRTeam@123", "HR", "8098776961"),
+                ("aravind.kumar", "Aravind Kumar", "aravind.kumar@hireflow.com", "ITTeam@123", "IT Team", "8098776961"),
+                ("vignesh.raj", "Vignesh Raj", "vignesh.raj@hireflow.com", "Interviewer@123", "Interviewer", "8098776961"),
+                ("sneha.subramanian", "Sneha Subramanian", "sneha.subramanian@hireflow.com", "Manager@123", "Manager", "8098776961")
+            };
 
             var results = new List<string>();
 
             foreach (var (userName, fullName, email, password, role, phone) in usersToCreate)
             {
-                var existingUser = await _userManager.FindByEmailAsync(email);
-                if (existingUser != null)
+                if (await _userManager.FindByEmailAsync(email) != null)
                 {
                     results.Add($"User {email} already exists.");
                     continue;
@@ -163,20 +147,17 @@ namespace HireFlow_API.Repositories
                 if (!createResult.Succeeded)
                 {
                     var errorMsg = string.Join(", ", createResult.Errors.Select(e => e.Description));
-                    results.Add($"❌ Failed to create {email}: {errorMsg}");
+                    results.Add($" Failed to create {email}: {errorMsg}");
                     continue;
                 }
 
-                // Ensure role exists
-                var roleExists = await _roleManager.RoleExistsAsync(role);
-                if (!roleExists)
+                if (!await _roleManager.RoleExistsAsync(role))
                 {
                     await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
                 }
 
-                // Assign role
                 await _userManager.AddToRoleAsync(user, role);
-                results.Add($"✅ Created {email} with role '{role}'.");
+                results.Add($"Created {email} with role '{role}'.");
             }
 
             return string.Join(Environment.NewLine, results);

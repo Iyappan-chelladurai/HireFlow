@@ -52,6 +52,12 @@ namespace HireFlow_MVC.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult Room(string id)
+        {
+            return View(model: id);
+        }
+
         // POST: /InterviewsMvc/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

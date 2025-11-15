@@ -1279,7 +1279,7 @@
         function loadInterviews() {
             $.getJSON("https://localhost:7180/api/InterviewSchedule/completed", function (data) {
                 interviewData = data;
-                alert(interviewData);
+               // alert(interviewData);
                 loadCalendar();
             });
         }
@@ -1506,41 +1506,60 @@
                 </div>
             `);
 
-            $.ajax({
-                url: "https://localhost:7180/Interview/GenerateInterviewQA",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(interviewId), // send the Guid directly
-                success: function (response) {
-                    // Handle stringified or parsed responses
-                    let questions = [];
+            var url = "https://localhost:7180/api/InterviewSchedule/Interview/GenerateInterviewQA?interviewId=" + interviewId;
+         //   alert(url);
+           $.ajax({
+            url: url,
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                let questions = [];
 
-                    if (typeof response === "string") {
-                        try {
-                            questions = JSON.parse(response);
-                        } catch {
-                            console.error("Invalid response JSON:", response);
-                        }
-                    } else if (Array.isArray(response)) {
-                        questions = response;
-                    } else if (response.questionsAndAnswers) {
-                        // if your API wraps the questions
-                        questions = JSON.parse(response.questionsAndAnswers);
-                    }
+                // Direct cases
+                if (typeof response === "string") {
+                    try { questions = JSON.parse(response); } catch {}
+                }
+                else if (Array.isArray(response)) {
+                    questions = response;
+                }
+                else if (response.questionsAndAnswers) {
+                    try { questions = JSON.parse(response.questionsAndAnswers); } catch {}
+                }
 
-                    if (questions.length > 0) {
-                        displayQuestions(questions);
-                        updateQuestionStats(questions);
-                    } else {
-                        showSampleQuestions();
+                // Handle backend structured response: { questions: [...], rawResponse: "...", error: "..."}
+                if (!questions.length && response.questions) {
+                    questions = response.questions;
+                }
+
+                // Fallback: parse rawResponse if valid JSON is inside it
+                if (!questions.length && response.rawResponse) {
+                    try {
+                        let cleaned = response.rawResponse
+                            .replace(/```json/gi, "")
+                            .replace(/```/g, "")
+                            .trim();
+
+                        questions = JSON.parse(cleaned);
+                    } catch (e) {
+                        console.error("Failed to parse rawResponse JSON:", e);
                     }
-                },
-                error: function (xhr) {
-                    console.error("Error loading interview questions:", xhr);
+                }
+
+                // Final output
+                if (questions.length > 0) {
+                    displayQuestions(questions);
+                    updateQuestionStats(questions);
+                } else {
                     showSampleQuestions();
                 }
-            });
-        }
+            },
+            error: function (xhr) {
+                console.error("Error loading interview questions:", xhr);
+                showSampleQuestions();
+            }
+        });
+         }
+
 
 
         // Function to display questions in the modal
@@ -1568,7 +1587,7 @@
                             <span class="question-number">Q${index + 1}</span>
                             <span class="question-category ${categoryClass}">${question.category || 'Technical'}</span>
                         </div>
-                        <div class="question-text">${question.questionText}</div>
+                        <div class="question-text">${question.question}</div>
                         <div class="question-difficulty">
                             <span class="difficulty-dot ${difficultyClass}"></span>
                             <span>${question.difficulty || 'Medium'} difficulty</span>
@@ -1617,37 +1636,37 @@
         function showSampleQuestions() {
             const sampleQuestions = [
                 {
-                    questionText: "Explain the concept of dependency injection and how it's implemented in .NET Core.",
+                    question: "Explain the concept of dependency injection and how it's implemented in .NET Core.",
                     category: "Technical",
                     difficulty: "Medium",
                     tags: [".NET", "Dependency Injection", "Architecture"]
                 },
                 {
-                    questionText: "What are the differences between SQL Server stored procedures and functions?",
+                    question: "What are the differences between SQL Server stored procedures and functions?",
                     category: "Technical",
                     difficulty: "Easy",
                     tags: ["SQL", "Database", "Stored Procedures"]
                 },
                 {
-                    questionText: "How would you optimize a slow-running database query?",
+                    question: "How would you optimize a slow-running database query?",
                     category: "Technical",
                     difficulty: "Hard",
                     tags: ["SQL", "Performance", "Optimization"]
                 },
                 {
-                    questionText: "Tell me about a time you had to deal with a difficult team member.",
+                    question: "Tell me about a time you had to deal with a difficult team member.",
                     category: "Behavioral",
                     difficulty: "Medium",
                     tags: ["Teamwork", "Communication"]
                 },
                 {
-                    questionText: "Describe a situation where you had to learn a new technology quickly to complete a project.",
+                    question: "Describe a situation where you had to learn a new technology quickly to complete a project.",
                     category: "Behavioral",
                     difficulty: "Medium",
                     tags: ["Learning", "Adaptability"]
                 },
                 {
-                    questionText: "How do you handle conflicting priorities when working on multiple projects?",
+                    question: "How do you handle conflicting priorities when working on multiple projects?",
                     category: "Scenario",
                     difficulty: "Medium",
                     tags: ["Time Management", "Prioritization"]

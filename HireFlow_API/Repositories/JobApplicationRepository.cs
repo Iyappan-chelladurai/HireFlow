@@ -229,9 +229,8 @@ namespace HireFlow_API.Repositories
 
             if (!File.Exists(resumePath))
                 return null;
-            
-            string resumeText = await File.ReadAllTextAsync(resumePath);
-            return resumeText;
+          
+            return resumePath;
         }
 
         public async Task<IList<CandidateDisplayDto>> GetCandidatesForJobAsync(Guid jobId)

@@ -41,9 +41,11 @@ namespace HireFlow_API.Services
             _cache = cache;
             var region = RegionEndpoint.GetBySystemName(_configuration["AwsSettings:Region"]);
 
+            ;
+
             _snsClient = new AmazonSimpleNotificationServiceClient(
-                _configuration["AwsSettings:AccessKey"] ,
-                _configuration["AwsSettings:SecretAccessKey"] ,
+                Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"),
+                Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"),
                region);
         }
 
@@ -69,7 +71,6 @@ namespace HireFlow_API.Services
                 }
                  
             }
-
            
             var user = new UserAccount
             {
@@ -151,46 +152,42 @@ namespace HireFlow_API.Services
             var request = new PublishRequest
             {
                 Message = message,
-                PhoneNumber = phoneNumber, // Include +91 for India, e.g. +919876543210
-                 MessageAttributes = new Dictionary<string, MessageAttributeValue>
-            {
+                PhoneNumber = phoneNumber,
+                MessageAttributes = new Dictionary<string, MessageAttributeValue>
                 {
-                    "AWS.SNS.SMS.SMSType",
-                    new MessageAttributeValue
                     {
-                        StringValue = "Transactional",
-                        DataType = "String"
+                        "AWS.SNS.SMS.SMSType",
+                        new MessageAttributeValue
+                        {
+                            StringValue = "Transactional",
+                            DataType = "String"
+                        }
                     }
                 }
-            }
             };
 
             try
             {
                 var response = await _snsClient.PublishAsync(request);
 
-                // Check if the message was sent successfully
                 if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine(" SMS sent successfully!");
+                    Console.WriteLine("SMS sent successfully!");
                     Console.WriteLine($"MessageId: {response.MessageId}");
                 }
                 else
                 {
-                    Console.WriteLine($" SMS send failed. Status code: {response.HttpStatusCode}");
+                    Console.WriteLine($"SMS send failed. Status code: {response.HttpStatusCode}");
                 }
             }
-            catch (Amazon.SimpleNotificationService.AmazonSimpleNotificationServiceException snsEx)
+            catch (AmazonSimpleNotificationServiceException snsEx)
             {
-                Console.WriteLine($" SNS error: {snsEx.Message}");
+                Console.WriteLine($"SNS error: {snsEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($" General error: {ex.Message}");
+                Console.WriteLine($"General error: {ex.Message}");
             }
-
-
-
 
             return otp;
         }

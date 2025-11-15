@@ -31,35 +31,47 @@ namespace HireFlow_API.Repositories
         {
             try
             {
-                _logger.LogInformation("Fetching all jobs...");
+                _logger.LogInformation("Fetching all jobs with filtering criteria...");
 
-                return await _context.Jobs
-                                      .Where(a => (a.JobStatus == 2 && a.ClosingDate < DateTime.Now.AddDays(-1)) || a.JobStatus != 2)
-                                      .AsNoTracking()
-                    .Select(j => new JobDTO
+                // Define a constant or enum for JobStatus
+                const int ClosedJobStatus = 2;
+
+                // Fetch jobs with candidate counts in a single query
+                var jobs = await _context.Jobs
+                    .Where(j => (j.JobStatus == ClosedJobStatus && j.ClosingDate <= DateTime.Now.AddDays(-1)) || j.JobStatus != ClosedJobStatus)
+                    .AsNoTracking()
+                    .Select(j => new
                     {
-                        JobId = j.JobId,
-                        JobTitle = j.JobTitle,
-                        JobSummary = j.JobSummary,
-                        JobDescription = j.JobDescription,
-                        Department = j.Department,
-                        Location = j.Location,
-                        Salary = j.Salary,
-                        Skills = j.Skills,
-                        EmploymentType = j.EmploymentType,
-                        Openings = j.Openings,
-                        PostedOn = j.PostedOn,
-                        ClosingDate = j.ClosingDate,
-                        PostedBy = j.PostedBy,
-                        JobStatus = j.JobStatus,
+                        Job = j,
                         CandidateCount = _context.JobApplications.Count(a => a.JobId == j.JobId)
-                    }).OrderByDescending(A=>A.ClosingDate)
+                    })
+                    .OrderByDescending(j => j.Job.ClosingDate)
                     .ToListAsync();
+
+                // Map to DTOs
+                return jobs.Select(j => new JobDTO
+                {
+                    JobId = j.Job.JobId,
+                    JobTitle = j.Job.JobTitle,
+                    JobSummary = j.Job.JobSummary,
+                    JobDescription = j.Job.JobDescription,
+                    Department = j.Job.Department,
+                    Location = j.Job.Location,
+                    Salary = j.Job.Salary,
+                    Skills = j.Job.Skills,
+                    EmploymentType = j.Job.EmploymentType,
+                    Openings = j.Job.Openings,
+                    PostedOn = j.Job.PostedOn,
+                    ClosingDate = j.Job.ClosingDate,
+                    PostedBy = j.Job.PostedBy,
+                    JobStatus = j.Job.JobStatus,
+                    CandidateCount = j.CandidateCount
+                }).ToList();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while fetching all jobs");
-                return Enumerable.Empty<JobDTO>();
+                throw; // Rethrow the exception to propagate the error
             }
         }
 
@@ -98,25 +110,37 @@ namespace HireFlow_API.Repositories
 
         public async Task AddNewJobAsync(Job job)
         {
+            if (job == null)
+            {
+                _logger.LogWarning("Attempted to add a null job.");
+                throw new ArgumentNullException(nameof(job), "Job cannot be null.");
+            }
+
             try
             {
-                _logger.LogInformation("Adding new job {@Job}", job);
+                _logger.LogInformation("Adding new job with Id {JobId}", job.JobId);
 
                 await _context.Jobs.AddAsync(job);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding new job {@Job}", job);
-                throw; // rethrow so higher layers know it failed
+                _logger.LogError(ex, "Error while adding new job with Id {JobId}", job.JobId);
+                throw; // Rethrow to propagate the error
             }
         }
 
         public async Task<bool> UpdateExistingJobAsync(Job job)
         {
+            if (job == null)
+            {
+                _logger.LogWarning("Attempted to update a null job.");
+                throw new ArgumentNullException(nameof(job), "Job cannot be null.");
+            }
+
             try
             {
-                if (!await _context.Jobs.AnyAsync(e => e.JobId == job.JobId))
+                if (!await _context.Jobs.AsNoTracking().AnyAsync(e => e.JobId == job.JobId))
                 {
                     _logger.LogWarning("Job with Id {JobId} not found for update", job.JobId);
                     return false;
@@ -124,7 +148,7 @@ namespace HireFlow_API.Repositories
 
                 _logger.LogInformation("Updating job with Id {JobId}", job.JobId);
 
-                _context.Entry(job).State = EntityState.Modified;
+                _context.Jobs.Update(job);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -164,7 +188,7 @@ namespace HireFlow_API.Repositories
             try
             {
                 _logger.LogInformation("Checking if job with Id {JobId} exists", jobId);
-                return await _context.Jobs.AnyAsync(e => e.JobId == jobId);
+                return await _context.Jobs.AsNoTracking().AnyAsync(e => e.JobId == jobId);
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@ namespace HireFlow_API.Controllers
  
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "HR")]
+    [Authorize(Roles = "HR" )]
     public class InterviewScheduleController : ControllerBase
     {
         private readonly IInterviewScheduleService _service;
@@ -78,10 +78,9 @@ namespace HireFlow_API.Controllers
             return Ok(updated);
         }
 
-
         [AllowAnonymous]
-        [HttpPost("Interview/GenerateInterviewQA")]
-        public async Task<IActionResult> GenerateInterviewQA([FromBody] Guid interviewId)
+        [HttpGet("Interview/GenerateInterviewQA")]
+        public async Task<IActionResult> GenerateInterviewQA([FromQuery] Guid interviewId)
         {
 
             var InterviewQuestions = await _service.GenerateInterviewQAAsync(interviewId);

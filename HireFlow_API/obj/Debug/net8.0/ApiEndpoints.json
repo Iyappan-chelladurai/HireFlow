@@ -272,14 +272,14 @@
     "ContainingType": "HireFlow_API.Controllers.InterviewScheduleController",
     "Method": "GenerateInterviewQA",
     "RelativePath": "api/InterviewSchedule/Interview/GenerateInterviewQA",
-    "HttpMethod": "POST",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "interviewId",
         "Type": "System.Guid",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

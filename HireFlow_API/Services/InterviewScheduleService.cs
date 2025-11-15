@@ -1,11 +1,14 @@
-﻿using HireFlow_API.Controllers;
+﻿using DocumentFormat.OpenXml.Packaging;
+using HireFlow_API.Controllers;
 using HireFlow_API.Model.DataModel;
 using HireFlow_API.Model.DTOs;
 using HireFlow_API.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
+using System.Text.RegularExpressions;
+using UglyToad.PdfPig;
 
 namespace HireFlow_API.Services
 {
@@ -33,11 +36,12 @@ namespace HireFlow_API.Services
         private readonly HttpClient _httpClient;
 
         public InterviewScheduleService(IInterviewScheduleRepository repository, IEmailService emailService,
-                                                                IJobApplicationService jobApplicationService)
+                                                                IJobApplicationService jobApplicationService , HttpClient httpClient)
         {
             _repository = repository;
             _emailService = emailService;
             _jobApplicationService = jobApplicationService;
+            _httpClient = httpClient;
         }
 
         public async Task<IEnumerable<UpcomingInterviewDto>> GetUpcomingInterviewsAsync()
@@ -109,10 +113,11 @@ namespace HireFlow_API.Services
             return interview;
         }
 
-       
+
+
         public async Task<InterviewQuestionResponse> GenerateInterviewQAAsync(Guid interviewId)
         {
-            var resumeText = await _jobApplicationService.GetCandidateResumeByInterviewId(interviewId);
+            var resumeText = await ExtractTextFromResumeLocally(await _jobApplicationService.GetCandidateResumeByInterviewId(interviewId));
 
             if (string.IsNullOrWhiteSpace(resumeText))
                 return new InterviewQuestionResponse { Error = "Resume text is required." };
@@ -164,14 +169,12 @@ namespace HireFlow_API.Services
                 {
                     new { role = "system", content = systemPrompt },
                     new { role = "user", content = userPrompt }
-                },
-                max_tokens = 1500,
-                temperature = 0.7
+                }
             };
 
             var req = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
             req.Headers.Add("Authorization", $"Bearer {apiKey}");
-            req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            req.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             var response = await _httpClient.SendAsync(req);
             var json = await response.Content.ReadAsStringAsync();
@@ -185,35 +188,81 @@ namespace HireFlow_API.Services
                 };
             }
 
-            var result = JsonDocument.Parse(json);
+            var result = System.Text.Json.JsonDocument.Parse(json);
             var content = result.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
+      .GetProperty("choices")[0]
+      .GetProperty("message")
+      .GetProperty("content")
+      .GetString();
 
             try
             {
-                var parsedQuestions = JsonSerializer.Deserialize<List<InterviewQuestion>>(content,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (string.IsNullOrWhiteSpace(content))
+                    throw new JsonException("Empty response from model.");
+
+                // Remove code fences (```json ... ```)
+                content = content.Trim();
+                if (content.StartsWith("```"))
+                {
+                    content = content
+                        .Replace("```json", "")
+                        .Replace("```", "")
+                        .Trim();
+                }
+
+                // Newtonsoft parsing
+                var parsedQuestions = JsonConvert.DeserializeObject<List<InterviewQuestion>>(content);
 
                 if (parsedQuestions == null || parsedQuestions.Count == 0)
-                    throw new JsonException("Empty response from model.");
+                    throw new JsonException("JSON parsed but contains no questions.");
 
                 return new InterviewQuestionResponse
                 {
                     Questions = parsedQuestions
                 };
             }
-            catch (JsonException)
+            catch (Exception ex)
             {
-                // If parsing fails, wrap the raw text to let frontend handle fallback
                 return new InterviewQuestionResponse
                 {
-                    Error = "Response format invalid or not in JSON.",
+                    Error = $"JSON parsing failed: {ex.Message}",
                     RawResponse = content
                 };
             }
         }
+        private async Task<string> ExtractTextFromResumeLocally(string filePath)
+        {
+            var ext = Path.GetExtension(filePath).ToLowerInvariant();
+
+            if (ext == ".pdf")
+            {
+                using var ms = new MemoryStream(await File.ReadAllBytesAsync(filePath));
+                using var pdf = PdfDocument.Open(ms);
+                var textBuilder = new StringBuilder();
+                foreach (var page in pdf.GetPages())
+                    textBuilder.AppendLine(page.Text);
+                return textBuilder.ToString();
+            }
+            else if (ext == ".docx")
+            {
+                using var doc = WordprocessingDocument.Open(filePath, false);
+                var body = doc.MainDocumentPart?.Document.Body;
+                if (body == null) return string.Empty;
+                return string.Join(Environment.NewLine, body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>().Select(t => t.Text));
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public string StripHtml(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            return Regex.Replace(input, "<.*?>", string.Empty);
+        }
+
     }
 }

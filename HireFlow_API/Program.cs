@@ -51,6 +51,8 @@ builder.Services.AddScoped<IInterviewScheduleRepository, InterviewScheduleReposi
 builder.Services.AddScoped<IInterviewScheduleService, InterviewScheduleService>();
 
 
+builder.Services.AddSignalR();
+
 builder.Services.AddMemoryCache();
 
 // Register IHttpClientFactory
@@ -173,7 +175,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.MapHub<InterviewHub>("/interviewHub");
 app.UseHttpsRedirection();
  
 app.UseCors("AllowAll");
