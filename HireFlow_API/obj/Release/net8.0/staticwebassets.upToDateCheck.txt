@@ -1,5 +1,5 @@
-wwwroot\Email\Interveiw.html
 wwwroot\Email\JobApplied.html
+wwwroot\Email\Interveiw.html
 wwwroot\Email\Selected.html
 wwwroot\Email\Shortlisted.html
 wwwroot\images.png

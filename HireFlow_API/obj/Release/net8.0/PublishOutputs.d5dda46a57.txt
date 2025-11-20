@@ -57,6 +57,7 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\Pub
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.Identity.Stores.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.Logging.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.Logging.Abstractions.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.ObjectPool.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.Options.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Extensions.Primitives.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\Microsoft.Identity.Client.dll
@@ -135,6 +136,7 @@ C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\Pub
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.IO.Packaging.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.IO.Pipelines.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.Memory.Data.dll
+C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.Net.WebSockets.WebSocketProtocol.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.Numerics.Tensors.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.Reflection.MetadataLoadContext.dll
 C:\IYAPPAN\Projects\Project\Project\HireFlow\HireFlow_API\obj\Release\net8.0\PubTmp\Out\System.Runtime.Caching.dll
