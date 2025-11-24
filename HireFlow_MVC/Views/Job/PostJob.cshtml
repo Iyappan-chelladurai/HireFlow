@@ -1658,16 +1658,14 @@
                 url: '@Url.Action("GetAllJobs", "Job")', // Replace with your API endpoint
                 method: 'GET',
                 dataType: 'json',
-                success: function(data) {
+                success: function(data)
+                {
                     tbody.empty(); // Clear existing rows
                       console.log("Jobs received:", data);
-
                       let Sno = 1;
                     data.forEach(job => {
                         var JobStatus = job.jobStatus == 1 ? "draft" : job.jobStatus == 0 ? "active" : "closed";
-
-                        const row = `
-                            <tr>
+                        const row = `<tr>
                                 <td>${Sno}</td>
                                 <td><span class="job-title-cell" data-job-id="${job.jobId}">${job.jobTitle}</span></td>
                                 <td>${job.department}</td>
@@ -1675,17 +1673,17 @@
                                 <td>${job.candidateCount}</td>
                                 <td><span class="status-badge status-${JobStatus}">${JobStatus}</span></td>
                                 <td>${job.closingDate}</td>
-                            </tr>
-                        `;
+                                </tr>`;
                         tbody.append(row);
                         Sno++;
                     });
-                },
+               },
                 error: function(err) {
                     console.error('Error loading jobs:', err);
                 }
             });
-        }
+            
+ }
 
         // Initial load - if DataTable is present it already loaded; fallback only
         if (!$.fn.dataTable || !$('#jobTable').DataTable) {

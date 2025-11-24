@@ -142,24 +142,18 @@ namespace HireFlow_MVC.Controllers
                 HttpContext.Session.SetString("JwtToken", responseData.JwtToken);
                 HttpContext.Session.SetString("IsNewCandidate", IsNewCandidate.Value.ToString());
 
-
                 if (role.ToLower() == "candidate")
                 {
-
                     if(IsNewCandidate.Value == "1")
                     {
                         return returnUrl == null ? RedirectToAction("ViewApplicationStatus", "JobApplications") : Redirect(returnUrl);
                     }
-
-                        return returnUrl == null ? RedirectToAction("AllJobs", "Job") : Redirect(returnUrl);
+                    return returnUrl == null ? RedirectToAction("AllJobs", "Job") : Redirect(returnUrl);
                 }
                 else
                 {
                     return returnUrl == null ? RedirectToAction("Dashboard", "Account") : Redirect(returnUrl);
                 }
-                
-              
-
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
